@@ -14,7 +14,15 @@
       {
         "title": "self-checkout",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "visible": false
+      },
+      {
+        "width": 800,
+        "height": 600,
+        "decorations": false,
+        "url": "splashscreen.html",
+        "label": "splashscreen"
       }
     ],
     "security": {
