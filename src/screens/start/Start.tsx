@@ -1,7 +1,7 @@
 import {useQuery} from "@tanstack/react-query";
-import {getProducts} from "../api/getProducts.ts";
+import {getProducts} from "../../api/getProducts.ts";
 
-export function Products() {
+export function Start() {
 
     const {isPending, error, data} = useQuery({
         queryKey: ['products'],
