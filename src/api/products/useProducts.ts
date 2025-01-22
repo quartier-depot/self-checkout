@@ -1,11 +1,9 @@
-import WooCommerceRestApi, {ProductsMainParams, WooRestApiOptions} from "woocommerce-rest-ts-api";
-import {getConfiguration} from "../../configuration/getConfiguration.ts";
+import {ProductsMainParams} from "woocommerce-rest-ts-api";
 import {useQuery} from "@tanstack/react-query";
 import {Product} from "./Product.ts";
+import {WooCommerceRestApiResponse} from "../WooCommerceRestApiResponse.ts";
+import {getApi} from "../getApi.ts";
 
-class WooCommerceRestApiResponse<T> {
-    data!: T[]
-}
 
 export function useProducts() {
     return useQuery({
@@ -16,20 +14,8 @@ export function useProducts() {
 
 async function getProducts(): Promise<Product[]> {
     const maximumItemsPerPage = 100;
-    const configuration = getConfiguration();
+    const api = getApi();
 
-    const options: WooRestApiOptions = {
-        url: configuration.woocommerce.url,
-        consumerKey: configuration.woocommerce.consumerKey,
-        consumerSecret: configuration.woocommerce.consumerSecret,
-        version: "wc/v3",
-        queryStringAuth: false,
-        axiosConfig: {
-            insecureHTTPParser: true,
-        }
-    }
-
-    const api = new WooCommerceRestApi(options);
     const initial = await api.get("products");
     const total = initial.headers['x-wp-total'];
 
@@ -46,7 +32,7 @@ async function getProducts(): Promise<Product[]> {
         }));
     }
 
-    let products: ProductsMainParams[] = [];
+    let products: any[] = [];
     const responses = await Promise.all(promises);
     for (const response of responses) {
         products = products.concat(response.data);
