@@ -4,6 +4,7 @@ export function Start() {
 
     const productsQuery = useProducts();
 
+    // noinspection HtmlUnknownTarget
     return (
         <div className={'bg-emerald-950 w-screen h-screen flex flex-col place-items-center'} >
             <img src="./logo-weiss.svg" alt="logo" className={'my-10'} width="500px"/>
