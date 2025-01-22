@@ -1,6 +1,6 @@
-import thumbsUp from "../../assets/thumbs-up.svg";
+import thumbsUp from "../../../../assets/thumbs-up.svg";
 
-export function PaymentInfo() {
+export function Payment() {
     return (
         <>
             <div className={'select-none h-auto w-full text-center pt-3 pb-4 px-4'}>
