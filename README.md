@@ -1,7 +1,17 @@
-# Tauri + React
+# Quartier Depot Self Checkout
 
-This template should help get you started developing with Tauri and React in Vite.
+A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](https://www.quartier-depot.ch/).
 
-## Recommended IDE Setup
+## Techstack
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+* Tauri
+* React
+* Tanstack Query
+* Tailwind
+
+## Credits
+
+Kudos to the following projects for inspiration.
+
+* Tailwind POS: https://github.com/emsifa/tailwind-pos
+* WooCommerce POS: https://wcpos.com / https://github.com/wcpos
