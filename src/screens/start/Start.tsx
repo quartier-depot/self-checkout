@@ -1,4 +1,4 @@
-import { useProducts} from "../../api/getProducts.ts";
+import { useProducts} from "../../api/products/useProducts.ts";
 
 export function Start() {
 

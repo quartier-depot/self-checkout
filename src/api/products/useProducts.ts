@@ -1,9 +1,10 @@
 import WooCommerceRestApi, {ProductsMainParams, WooRestApiOptions} from "woocommerce-rest-ts-api";
-import {getConfiguration} from "../configuration/getConfiguration.ts";
+import {getConfiguration} from "../../configuration/getConfiguration.ts";
 import {useQuery} from "@tanstack/react-query";
+import {Product} from "./Product.ts";
 
-type WooCommerceRestApiResponse<T> = {
-    data: T[]
+class WooCommerceRestApiResponse<T> {
+    data!: T[]
 }
 
 export function useProducts() {
@@ -13,7 +14,7 @@ export function useProducts() {
     });
 }
 
-async function getProducts(): Promise<ProductsMainParams[]> {
+async function getProducts(): Promise<Product[]> {
     const maximumItemsPerPage = 100;
     const configuration = getConfiguration();
 
@@ -51,5 +52,5 @@ async function getProducts(): Promise<ProductsMainParams[]> {
         products = products.concat(response.data);
     }
 
-    return products
+    return products.map(product => new Product(product));
 }

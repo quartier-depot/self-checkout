@@ -1,6 +1,6 @@
-import {SearchBar} from "./searchBar/SearchBar.tsx";
-import {SearchResults} from "./searchResults/SearchResults.tsx";
-import {useProducts} from "../../../api/getProducts.ts";
+import {SearchBar} from "./searchBar/SearchBar";
+import {SearchResults} from "./searchResults/SearchResults";
+import {useProducts} from "../../../api/products/useProducts";
 
 export function Products() {
 
