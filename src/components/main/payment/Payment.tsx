@@ -1,5 +1,6 @@
 import {useAppContext} from "../../../context/useAppContext.ts";
 import {formatPrice} from "../../../format/formatPrice.ts";
+import {Wallet} from "./Wallet.tsx";
 
 export function Payment() {
     const {state} = useAppContext();
@@ -11,6 +12,7 @@ export function Payment() {
                     <div>TOTAL</div>
                     <div className={'text-right w-full'}>CHF {formatPrice(state.cart.price)}</div>
                 </div>
+                <Wallet />
                 <button
                     className={'text-white rounded-2xl text-lg w-full py-3 focus:outline-none bg-emerald-700'}>
                     WEITER

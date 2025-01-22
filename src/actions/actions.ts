@@ -6,6 +6,7 @@ export enum ActionTypes {
     CHANGE_CART_QUANTITY = "CHANGE_CART_QUANTITY",
     SET_CART_QUANTITY = "SET_CART_QUANTITY",
     EMPTY_CART = "EMPTY_CART",
+    SET_CUSTOMER = "SET_CUSTOMER",
 }
 
 export type IsInitializedAction = {
@@ -36,6 +37,13 @@ export type SetCartQuantityAction = {
     }
 }
 
+export type SetCustomerAction = {
+    type: ActionTypes.SET_CUSTOMER,
+    payload: {
+        email: string
+    };
+}
+
 export type EmptyCartAction = {
     type: ActionTypes.EMPTY_CART
 }
@@ -45,4 +53,5 @@ export type Actions =
     | SearchAction
     | ChangeCartQuantityAction
     | SetCartQuantityAction
-    | EmptyCartAction;
+    | EmptyCartAction
+    | SetCustomerAction;

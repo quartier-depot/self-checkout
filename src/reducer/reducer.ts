@@ -17,6 +17,7 @@ export type State = {
     searchTerm: string,
     products: Product[] | undefined;
     cart: Cart;
+    customer: {  email: string }
 };
 
 export const initialState: State = {
@@ -24,6 +25,7 @@ export const initialState: State = {
     products: undefined,
     searchTerm: '',
     cart: {price: 0, quantity: 0, items: []},
+    customer: {email: ''},
 };
 
 export function reducer(state: State, action: Actions) {
@@ -57,6 +59,12 @@ export function reducer(state: State, action: Actions) {
             return {
                 ...state,
                 cart: {...initialState.cart}
+            };
+
+        case ActionTypes.SET_CUSTOMER:
+            return {
+                ...state,
+                customer: action.payload
             };
 
         default:
