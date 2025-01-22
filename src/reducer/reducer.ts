@@ -1,23 +1,15 @@
 import {Actions, ActionTypes} from "../actions/actions";
 import {Product} from "../api/products/Product.ts";
+import {Cart, Item} from "../api/orders/Cart.ts";
+import {Customer} from "../api/customers/Customer.ts";
 
-type Cart = {
-    items: Item[];
-    quantity: number;
-    price: number;
-}
-
-type Item = {
-    product: Product;
-    quantity: number;
-}
 
 export type State = {
     initialized: boolean;
     searchTerm: string,
     products: Product[] | undefined;
     cart: Cart;
-    customer: {  email: string }
+    customer?: Customer;
 };
 
 export const initialState: State = {
@@ -25,7 +17,7 @@ export const initialState: State = {
     products: undefined,
     searchTerm: '',
     cart: {price: 0, quantity: 0, items: []},
-    customer: {email: ''},
+    customer: undefined,
 };
 
 export function reducer(state: State, action: Actions) {
@@ -66,6 +58,12 @@ export function reducer(state: State, action: Actions) {
                 ...state,
                 customer: action.payload
             };
+
+        case ActionTypes.START_NEW_ORDER:
+            return {
+                ...initialState,
+                initialized: true
+            }
 
         default:
             return state;

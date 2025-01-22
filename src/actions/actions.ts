@@ -1,4 +1,5 @@
 import {Product} from "../api/products/Product.ts";
+import {Customer} from "../api/customers/Customer.ts";
 
 export enum ActionTypes {
     IS_INITIALIZED = "IS_INITIALIZED",
@@ -7,6 +8,7 @@ export enum ActionTypes {
     SET_CART_QUANTITY = "SET_CART_QUANTITY",
     EMPTY_CART = "EMPTY_CART",
     SET_CUSTOMER = "SET_CUSTOMER",
+    START_NEW_ORDER = "START_NEW_ORDER",
 }
 
 export type IsInitializedAction = {
@@ -39,13 +41,15 @@ export type SetCartQuantityAction = {
 
 export type SetCustomerAction = {
     type: ActionTypes.SET_CUSTOMER,
-    payload: {
-        email: string
-    };
+    payload?: Customer;
 }
 
 export type EmptyCartAction = {
     type: ActionTypes.EMPTY_CART
+}
+
+export type StartNewOrderAction = {
+    type: ActionTypes.START_NEW_ORDER
 }
 
 export type Actions =
@@ -54,4 +58,5 @@ export type Actions =
     | ChangeCartQuantityAction
     | SetCartQuantityAction
     | EmptyCartAction
-    | SetCustomerAction;
+    | SetCustomerAction
+    | StartNewOrderAction;
