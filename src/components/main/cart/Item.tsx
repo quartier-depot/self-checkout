@@ -4,6 +4,7 @@ import {Product} from "../../../api/products/Product.ts";
 import {useAppContext} from "../../../context/useAppContext.ts";
 import {ActionTypes} from "../../../actions/actions.ts";
 import {ChangeEvent} from "react";
+import {formatPrice} from "../../../format/formatPrice.ts";
 
 interface ItemProps {
     item: { product: Product; quantity: number }
@@ -33,7 +34,7 @@ export function Item({item}: ItemProps) {
                 className="rounded-lg h-10 w-10 bg-white shadow mr-2 text-center pt-2">{item.product.artikel_id?.substring(0, 3)}</div>
             <div className={'flex-grow'}>
                 <h5 className={'text-sm'}>{item.product.name}</h5>
-                <p className={'text-xs block'}>{item.product.price}</p>
+                <p className={'text-xs block'}>{formatPrice(item.product.price)}</p>
             </div>
             <div className={'py-1'}>
                 <div className={'w-28 grid grid-cols-3 gap-2 ml-2'}>

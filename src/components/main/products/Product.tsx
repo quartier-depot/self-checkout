@@ -1,6 +1,7 @@
 import {Product as ProductClass} from "../../../api/products/Product";
 import {useAppContext} from "../../../context/useAppContext.ts";
 import {ActionTypes} from "../../../actions/actions.ts";
+import {formatPrice} from "../../../format/formatPrice.ts";
 
 interface ProductProps {
     product: ProductClass
@@ -22,7 +23,7 @@ export function Product({product}: ProductProps) {
                 {product.artikel_id}
             </h2>
                 <p className={'flex-grow truncate mr-1'}>{product.name}</p>
-                <p className={'nowrap font-semibold'}>{product.price}</p>
+                <p className={'nowrap font-semibold'}>{formatPrice(product.price)}</p>
         </div>
     )
 }
