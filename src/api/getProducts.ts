@@ -1,11 +1,19 @@
 import WooCommerceRestApi, {ProductsMainParams, WooRestApiOptions} from "woocommerce-rest-ts-api";
 import {getConfiguration} from "../configuration/getConfiguration.ts";
+import {useQuery} from "@tanstack/react-query";
 
 type WooCommerceRestApiResponse<T> = {
     data: T[]
 }
 
-export async function getProducts(): Promise<ProductsMainParams[]> {
+export function useProducts() {
+    return useQuery({
+        queryKey: ['products'],
+        queryFn: getProducts
+    });
+}
+
+async function getProducts(): Promise<ProductsMainParams[]> {
     const maximumItemsPerPage = 100;
     const configuration = getConfiguration();
 

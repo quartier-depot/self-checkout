@@ -1,12 +1,8 @@
-import {useQuery} from "@tanstack/react-query";
-import {getProducts} from "../../api/getProducts.ts";
+import { useProducts} from "../../api/getProducts.ts";
 
 export function Start() {
 
-    const {isPending, error, data} = useQuery({
-        queryKey: ['products'],
-        queryFn: getProducts
-    });
+    const {isPending, error, data} = useProducts();
 
     if (isPending) return 'Loading...'
 
