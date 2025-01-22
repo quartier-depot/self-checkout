@@ -6,7 +6,7 @@ export function PaymentInfo() {
             <div className={'select-none h-auto w-full text-center pt-3 pb-4 px-4'}>
                 <div className={'flex mb-3 text-lg font-semibold text-blue-gray-700'}>
                     <div>TOTAL</div>
-                    <div className={'text-right w-full'} x-text="priceFormat(getTotalPrice())"></div>
+                    <div className={'text-right w-full'}></div>
                 </div>
                 <div className={'mb-3 text-blue-gray-700 px-3 pt-2 pb-3 rounded-lg bg-blue-gray-50'}>
                     <div className={'flex text-lg font-semibold'}>
@@ -19,11 +19,9 @@ export function PaymentInfo() {
                     </div>
                     <hr className={'my-2'}/>
                     <div className={'grid grid-cols-3 gap-2 mt-2'}>
-                        <template x-for="money in moneys">
                             <button
                                 className={'bg-white rounded-lg shadow hover:shadow-lg focus:outline-none inline-block px-2 py-1 text-sm'}>+<span
-                                x-text="numberFormat(money)"></span></button>
-                        </template>
+                                ></span></button>
                     </div>
                 </div>
                 <div
