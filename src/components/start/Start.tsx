@@ -1,8 +1,18 @@
 import { useProducts} from "../../api/products/useProducts.ts";
+import {useAppContext} from "../../context/useAppContext.ts";
+import {useEffect} from "react";
+import {ActionTypes} from "../../actions/actions.ts";
 
 export function Start() {
+    const {dispatch} = useAppContext();
 
     const productsQuery = useProducts();
+
+    useEffect(() => {
+        if (productsQuery.isSuccess) {
+            dispatch({type: ActionTypes.IS_INITIALIZED});
+        }
+    }, [productsQuery]);
 
     // noinspection HtmlUnknownTarget
     return (

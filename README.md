@@ -15,3 +15,4 @@ Kudos to the following projects for inspiration.
 
 * Tailwind POS: https://github.com/emsifa/tailwind-pos
 * WooCommerce POS: https://wcpos.com / https://github.com/wcpos
+* Context/Reducer with TypeScript: https://github.com/m-oniqu3/context-reducer
