@@ -1,6 +1,7 @@
-import {Products} from "./products/Products.tsx";
-import {Checkout} from "./checkout/Checkout.tsx";
-import {Search} from "./search/Search.tsx";
+import {Products} from "./products/Products";
+import {Payment} from "./payment/Payment";
+import {Search} from "./search/Search";
+import {Cart} from "./cart/Cart.tsx";
 
 export function Main() {
 
@@ -14,7 +15,12 @@ export function Main() {
                         <Search />
                         <Products />
                     </div>
-                    <Checkout/>
+                    <div className={'w-5/12 flex flex-col bg-blue-gray-50 h-full bg-white pr-4 pl-2 py-4'}>
+                        <div className={'bg-white rounded-3xl flex flex-col h-full shadow'}>
+                            <Cart/>
+                            <Payment />
+                        </div>
+                    </div>
                 </div>
             </div>
         </>)

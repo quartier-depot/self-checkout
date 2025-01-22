@@ -1,16 +1,29 @@
 import {Actions, ActionTypes} from "../actions/actions";
 import {Product} from "../api/products/Product.ts";
 
+type Cart = {
+    items: Item[];
+    quantity: number;
+    price: number;
+}
+
+type Item = {
+    product: Product;
+    quantity: number;
+}
+
 export type State = {
     initialized: boolean;
     searchTerm: string,
     products: Product[] | undefined;
+    cart: Cart;
 };
 
 export const initialState: State = {
     initialized: false,
     products: undefined,
     searchTerm: '',
+    cart: {price: 0, quantity: 0, items: []},
 };
 
 export function reducer(state: State, action: Actions) {
@@ -28,13 +41,30 @@ export function reducer(state: State, action: Actions) {
                 products: search(action.payload.searchTerm, action.payload.products),
             };
 
+        case ActionTypes.CHANGE_CART_QUANTITY:
+            return {
+                ...state,
+                cart: changeCartQuantity(state.cart, action.payload),
+            };
+
+        case ActionTypes.SET_CART_QUANTITY:
+            return {
+                ...state,
+                cart: setCartQuantity(state.cart, action.payload),
+            };
+
+        case ActionTypes.EMPTY_CART:
+            return {
+                ...state,
+                cart: {...initialState.cart}
+            };
 
         default:
             return state;
     }
 }
 
-function search(searchTerm: string, products: Product[]|undefined) {
+function search(searchTerm: string, products: Product[] | undefined) {
     if ((!searchTerm)) {
         return undefined;
     }
@@ -44,4 +74,66 @@ function search(searchTerm: string, products: Product[]|undefined) {
     }
 
     return products.filter(product => product.name.includes(searchTerm) || product.artikel_id?.includes(searchTerm));
+}
+
+function changeCartQuantity(cart: Cart, delta: Item) {
+    const alreadyInCart = cart.items.find(item => item.product.id === delta.product.id);
+    let items = [];
+    if (Number.isNaN(delta.quantity)) {
+        throw new Error("NaN");
+    }
+
+    if (alreadyInCart) {
+        items = cart.items.map(item => {
+            if (item.product.id === delta.product.id) {
+                return {product: item.product, quantity: item.quantity + delta.quantity};
+            } else {
+                return item;
+            }
+        });
+        if (delta.quantity != 0) {
+            items = items.filter(item => item.quantity > 0);
+        }
+    } else {
+        if (delta.quantity <= 0) {
+            throw new Error(`quantity must be positive for a new item but is ${delta.quantity}`);
+        }
+        items = [...cart.items, delta];
+    }
+
+    const price = items.reduce((accumulator, item) => accumulator + item.product.price, 0);
+
+    const quantity = items.reduce((accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0), 0);
+    return {price, quantity, items};
+}
+
+function setCartQuantity(cart: Cart, delta: Item) {
+    const alreadyInCart = cart.items.find(item => item.product.id === delta.product.id);
+    let items = [];
+    if (alreadyInCart) {
+        items = cart.items.map(item => {
+            if (item.product.id === delta.product.id) {
+                if (Number.isNaN(delta.quantity)) {
+                    return {product: item.product, quantity: 0};
+                } else {
+                    return {product: item.product, quantity: delta.quantity};
+                }
+            } else {
+                return item;
+            }
+        });
+        if (!Number.isNaN(delta.quantity) && delta.quantity != 0) {
+            items = items.filter(item => item.quantity > 0);
+        }
+    } else {
+        if (delta.quantity <= 0) {
+            throw new Error(`quantity must be positive for a new item but is ${delta.quantity}`);
+        }
+        items = [...cart.items, delta];
+    }
+
+    const price = items.reduce((accumulator, item) => accumulator + item.product.price, 0);
+
+    const quantity = items.reduce((accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0), 0);
+    return {price, quantity, items};
 }
