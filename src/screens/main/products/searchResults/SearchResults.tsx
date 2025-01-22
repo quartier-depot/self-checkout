@@ -1,24 +1,24 @@
 import {EmptySearch} from "./EmptySearch.tsx";
+import {ProductsMainParams} from "woocommerce-rest-ts-api";
+import {Product} from "./product/Product.tsx";
 
-export function SearchResults() {
+interface SearchResultsProps {
+    products: ProductsMainParams[]
+}
+
+export function SearchResults({products}: SearchResultsProps) {
     return (
         <>
             <div className={'h-full overflow-hidden mt-4'}>
                 <div className={'h-full overflow-y-auto px-2'}>
-                    <EmptySearch/>
-                    { /*
-                    <div className={'grid grid-cols-4 gap-4 pb-3'}>
-                        <div
-                            role="button"
-                            className={'select-none cursor-pointer transition-shadow overflow-hidden rounded-2xl bg-white shadow hover:shadow-lg'}
-                        >
-                            <div className={'flex pb-3 px-3 text-sm -mt-3'}>
-                                <p className={'flex-grow truncate mr-1'}></p>
-                                <p className={'nowrap font-semibold'}></p>
-                            </div>
+                    {products.length === 0 && (
+                        <EmptySearch/>
+                    )}
+                    {products.length > 0 && (
+                        <div className={'grid grid-cols-4 gap-4 pb-3'}>
+                            {products.map((product) => <Product key={product.id} product={product}/>)}
                         </div>
-                    </div>
-                    */}
+                    )}
                 </div>
             </div>
         </>
