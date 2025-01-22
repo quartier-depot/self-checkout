@@ -5,7 +5,6 @@ import {ActionTypes} from "../../actions/actions.ts";
 
 export function Start() {
     const {dispatch} = useAppContext();
-
     const productsQuery = useProducts();
 
     useEffect(() => {

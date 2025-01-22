@@ -1,4 +1,4 @@
-import empty from "../../../../assets/empty.svg";
+import empty from "../../../assets/empty.svg";
 
 export function NoProducts() {
     return (

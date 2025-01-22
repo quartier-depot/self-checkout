@@ -1,4 +1,4 @@
-import {Product as ProductClass} from "../../../../../api/products/Product";
+import {Product as ProductClass} from "../../../api/products/Product";
 
 interface ProductProps {
     product: ProductClass
