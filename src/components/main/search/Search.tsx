@@ -1,18 +1,25 @@
 import magnifier from "../../../assets/magnifier.svg";
 import {useAppContext} from "../../../context/useAppContext.ts";
 import {ActionTypes} from "../../../actions/actions.ts";
-import {ChangeEvent} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {useProducts} from "../../../api/products/useProducts.ts";
 
 export function Search() {
     const { dispatch} = useAppContext();
     const productQuery = useProducts();
+    const [inputValue, setInputValue] = useState('')
+
+    useEffect(() => {
+        const timer = setTimeout( () => {
+            dispatch({type: ActionTypes.SEARCH, payload: {
+                    searchTerm: inputValue,
+                    products: productQuery.data
+                }})}, 300);
+        return () => clearTimeout(timer)
+    }, [inputValue])
 
     function handleSearch(event: ChangeEvent<HTMLInputElement>) {
-        dispatch({type: ActionTypes.SEARCH, payload: {
-                searchTerm: event.target.value,
-                products: productQuery.data
-            }});
+        setInputValue(event.target.value);
     }
 
     return (
