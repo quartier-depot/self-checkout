@@ -2,10 +2,17 @@ import {Products} from "./products/Products";
 import {Payment} from "./payment/Payment";
 import {Search} from "./search/Search";
 import {Cart} from "./cart/Cart.tsx";
+import {useBarcode} from "../../barcode/useBarcode.ts";
+import {useProducts} from "../../api/products/useProducts.ts";
+import {ActionTypes} from "../../actions/actions.ts";
+import {useAppContext} from "../../context/useAppContext.ts";
 
 export function Main() {
-
-    // const productsQuery = useProducts();
+    const {dispatch} = useAppContext();
+    const productsQuery = useProducts();
+    useBarcode((barcode) => {
+        dispatch({type: ActionTypes.BARCODE_SEARCH, payload: {products: productsQuery.data, barcode}});
+    });
 
     return (
         <>

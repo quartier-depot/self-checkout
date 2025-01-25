@@ -6,6 +6,7 @@ export class Product {
     price: number;
     external_url: string | undefined;
     artikel_id: string | undefined;
+    ean: string | undefined;
 
     constructor(dto: any) {
         this.id = dto.id;
@@ -18,5 +19,6 @@ export class Product {
             key: string,
             value: string
         }) => meta.key === 'artikel-id')?.value;
+        this.ean = this.artikel_id === 'A29' ? '7610900861361' : undefined;
     }
 }

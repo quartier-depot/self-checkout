@@ -33,7 +33,10 @@ export function reducer(state: State, action: Actions) {
                 ...state,
                 searchTerm: action.payload.searchTerm,
                 products: search(action.payload.searchTerm, action.payload.products),
-            };
+            };        
+            
+            case ActionTypes.BARCODE_SEARCH:
+            return barcodeSearch(state, action.payload.barcode, action.payload.products);
 
         case ActionTypes.CHANGE_CART_QUANTITY:
             return {
@@ -111,6 +114,31 @@ function changeCartQuantity(cart: Cart, delta: Item) {
 
     const quantity = items.reduce((accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0), 0);
     return {price, quantity, items};
+}
+
+function barcodeSearch(state: State, barcode: string, products: Product[] | undefined): State {
+    if (products) {
+        const filteredProducts = products.filter((product: Product) => {
+            return product.ean === barcode;
+        });
+        switch (filteredProducts.length) {
+            case 0:
+                console.log('nothing found');
+                break;
+            case 1:
+                return {
+                    ...state,
+                    cart: changeCartQuantity(state.cart, {product: filteredProducts[0], quantity: 1})
+                }
+            case 2:
+            return {
+                ...state,
+                searchTerm: barcode,
+                products: filteredProducts,
+            }
+        }
+    }
+    return state;
 }
 
 function setCartQuantity(cart: Cart, delta: Item) {
