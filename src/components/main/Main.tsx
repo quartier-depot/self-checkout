@@ -6,12 +6,15 @@ import {useBarcode} from "../../barcode/useBarcode.ts";
 import {useProducts} from "../../api/products/useProducts.ts";
 import {ActionTypes} from "../../actions/actions.ts";
 import {useAppContext} from "../../context/useAppContext.ts";
+import {useCustomers} from "../../api/customers/useCustomers.ts";
 
 export function Main() {
     const {dispatch} = useAppContext();
     const productsQuery = useProducts();
+    const customersQuery = useCustomers();
+
     useBarcode((barcode) => {
-        dispatch({type: ActionTypes.BARCODE_SEARCH, payload: {products: productsQuery.data, barcode}});
+        dispatch({type: ActionTypes.SCANNER_INPUT, payload: {products: productsQuery.data, customers: customersQuery.data, scannerInput: barcode}});
     });
 
     return (

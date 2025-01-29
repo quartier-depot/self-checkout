@@ -35,8 +35,8 @@ export function reducer(state: State, action: Actions) {
                 products: search(action.payload.searchTerm, action.payload.products),
             };        
             
-            case ActionTypes.BARCODE_SEARCH:
-            return barcodeSearch(state, action.payload.barcode, action.payload.products);
+            case ActionTypes.SCANNER_INPUT:
+            return scannerInput(state, action.payload.scannerInput, action.payload.products, action.payload.customers);
 
         case ActionTypes.CHANGE_CART_QUANTITY:
             return {
@@ -116,14 +116,40 @@ function changeCartQuantity(cart: Cart, delta: Item) {
     return {price, quantity, items};
 }
 
-function barcodeSearch(state: State, barcode: string, products: Product[] | undefined): State {
+function scannerInput(state: State, scannerInput: string, products: Product[] | undefined, customers: Customer[] | undefined): State {
+    if (scannerInput.startsWith("qdm")) {
+        return memberInput(state, scannerInput, customers);
+    } else {
+        return barcodeInput(state, scannerInput, products);
+    }
+}
+
+function memberInput(state: State, member: string, customers: Customer[] | undefined) {
+    const memberId = member.substring("qdm".length).replaceAll("'", "-");
+    if (customers) {
+        const customer = customers.find(customer => customer.member_id === memberId);
+        if (customer) {
+            return {
+                ...state,
+                customer: customer
+            }
+        } else {
+            console.log("No customer found with memberId "+memberId);
+            return state;
+        }
+
+    }
+    return state;
+}
+
+function barcodeInput(state: State, barcode: string, products: Product[] | undefined): State {
     if (products) {
         const filteredProducts = products.filter((product: Product) => {
             return product.barcode === barcode;
         });
         switch (filteredProducts.length) {
             case 0:
-                console.log('nothing found');
+                console.log('Nothing found for '+barcode);
                 break;
             case 1:
                 return {

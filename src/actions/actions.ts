@@ -9,7 +9,7 @@ export enum ActionTypes {
     EMPTY_CART = "EMPTY_CART",
     SET_CUSTOMER = "SET_CUSTOMER",
     START_NEW_ORDER = "START_NEW_ORDER",
-    BARCODE_SEARCH = 'BARCODE_SEARCH'
+    SCANNER_INPUT = 'SCANNER_INPUT'
 }
 
 export type IsInitializedAction = {
@@ -24,11 +24,12 @@ export type SearchAction = {
     }
 }
 
-export type BarcodeSearchAction = {
-    type: ActionTypes.BARCODE_SEARCH,
+export type ScannerInputAction = {
+    type: ActionTypes.SCANNER_INPUT,
     payload: {
-        barcode: string,
+        scannerInput: string,
         products: Product[] | undefined,
+        customers: Customer[] | undefined,
     }
 }
 
@@ -64,7 +65,7 @@ export type StartNewOrderAction = {
 export type Actions =
     | IsInitializedAction
     | SearchAction
-    | BarcodeSearchAction
+    | ScannerInputAction
     | ChangeCartQuantityAction
     | SetCartQuantityAction
     | EmptyCartAction

@@ -1,3 +1,5 @@
+import {getMetaData} from "../getMetaData.ts";
+
 export class Product {
     id: number;
     product_id: string
@@ -15,14 +17,7 @@ export class Product {
         this.permalink = dto.permalink;
         this.price = parseFloat(dto.price);
         this.external_url = dto.external_url;
-        this.artikel_id = this.getMeta("artikel-id", dto);
-        this.barcode = this.getMeta("barcode", dto);
-    }
-
-    getMeta(key: string, dto: any): string | undefined {
-        return dto.meta_data.find((meta: {
-            key: string,
-            value: string
-        }) => meta.key === key)?.value;
+        this.artikel_id = getMetaData("artikel-id", dto);
+        this.barcode = getMetaData("barcode", dto);
     }
 }

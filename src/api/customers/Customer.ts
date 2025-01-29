@@ -1,9 +1,12 @@
+import {getMetaData} from "../getMetaData.ts";
+
 export class Customer {
     id: number;
     email: string;
     first_name: string;
     last_name: string;
     username: string;
+    member_id: string;
     shipping: Shipping;
 
     constructor(dto: any) {
@@ -12,6 +15,7 @@ export class Customer {
         this.first_name = dto.first_name;
         this.last_name = dto.last_name;
         this.username = dto.username;
+        this.member_id = getMetaData("member_id", dto);
         this.shipping = new Shipping(dto.shipping);
     }
 }
