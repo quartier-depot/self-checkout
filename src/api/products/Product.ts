@@ -6,7 +6,7 @@ export class Product {
     price: number;
     external_url: string | undefined;
     artikel_id: string | undefined;
-    ean: string | undefined;
+    barcode: string | undefined;
 
     constructor(dto: any) {
         this.id = dto.id;
@@ -15,10 +15,14 @@ export class Product {
         this.permalink = dto.permalink;
         this.price = parseFloat(dto.price);
         this.external_url = dto.external_url;
-        this.artikel_id = dto.meta_data.find((meta: {
+        this.artikel_id = this.getMeta("artikel-id", dto);
+        this.barcode = this.getMeta("barcode", dto);
+    }
+
+    getMeta(key: string, dto: any): string | undefined {
+        return dto.meta_data.find((meta: {
             key: string,
             value: string
-        }) => meta.key === 'artikel-id')?.value;
-        this.ean = this.artikel_id === 'A29' ? '7610900861361' : undefined;
+        }) => meta.key === key)?.value;
     }
 }
