@@ -16,7 +16,9 @@ async function getProducts(): Promise<Product[]> {
     const maximumItemsPerPage = 100;
     const api = getApi();
 
-    const initial = await api.get("products");
+    const initial = await api.get("products", {
+        status: "publish"
+    });
     const total = initial.headers['x-wp-total'];
 
     if (initial.data.length === total) {
