@@ -29,6 +29,7 @@ async function getProducts(): Promise<Product[]> {
     const promises: Promise<WooCommerceRestApiResponse<ProductsMainParams>>[] = [];
     for (let i = 0; i < numberOfRequests; i++) {
         promises.push(api.get("products", {
+            status: "publish",
             per_page: maximumItemsPerPage,
             page: i + 1
         }));
