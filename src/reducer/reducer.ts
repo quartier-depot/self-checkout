@@ -119,7 +119,7 @@ function changeCartQuantity(cart: Cart, delta: Item) {
 function barcodeSearch(state: State, barcode: string, products: Product[] | undefined): State {
     if (products) {
         const filteredProducts = products.filter((product: Product) => {
-            return product.ean === barcode;
+            return product.barcode === barcode;
         });
         switch (filteredProducts.length) {
             case 0:
