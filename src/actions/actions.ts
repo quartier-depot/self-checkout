@@ -2,7 +2,6 @@ import {Product} from "../api/products/Product.ts";
 import {Customer} from "../api/customers/Customer.ts";
 
 export enum ActionTypes {
-    IS_INITIALIZED = "IS_INITIALIZED",
     SEARCH = "SEARCH",
     CHANGE_CART_QUANTITY = "CHANGE_CART_QUANTITY",
     SET_CART_QUANTITY = "SET_CART_QUANTITY",
@@ -10,10 +9,6 @@ export enum ActionTypes {
     SET_CUSTOMER = "SET_CUSTOMER",
     START_NEW_ORDER = "START_NEW_ORDER",
     SCANNER_INPUT = 'SCANNER_INPUT'
-}
-
-export type IsInitializedAction = {
-    type: ActionTypes.IS_INITIALIZED;
 }
 
 export type SearchAction = {
@@ -63,7 +58,6 @@ export type StartNewOrderAction = {
 }
 
 export type Actions =
-    | IsInitializedAction
     | SearchAction
     | ScannerInputAction
     | ChangeCartQuantityAction

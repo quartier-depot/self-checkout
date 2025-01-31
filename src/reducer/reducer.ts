@@ -5,7 +5,6 @@ import {Customer} from "../api/customers/Customer.ts";
 
 
 export type State = {
-    initialized: boolean;
     searchTerm: string,
     products: Product[] | undefined;
     cart: Cart;
@@ -13,7 +12,6 @@ export type State = {
 };
 
 export const initialState: State = {
-    initialized: false,
     products: undefined,
     searchTerm: '',
     cart: {price: 0, quantity: 0, items: []},
@@ -22,12 +20,6 @@ export const initialState: State = {
 
 export function reducer(state: State, action: Actions) {
     switch (action.type) {
-        case ActionTypes.IS_INITIALIZED:
-            return {
-                ...state,
-                initialized: true
-            };
-
         case ActionTypes.SEARCH:
             return {
                 ...state,

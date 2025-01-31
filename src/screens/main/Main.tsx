@@ -7,6 +7,7 @@ import {useProducts} from "../../api/products/useProducts.ts";
 import {ActionTypes} from "../../actions/actions.ts";
 import {useAppContext} from "../../context/useAppContext.ts";
 import {useCustomers} from "../../api/customers/useCustomers.ts";
+import {Loading} from "../../components/modal/loading/Loading.tsx";
 
 export function Main() {
     const {dispatch} = useAppContext();
@@ -16,6 +17,8 @@ export function Main() {
     useBarcode((barcode) => {
         dispatch({type: ActionTypes.SCANNER_INPUT, payload: {products: productsQuery.data, customers: customersQuery.data, scannerInput: barcode}});
     });
+
+    const showModal = !productsQuery.isSuccess || !customersQuery.isSuccess;
 
     return (
         <>
@@ -33,7 +36,11 @@ export function Main() {
                     </div>
                 </div>
             </div>
-        </>)
+
+            {showModal && <Loading />}
+        </>
+
+    )
 }
 
 
