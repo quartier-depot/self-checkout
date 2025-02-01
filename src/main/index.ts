@@ -72,3 +72,14 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+// UNSECURE
+// SSL/TSL: this is the self-signed certificate support
+// https://stackoverflow.com/questions/38986692/how-do-i-trust-a-self-signed-certificate-from-an-electron-app
+app.on('certificate-error', (event, _webContents, url, _error, _certificate, callback) => {
+  // On certificate error we disable default behaviour (stop loading the page)
+  // and we then say "it is all fine - true" to the callback
+  event.preventDefault();
+  console.log("UNSECURE request to "+url);
+  callback(true);
+});
