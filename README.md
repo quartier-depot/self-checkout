@@ -4,20 +4,20 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 
 ## Techstack
 
-* Electron (electron-vite)
-* React
-* Typescript
-* Tanstack Query
-* Tailwind
+- Electron (electron-vite)
+- React
+- Typescript
+- Tanstack Query
+- Tailwind
 
 ## Credits
 
 Kudos to the following projects for inspiration.
 
-* Electron Vite: https://electron-vite.org/
-* Tailwind POS: https://github.com/emsifa/tailwind-pos
-* WooCommerce POS: https://wcpos.com / https://github.com/wcpos
-* Context/Reducer with TypeScript: https://github.com/m-oniqu3/context-reducer
+- Electron Vite: https://electron-vite.org/
+- Tailwind POS: https://github.com/emsifa/tailwind-pos
+- WooCommerce POS: https://wcpos.com / https://github.com/wcpos
+- Context/Reducer with TypeScript: https://github.com/m-oniqu3/context-reducer
 
 ## Recommended IDE Setup
 

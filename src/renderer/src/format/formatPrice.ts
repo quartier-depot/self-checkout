@@ -1,14 +1,13 @@
 export function formatPrice(amount: unknown): string {
   if (!isFormattableNumber(amount)) {
-    return ''
+    return '';
   }
   return Intl.NumberFormat('de-CH', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(amount)
+  }).format(amount);
 }
 
-
 export function isFormattableNumber(amount: unknown): amount is number {
-  return typeof amount === 'number' && Number.isFinite(amount)
+  return typeof amount === 'number' && Number.isFinite(amount);
 }

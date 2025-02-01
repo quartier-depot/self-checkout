@@ -1,8 +1,8 @@
-import { getConfiguration } from '../configuration/getConfiguration'
-import WooCommerceRestApi, { WooRestApiOptions } from 'woocommerce-rest-ts-api'
+import { getConfiguration } from '../configuration/getConfiguration';
+import WooCommerceRestApi, { WooRestApiOptions } from 'woocommerce-rest-ts-api';
 
 export function getApi() {
-  const configuration = getConfiguration()
+  const configuration = getConfiguration();
 
   const options: WooRestApiOptions = {
     url: configuration.woocommerce.url,
@@ -13,7 +13,7 @@ export function getApi() {
     axiosConfig: {
       insecureHTTPParser: true
     }
-  }
+  };
 
-  return new WooCommerceRestApi(options)
+  return new WooCommerceRestApi(options);
 }

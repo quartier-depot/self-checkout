@@ -1,28 +1,31 @@
-import { useBarcode } from '../../barcode/useBarcode'
-import { useProducts } from '../../api/products/useProducts'
-import { ActionTypes } from '../../actions/actions'
-import { useAppContext } from '../../context/useAppContext'
-import { useCustomers } from '../../api/customers/useCustomers'
-import { Search } from './search/Search'
-import { Products } from './products/Products'
-import { Cart } from './cart/Cart'
-import { Payment } from './payment/Payment'
-import { Loading } from '../../components/modal/loading/Loading'
-
+import { useBarcode } from '../../barcode/useBarcode';
+import { useProducts } from '../../api/products/useProducts';
+import { ActionTypes } from '../../actions/actions';
+import { useAppContext } from '../../context/useAppContext';
+import { useCustomers } from '../../api/customers/useCustomers';
+import { Search } from './search/Search';
+import { Products } from './products/Products';
+import { Cart } from './cart/Cart';
+import { Payment } from './payment/Payment';
+import { Loading } from '../../components/modal/loading/Loading';
 
 export function Main() {
-  const { dispatch } = useAppContext()
-  const productsQuery = useProducts()
-  const customersQuery = useCustomers()
+  const { dispatch } = useAppContext();
+  const productsQuery = useProducts();
+  const customersQuery = useCustomers();
 
   useBarcode((barcode) => {
     dispatch({
       type: ActionTypes.SCANNER_INPUT,
-      payload: { products: productsQuery.data, customers: customersQuery.data, scannerInput: barcode }
-    })
-  })
+      payload: {
+        products: productsQuery.data,
+        customers: customersQuery.data,
+        scannerInput: barcode
+      }
+    });
+  });
 
-  const showModal = !productsQuery.isSuccess || !customersQuery.isSuccess
+  const showModal = !productsQuery.isSuccess || !customersQuery.isSuccess;
 
   return (
     <>
@@ -43,8 +46,5 @@ export function Main() {
 
       {showModal && <Loading />}
     </>
-
-  )
+  );
 }
-
-

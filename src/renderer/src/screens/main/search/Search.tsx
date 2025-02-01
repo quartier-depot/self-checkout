@@ -1,39 +1,40 @@
-import magnifier from '../../../assets/magnifier.svg'
-import { useAppContext } from '../../../context/useAppContext'
-import { ActionTypes } from '../../../actions/actions'
-import * as React from 'react'
-import { ChangeEvent, useEffect, useState } from 'react'
-import { useProducts } from '../../../api/products/useProducts'
+import magnifier from '../../../assets/magnifier.svg';
+import { useAppContext } from '../../../context/useAppContext';
+import { ActionTypes } from '../../../actions/actions';
+import * as React from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useProducts } from '../../../api/products/useProducts';
 
 export function Search() {
-  const { dispatch } = useAppContext()
-  const productQuery = useProducts()
-  const [inputValue, setInputValue] = useState('')
-  const lastInputTimeRef = React.useRef<number | null>(null)
+  const { dispatch } = useAppContext();
+  const productQuery = useProducts();
+  const [inputValue, setInputValue] = useState('');
+  const lastInputTimeRef = React.useRef<number | null>(null);
   // const timeoutRef = React.useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch({
-        type: ActionTypes.SEARCH, payload: {
+        type: ActionTypes.SEARCH,
+        payload: {
           searchTerm: inputValue,
           products: productQuery.data
         }
-      })
-    }, 300)
-    lastInputTimeRef.current = Date.now()
+      });
+    }, 300);
+    lastInputTimeRef.current = Date.now();
     return () => {
-      console.log('clear')
-      const timeBetweenInput = Date.now() - (lastInputTimeRef.current || 0)
+      console.log('clear');
+      const timeBetweenInput = Date.now() - (lastInputTimeRef.current || 0);
       if (timeBetweenInput < 20) {
-        setInputValue(inputValue.substring(0, inputValue.length - 1))
+        setInputValue(inputValue.substring(0, inputValue.length - 1));
       }
-      clearTimeout(timer)
-    }
-  }, [inputValue])
+      clearTimeout(timer);
+    };
+  }, [inputValue]);
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>) {
-    setInputValue(event.target.value)
+    setInputValue(event.target.value);
   }
 
   return (
@@ -43,11 +44,13 @@ export function Search() {
       </div>
       <input
         type="text"
-        className={'bg-white rounded-3xl shadow text-lg full w-full h-16 py-4 pl-16 transition-shadow focus:shadow-2xl focus:outline-none'}
+        className={
+          'bg-white rounded-3xl shadow text-lg full w-full h-16 py-4 pl-16 transition-shadow focus:shadow-2xl focus:outline-none'
+        }
         placeholder="Suche"
         value={inputValue}
         onChange={handleSearch}
       />
     </div>
-  )
+  );
 }

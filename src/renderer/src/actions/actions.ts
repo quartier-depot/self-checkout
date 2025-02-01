@@ -1,5 +1,5 @@
-import { Product } from '../api/products/Product'
-import { Customer } from '../api/customers/Customer'
+import { Product } from '../api/products/Product';
+import { Customer } from '../api/customers/Customer';
 
 export enum ActionTypes {
   SEARCH = 'SEARCH',
@@ -12,50 +12,50 @@ export enum ActionTypes {
 }
 
 export type SearchAction = {
-  type: ActionTypes.SEARCH,
+  type: ActionTypes.SEARCH;
   payload: {
-    searchTerm: string,
-    products: Product[] | undefined,
-  }
-}
+    searchTerm: string;
+    products: Product[] | undefined;
+  };
+};
 
 export type ScannerInputAction = {
-  type: ActionTypes.SCANNER_INPUT,
+  type: ActionTypes.SCANNER_INPUT;
   payload: {
-    scannerInput: string,
-    products: Product[] | undefined,
-    customers: Customer[] | undefined,
-  }
-}
+    scannerInput: string;
+    products: Product[] | undefined;
+    customers: Customer[] | undefined;
+  };
+};
 
 export type ChangeCartQuantityAction = {
-  type: ActionTypes.CHANGE_CART_QUANTITY,
+  type: ActionTypes.CHANGE_CART_QUANTITY;
   payload: {
-    product: Product,
-    quantity: number,
-  }
-}
+    product: Product;
+    quantity: number;
+  };
+};
 
 export type SetCartQuantityAction = {
-  type: ActionTypes.SET_CART_QUANTITY,
+  type: ActionTypes.SET_CART_QUANTITY;
   payload: {
-    product: Product,
-    quantity: number,
-  }
-}
+    product: Product;
+    quantity: number;
+  };
+};
 
 export type SetCustomerAction = {
-  type: ActionTypes.SET_CUSTOMER,
+  type: ActionTypes.SET_CUSTOMER;
   payload?: Customer;
-}
+};
 
 export type EmptyCartAction = {
-  type: ActionTypes.EMPTY_CART
-}
+  type: ActionTypes.EMPTY_CART;
+};
 
 export type StartNewOrderAction = {
-  type: ActionTypes.START_NEW_ORDER
-}
+  type: ActionTypes.START_NEW_ORDER;
+};
 
 export type Actions =
   | SearchAction
