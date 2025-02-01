@@ -2,10 +2,11 @@ import EventEmitter from '../event-emitter.js';
 import { Aim, GS1 } from '@point-of-sale/barcode-parser';
 
 const DeviceIds = [
-	{ vendorId: 0x0c2e },	/* Honeywell Barcode Scanner */
+	  { vendorId: 0x0c2e },	/* Honeywell Barcode Scanner */
     { vendorId: 0x23d0 },   /* Youjie */
     { vendorId: 0x05e0 },   /* Symbol */
     { vendorId: 0x05f9 },   /* Datalogic */
+  //   { vendorId: 0xA12 }     /* KDC */
 ]
 
 class WebHIDBarcodeScanner {
@@ -37,6 +38,7 @@ class WebHIDBarcodeScanner {
 				this.#internal.device = null;
 				this.#internal.emitter.emit('disconnected');
 			}
+      console.log("disconnected");
 		});
 	}
 
@@ -60,7 +62,7 @@ class WebHIDBarcodeScanner {
             }
 
             if (!found) {
-                console.log('The barcode scanner is not in HID POS mode');
+                console.log(`The barcode scanner of device is not in HID POS mode`);
 
                 this.#internal.emitter.emit('unsupported', {
                     devices: devices

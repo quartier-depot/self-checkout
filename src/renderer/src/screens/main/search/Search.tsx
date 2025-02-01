@@ -10,7 +10,6 @@ export function Search() {
   const productQuery = useProducts();
   const [inputValue, setInputValue] = useState('');
   const lastInputTimeRef = React.useRef<number | null>(null);
-  // const timeoutRef = React.useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,7 +23,6 @@ export function Search() {
     }, 300);
     lastInputTimeRef.current = Date.now();
     return () => {
-      console.log('clear');
       const timeBetweenInput = Date.now() - (lastInputTimeRef.current || 0);
       if (timeBetweenInput < 20) {
         setInputValue(inputValue.substring(0, inputValue.length - 1));
