@@ -131,7 +131,7 @@ function scannerInput(
 }
 
 function memberInput(state: State, member: string, customers: Customer[] | undefined) {
-  const memberId = member.substring('qdm'.length).replaceAll('\'', '-');
+  const memberId = member.substring('qdm'.length).replaceAll("'", '-');
   if (customers) {
     const customer = customers.find((customer) => customer.member_id === memberId);
     if (customer) {
