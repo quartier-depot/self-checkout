@@ -1,6 +1,8 @@
+import { Modal } from '../Modal';
+
 export function Loading() {
   return (
-    <div className="modal h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50">
+    <Modal>
       <div role="status">
         <svg
           aria-hidden="true"
@@ -20,6 +22,6 @@ export function Loading() {
         </svg>
         <span className="sr-only">Loading...</span>
       </div>
-    </div>
+    </Modal>
   );
 }
