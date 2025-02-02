@@ -1,6 +1,5 @@
 import { useAppContext } from '../../../context/useAppContext';
 import { formatPrice } from '../../../format/formatPrice';
-import { Wallet } from './Wallet';
 import { useWalletBalance } from '../../../api/wallet/useWalletBalance';
 import classNames from 'classnames';
 import { useCreateOrder } from '../../../api/orders/useCreateOrder';
@@ -50,7 +49,6 @@ export function Payment() {
           <div>TOTAL</div>
           <div className={'text-right w-full'}>CHF {formatPrice(state.cart.price)}</div>
         </div>
-        <Wallet />
         <button
           disabled={!paymentEnabled}
           onClick={handlePayment}

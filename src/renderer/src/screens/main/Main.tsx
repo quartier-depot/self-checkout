@@ -12,6 +12,7 @@ import KeyboardBarcodeScanner from '../../external/@point-of-sale/keyboard-barco
 import { getConfiguration } from '../../configuration/getConfiguration';
 import classNames from 'classnames';
 import barcode from '../../assets/barcode.svg';
+import { Wallet } from './wallet/Wallet';
 
 export function Main() {
   const { dispatch } = useAppContext();
@@ -61,7 +62,8 @@ export function Main() {
             <Products />
           </div>
           <div className={'w-5/12 flex flex-col bg-slate-50 h-full pr-4 pl-2 py-4'}>
-            <div className={'bg-white rounded-3xl flex flex-col h-full shadow'}>
+            <Wallet />
+            <div className={'bg-white rounded-3xl flex flex-col h-full shadow mt-4'}>
 
               {!loadingData && (
                 <button type="button"
