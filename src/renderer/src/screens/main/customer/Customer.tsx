@@ -2,7 +2,7 @@ import { useAppContext } from '../../../context/useAppContext';
 import { useWalletBalance } from '../../../api/wallet/useWalletBalance';
 import { formatPrice } from '../../../format/formatPrice';
 
-export function Wallet() {
+export function Customer() {
   const { state } = useAppContext();
   const walletQuery = useWalletBalance(state.customer?.email);
   const loggedIn = Boolean(state.customer);

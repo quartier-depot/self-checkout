@@ -12,7 +12,7 @@ import KeyboardBarcodeScanner from '../../external/@point-of-sale/keyboard-barco
 import { getConfiguration } from '../../configuration/getConfiguration';
 import classNames from 'classnames';
 import barcode from '../../assets/barcode.svg';
-import { Wallet } from './wallet/Wallet';
+import { Customer } from './customer/Customer';
 
 export function Main() {
   const { dispatch } = useAppContext();
@@ -62,22 +62,21 @@ export function Main() {
             <Products />
           </div>
           <div className={'w-5/12 flex flex-col bg-slate-50 h-full pr-4 pl-2 py-4'}>
-            <Wallet />
+            <Customer />
             <div className={'bg-white rounded-3xl flex flex-col h-full shadow mt-4'}>
-
-              {!loadingData && (
-                <button type="button"
-                        id="scanner-button"
-                        onClick={setupScanner}
-                        className={classNames({ 'hidden': configuration.electron })}>
-                  <img src={barcode} alt="barcode" className={'h-6 w-6 inline-block'} />
-                </button>
-              )}
               <Cart />
               <Payment />
             </div>
           </div>
         </div>
+        {!loadingData && (
+          <button type="button"
+                  id="scanner-button"
+                  onClick={setupScanner}
+                  className={classNames('absolute bottom-10 left-8 bg-amber-200 p-1', { 'hidden': configuration.electron })}>
+            <img src={barcode} alt="barcode" className={'h-6 w-6 inline-block'} />
+          </button>
+        )}
       </div>
 
       {loadingData && <Loading />}
