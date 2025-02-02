@@ -99,6 +99,7 @@ function createWindow(): void {
     `
       function clickButton() {
         const button = document.querySelector("#scanner-button");
+        console.log('click');
         if (button) {
           button.click();
         } else {
@@ -108,6 +109,8 @@ function createWindow(): void {
       clickButton()`,
     true
   );
+
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished

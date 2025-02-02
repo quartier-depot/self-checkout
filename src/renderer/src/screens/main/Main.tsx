@@ -8,6 +8,7 @@ import { Cart } from './cart/Cart';
 import { Payment } from './payment/Payment';
 import { Loading } from '../../components/modal/loading/Loading';
 import WebHidBarcodeScanner from '../../external/@point-of-sale/webhid-barcode-scanner/main';
+import KeyboardBarcodeScanner from '../../external/@point-of-sale/keyboard-barcode-scanner/main';
 import { getConfiguration } from '../../configuration/getConfiguration';
 import classNames from 'classnames';
 import barcode from '../../assets/barcode.svg';
@@ -25,6 +26,16 @@ export function Main() {
       console.log(`Connected to ${device.productName}`);
     });
     barcodeScanner.addEventListener('barcode', handleBarcodeEvent);
+
+    const keyboardScanner = new KeyboardBarcodeScanner();
+    keyboardScanner.addEventListener('connected', device => {
+      console.log(`Connected to barcode scanner ${device} in keyboard emulation mode`);
+    });
+    keyboardScanner.addEventListener('disconnected', () => {
+      console.log(`Disconnected keyboard`);
+    });
+    keyboardScanner.connect();
+    keyboardScanner.addEventListener('barcode', handleBarcodeEvent);
   }
 
   function handleBarcodeEvent(e: BarcodeEvent) {
