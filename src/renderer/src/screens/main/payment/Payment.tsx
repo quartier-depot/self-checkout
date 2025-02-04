@@ -8,8 +8,8 @@ import { useUpdateOrder } from '../../../api/orders/useUpdateOrder';
 import { ActionTypes } from '../../../actions/actions';
 import { useState } from 'react';
 import { Loading } from '../../../components/modal/loading/Loading';
-import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { Confirmation } from './confirmation/Confirmation';
 
 export function Payment() {
   const { state, dispatch } = useAppContext();
@@ -84,14 +84,7 @@ export function Payment() {
 
       {showLoading && <Loading />}
 
-      {showConfirmation && (
-        <Dialog
-          title={'Danke für deinen Einkauf'}
-          content={`Dein virtuelles Konto wurde mit ${formatPrice(total)} belastet. Dein neuer Kontostand beträgt ${formatPrice(newBalance)}. Bestellnummber ${orderId}, Transaktionsnummer ${transactionId}.`}>
-          <button className={'rounded-2xl text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
-                  onClick={closeThankYou}>NEUER EINKAUF
-          </button>
-        </Dialog>)}
+      {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId} transactionId={transactionId} onClose={closeThankYou} />}
     </>
   );
 }
