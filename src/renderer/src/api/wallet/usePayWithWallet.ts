@@ -1,12 +1,16 @@
-import { useMutation } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 import { getApi } from '../getApi';
 import { Customer } from '../customers/Customer';
 import { WooRestApiEndpoint } from 'woocommerce-rest-ts-api';
 
-export function usePayWithWallet() {
+export function usePayWithWallet(queryClient: QueryClient) {
   return useMutation({
-    mutationFn: async (param: { customer: Customer; amount: number; note: string }) =>
-      payWithWallet(param.customer, param.amount, param.note)
+    mutationFn: async (param: { customer: Customer; amount: number; note: string }) => {
+      return await payWithWallet(param.customer, param.amount, param.note)
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries( {queryKey: ['wallet'] });
+    }
   });
 }
 

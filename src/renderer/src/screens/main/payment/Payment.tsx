@@ -8,38 +8,58 @@ import { useUpdateOrder } from '../../../api/orders/useUpdateOrder';
 import { ActionTypes } from '../../../actions/actions';
 import { useState } from 'react';
 import { Loading } from '../../../components/modal/loading/Loading';
+import { Dialog } from '../../../components/modal/dialog/Dialog';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function Payment() {
   const { state, dispatch } = useAppContext();
   const walletQuery = useWalletBalance(state.customer?.email);
-  const [showModal, setShowModal] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const [total, setTotal] = useState(0);
+  const [newBalance, setNewBalance] = useState(0);
+  const [transactionId, setTransactionId] = useState(0);
+  const [orderId, setOrderId] = useState('');
+
   const paymentEnabled =
     walletQuery.isSuccess && walletQuery.data != undefined && walletQuery.data >= state.cart.price;
 
+  const queryClient = useQueryClient();
   const createOrderMutation = useCreateOrder();
-  const payWithWalletMutation = usePayWithWallet();
+  const payWithWalletMutation = usePayWithWallet(queryClient);
   const updateOrderMutation = useUpdateOrder();
 
   async function handlePayment() {
-    setShowModal(true);
-    const { id, total } = await createOrderMutation.mutateAsync({
+    setShowLoading(true);
+    const { orderId, orderTotal } = await createOrderMutation.mutateAsync({
       customer: state.customer!,
       cart: state.cart
     });
     const walletTransactionId = await payWithWalletMutation.mutateAsync({
       customer: state.customer!,
-      amount: total,
-      note: `For self-checkout-order payment #${id}`
+      amount: orderTotal,
+      note: `For self-checkout-order payment #${orderId}`
     });
     await updateOrderMutation.mutateAsync({
-      id,
+      id: orderId,
       payment_method: 'wallet',
       payment_method_title: 'Virtuelles Konto',
       status: 'completed',
       transaction_id: walletTransactionId.toString()
     });
+    const newBalance = (await walletQuery.refetch()).data;
     dispatch({ type: ActionTypes.START_NEW_ORDER });
-    setShowModal(false);
+    setNewBalance(newBalance!);
+    setTotal(orderTotal);
+    setTransactionId(walletTransactionId);
+    setOrderId(orderId);
+    setShowLoading(false);
+    setShowConfirmation(true);
+  }
+
+  function closeThankYou() {
+    setShowConfirmation(false);
   }
 
   return (
@@ -53,7 +73,7 @@ export function Payment() {
           disabled={!paymentEnabled}
           onClick={handlePayment}
           className={classNames(
-            'rounded-2xl text-lg w-full py-3 focus:outline-none bg-bg-emerald-700',
+            'rounded-2xl text-lg w-full py-3 focus:outline-none',
             { 'text-white bg-orange-900': !paymentEnabled },
             { 'text-white bg-emerald-700': paymentEnabled }
           )}
@@ -62,7 +82,16 @@ export function Payment() {
         </button>
       </div>
 
-      {showModal && <Loading />}
+      {showLoading && <Loading />}
+
+      {showConfirmation && (
+        <Dialog
+          title={'Danke für deinen Einkauf'}
+          content={`Dein virtuelles Konto wurde mit ${formatPrice(total)} belastet. Dein neuer Kontostand beträgt ${formatPrice(newBalance)}. Bestellnummber ${orderId}, Transaktionsnummer ${transactionId}.`}>
+          <button className={'rounded-2xl text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
+                  onClick={closeThankYou}>NEUER EINKAUF
+          </button>
+        </Dialog>)}
     </>
   );
 }

@@ -25,5 +25,5 @@ async function createOrder(customer: Customer, cart: Cart) {
   };
 
   const response = await api.post('orders', order);
-  return { id: response.data.id as string, total: Number.parseFloat(response.data.total) };
+  return { orderId: response.data.id as string, orderTotal: Number.parseFloat(response.data.total) };
 }

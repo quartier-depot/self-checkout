@@ -6,7 +6,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useProducts } from '../../../api/products/useProducts';
 
 export function Search() {
-  const { dispatch } = useAppContext();
+  const { dispatch, state } = useAppContext();
   const productQuery = useProducts();
   const [inputValue, setInputValue] = useState('');
   const lastInputTimeRef = React.useRef<number | null>(null);
@@ -26,6 +26,12 @@ export function Search() {
       clearTimeout(timer);
     };
   }, [inputValue]);
+
+  useEffect(() => {
+    if (!state.searchTerm) {
+      setInputValue('');
+    }
+  }, [state])
 
   function handleSearch(event: ChangeEvent<HTMLInputElement>) {
     setInputValue(event.target.value);

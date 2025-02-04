@@ -1,10 +1,10 @@
 import './App.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Main } from './screens/main/Main';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { AppInsightsErrorBoundary, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { getConfiguration } from './configuration/getConfiguration';
+import { Main } from './screens/main/Main';
 
 const configuration = getConfiguration();
 const reactPlugin = new ReactPlugin();
