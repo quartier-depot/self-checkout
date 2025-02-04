@@ -4,6 +4,9 @@ type Configuration = {
     consumerKey: string;
     consumerSecret: string;
   },
+  appInsights: {
+    connectionString: string
+  }
   electron: boolean
 };
 
@@ -11,6 +14,7 @@ export function getConfiguration(): Configuration {
   const WOOCOMMERCE_URL = import.meta.env.VITE_WOOCOMMERCE_URL;
   const WOOCOMMERCE_CONSUMER_KEY = import.meta.env.VITE_WOOCOMMERCE_CONSUMER_KEY;
   const WOOCOMMERCE_CONSUMER_SECRET = import.meta.env.VITE_WOOCOMMERCE_CONSUMER_SECRET;
+  const APPINSIGHTS_CONNECTION_STRING = import.meta.env.VITE_APPINSIGHTS_CONNECTION_STRING;
 
   return {
     woocommerce: {
@@ -18,7 +22,10 @@ export function getConfiguration(): Configuration {
       consumerKey: WOOCOMMERCE_CONSUMER_KEY,
       consumerSecret: WOOCOMMERCE_CONSUMER_SECRET
     },
-    electron: isElectron(),
+    appInsights: {
+      connectionString: APPINSIGHTS_CONNECTION_STRING
+    },
+    electron: isElectron()
   };
 }
 
