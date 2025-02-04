@@ -50,6 +50,10 @@ export function Main() {
     });
   }
 
+  function loginUser() {
+    dispatch({type: ActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213)});
+  }
+
 
   const loadingData = !productsQuery.isSuccess || !customersQuery.isSuccess;
 
@@ -70,12 +74,21 @@ export function Main() {
           </div>
         </div>
         {!loadingData && (
-          <button type="button"
-                  id="scanner-button"
-                  onClick={setupScanner}
-                  className={classNames('absolute bottom-10 left-8 bg-amber-200 p-1', { 'hidden': configuration.electron })}>
-            <img src={barcode} alt="barcode" className={'h-6 w-6 inline-block'} />
-          </button>
+          <div className={'absolute bottom-10 left-8'}>
+            <button type="button"
+                    id="scanner-button"
+                    onClick={setupScanner}
+                    className={classNames('bg-amber-200 p-1', { 'hidden': configuration.electron })}>
+              <img src={barcode} alt="barcode" className={'h-6 w-6 inline-block'} />
+            </button>
+
+            <button type="button"
+                    id="scanner-button"
+                    onClick={loginUser}
+                    className={classNames('bg-amber-200 p-1', { 'hidden': configuration.electron })}>
+              <img src={barcode} alt="user" className={'h-6 w-6 inline-block'} />
+            </button>
+          </div>
         )}
       </div>
 
