@@ -19,6 +19,10 @@ Kudos to the following projects for inspiration.
 - WooCommerce POS: https://wcpos.com / https://github.com/wcpos
 - Context/Reducer with TypeScript: https://github.com/m-oniqu3/context-reducer
 
+## Notes
+
+- For the scanner to read barcodes correctly, set the keyboard layout to English.
+
 ## Recommended IDE Setup
 
 - [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
