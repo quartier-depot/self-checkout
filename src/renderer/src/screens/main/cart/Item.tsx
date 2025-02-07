@@ -3,8 +3,9 @@ import plus from '../../../assets/plus.svg';
 import { ChangeEvent } from 'react';
 import { Product } from '../../../api/products/Product';
 import { useAppContext } from '../../../context/useAppContext';
-import { ActionTypes } from '../../../actions/actions';
 import { formatPrice } from '../../../format/formatPrice';
+import { changeCartQuantity } from '../../../actions/changeCartQuantity';
+import { setCartQuantity } from '../../../actions/setCartQuantity';
 
 interface ItemProps {
   item: { product: Product; quantity: number };
@@ -14,17 +15,11 @@ export function Item({ item }: ItemProps) {
   const { dispatch } = useAppContext();
 
   function handleChangeQuantity(quantity: number) {
-    dispatch({
-      type: ActionTypes.CHANGE_CART_QUANTITY,
-      payload: { product: item.product, quantity: quantity }
-    });
+    dispatch(changeCartQuantity(quantity, item.product));
   }
 
   function handleSetQuantity(quantity: number) {
-    dispatch({
-      type: ActionTypes.SET_CART_QUANTITY,
-      payload: { product: item.product, quantity: quantity }
-    });
+    dispatch(setCartQuantity(quantity, item.product));
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Actions, ActionTypes } from '../actions/actions';
+import { Action, ActionTypes } from '../actions/action';
 import { Product } from '../api/products/Product';
 import { Cart, Item } from '../api/orders/Cart';
 import { Customer } from '../api/customers/Customer';
@@ -17,7 +17,7 @@ export const initialState: State = {
   customer: undefined
 };
 
-export function reducer(state: State, action: Actions) {
+export function reducer(state: State, action: Action) {
   switch (action.type) {
     case ActionTypes.SEARCH:
       return {
@@ -108,7 +108,7 @@ function changeCartQuantity(cart: Cart, delta: Item) {
     items = [...cart.items, delta];
   }
 
-  const price = items.reduce((accumulator, item) => accumulator + item.product.price, 0);
+  const price = items.reduce((accumulator, item) => accumulator + item.product.price * item.quantity, 0);
 
   const quantity = items.reduce(
     (accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0),
@@ -131,7 +131,7 @@ function scannerInput(
 }
 
 function memberInput(state: State, member: string, customers: Customer[] | undefined) {
-  const memberId = member.substring('qdm'.length).replaceAll("'", '-');
+  const memberId = member.substring('qdm'.length).replaceAll('\'', '-');
   if (customers) {
     const customer = customers.find((customer) => customer.member_id === memberId);
     if (customer) {
@@ -197,7 +197,7 @@ function setCartQuantity(cart: Cart, delta: Item) {
     items = [...cart.items, delta];
   }
 
-  const price = items.reduce((accumulator, item) => accumulator + item.product.price, 0);
+  const price = items.reduce((accumulator, item) => accumulator + item.product.price * item.quantity, 0);
 
   const quantity = items.reduce(
     (accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0),

@@ -1,7 +1,7 @@
 import { Product as ProductClass } from '../../../api/products/Product';
 import { useAppContext } from '../../../context/useAppContext';
-import { ActionTypes } from '../../../actions/actions';
 import { formatPrice } from '../../../format/formatPrice';
+import { changeCartQuantity } from '../../../actions/changeCartQuantity';
 
 interface ProductProps {
   product: ProductClass;
@@ -11,10 +11,7 @@ export function Product({ product }: ProductProps) {
   const { dispatch } = useAppContext();
 
   function handleAddToCart() {
-    dispatch({
-      type: ActionTypes.CHANGE_CART_QUANTITY,
-      payload: { product: product, quantity: 1 }
-    });
+    dispatch(changeCartQuantity(1, product));
   }
 
   return (

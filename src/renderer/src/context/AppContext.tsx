@@ -1,10 +1,10 @@
 import React, { createContext, ReactNode, useReducer } from 'react';
-import { Actions } from '../actions/actions';
+import { Action } from '../actions/action';
 import { initialState, reducer, State } from '../reducer/reducer';
 
 type AppContextType = {
   state: State;
-  dispatch: React.Dispatch<Actions>;
+  dispatch: React.Dispatch<Action>;
 };
 
 export const AppContext = createContext<AppContextType | null>(null);

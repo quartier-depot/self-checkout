@@ -57,7 +57,7 @@ export type StartNewOrderAction = {
   type: ActionTypes.START_NEW_ORDER;
 };
 
-export type Actions =
+export type Action =
   | SearchAction
   | ScannerInputAction
   | ChangeCartQuantityAction

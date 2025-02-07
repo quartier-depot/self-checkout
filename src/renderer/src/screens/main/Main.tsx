@@ -1,5 +1,5 @@
 import { useProducts } from '../../api/products/useProducts';
-import { ActionTypes } from '../../actions/actions';
+import { ActionTypes } from '../../actions/action';
 import { useAppContext } from '../../context/useAppContext';
 import { useCustomers } from '../../api/customers/useCustomers';
 import { Search } from './search/Search';
