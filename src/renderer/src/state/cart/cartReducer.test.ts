@@ -38,8 +38,7 @@ describe('cartReducer', () => {
     });
   });
 
-  describe('when cart contains 1 product', () => {
-
+  describe('when cart contains product once', () => {
 
     test('on change cart quantity by +1 sets product twice', () => {
       const actual = reducer(
@@ -63,6 +62,18 @@ describe('cartReducer', () => {
       const actual = reducer(
         withProductOnce,
         setCartQuantity(2, product)
+      );
+
+      expectProductTwice(actual);
+    });
+  });
+
+  describe('when cart contains product three times', () => {
+
+    test('on change cart quantity by +1 sets product twice', () => {
+      const actual = reducer(
+        withProductThreeTimes,
+        changeCartQuantity(-1, product)
       );
 
       expectProductTwice(actual);
@@ -109,5 +120,14 @@ const withProductOnce: State = {
     price: product.price,
     quantity: 1,
     items: [{ product: product, quantity: 1 }]
+  }
+};
+
+const withProductThreeTimes: State = {
+  ...withoutProducts,
+  cart: {
+    price: product.price * 3,
+    quantity: 3,
+    items: [{ product: product, quantity: 3 }]
   }
 };
