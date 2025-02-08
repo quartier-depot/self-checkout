@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import { initialState, reducer, State } from './reducer';
 import { Product } from '../api/products/Product';
-import { changeCartQuantity } from '../actions/changeCartQuantity';
-import { setCartQuantity } from '../actions/setCartQuantity';
-import { emptyCart } from '../actions/emptyCart';
+import { changeCartQuantity } from './cart/changeCartQuantity';
+import { setCartQuantity } from './cart/setCartQuantity';
+import { emptyCart } from './cart/emptyCart';
 
 describe('reducer', () => {
   describe('cart', () => {

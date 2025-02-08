@@ -1,6 +1,6 @@
 import magnifier from '../../../assets/magnifier.svg';
 import { useAppContext } from '../../../context/useAppContext';
-import { ActionTypes } from '../../../actions/action';
+import { ActionTypes } from '../../../state/action';
 import * as React from 'react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useProducts } from '../../../api/products/useProducts';

@@ -1,4 +1,4 @@
-import { Action, ActionTypes } from './action';
+import { Action, ActionTypes } from '../action';
 
 export function emptyCart(): Action {
   return {

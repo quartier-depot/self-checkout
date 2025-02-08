@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useCreateOrder } from '../../../api/orders/useCreateOrder';
 import { usePayWithWallet } from '../../../api/wallet/usePayWithWallet';
 import { useUpdateOrder } from '../../../api/orders/useUpdateOrder';
-import { ActionTypes } from '../../../actions/action';
+import { ActionTypes } from '../../../state/action';
 import { useState } from 'react';
 import { Loading } from '../../../components/modal/loading/Loading';
 import { useQueryClient } from '@tanstack/react-query';

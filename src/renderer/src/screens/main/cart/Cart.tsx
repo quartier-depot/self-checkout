@@ -1,7 +1,7 @@
 import cart from '../../../assets/cart.svg';
 import trash from '../../../assets/trash.svg';
 import { useAppContext } from '../../../context/useAppContext';
-import { ActionTypes } from '../../../actions/action';
+import { ActionTypes } from '../../../state/action';
 import { Item } from './Item';
 
 export function Cart() {

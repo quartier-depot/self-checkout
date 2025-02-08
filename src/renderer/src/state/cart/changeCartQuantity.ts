@@ -1,5 +1,5 @@
-import { Action, ActionTypes } from './action';
-import { Product } from '../api/products/Product';
+import { Action, ActionTypes } from '../action';
+import { Product } from '../../api/products/Product';
 
 export function changeCartQuantity(delta: number, product: Product): Action {
   return {

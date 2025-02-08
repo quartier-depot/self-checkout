@@ -1,4 +1,4 @@
-import { Action, ActionTypes } from '../actions/action';
+import { Action, ActionTypes } from './action';
 import { Product } from '../api/products/Product';
 import { Cart, Item } from '../api/orders/Cart';
 import { Customer } from '../api/customers/Customer';

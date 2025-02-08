@@ -4,8 +4,8 @@ import { ChangeEvent } from 'react';
 import { Product } from '../../../api/products/Product';
 import { useAppContext } from '../../../context/useAppContext';
 import { formatPrice } from '../../../format/formatPrice';
-import { changeCartQuantity } from '../../../actions/changeCartQuantity';
-import { setCartQuantity } from '../../../actions/setCartQuantity';
+import { changeCartQuantity } from '../../../state/cart/changeCartQuantity';
+import { setCartQuantity } from '../../../state/cart/setCartQuantity';
 
 interface ItemProps {
   item: { product: Product; quantity: number };

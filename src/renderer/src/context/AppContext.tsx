@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useReducer } from 'react';
-import { Action } from '../actions/action';
-import { initialState, reducer, State } from '../reducer/reducer';
+import { Action } from '../state/action';
+import { initialState, reducer, State } from '../state/reducer';
 
 type AppContextType = {
   state: State;

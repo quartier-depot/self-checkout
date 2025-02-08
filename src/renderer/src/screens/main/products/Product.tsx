@@ -1,7 +1,7 @@
 import { Product as ProductClass } from '../../../api/products/Product';
 import { useAppContext } from '../../../context/useAppContext';
 import { formatPrice } from '../../../format/formatPrice';
-import { changeCartQuantity } from '../../../actions/changeCartQuantity';
+import { changeCartQuantity } from '../../../state/cart/changeCartQuantity';
 
 interface ProductProps {
   product: ProductClass;
