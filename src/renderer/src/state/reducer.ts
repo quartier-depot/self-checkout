@@ -3,6 +3,7 @@ import { Product } from '../api/products/Product';
 import { Cart } from '../api/orders/Cart';
 import { Customer } from '../api/customers/Customer';
 import { cartReducer } from './cart/cartReducer';
+import { customerReducer } from './customer/customerReducer';
 
 export type State = {
   searchTerm: string;
@@ -20,6 +21,7 @@ export const initialState: State = {
 
 export function reducer(state: State, action: Action) {
   state = cartReducer(state, action);
+  state = customerReducer(state, action);
 
   switch (action.type) {
     case ActionTypes.SEARCH:
@@ -29,11 +31,6 @@ export function reducer(state: State, action: Action) {
         products: search(action.payload.searchTerm, action.payload.products)
       };
 
-    case ActionTypes.SET_CUSTOMER:
-      return {
-        ...state,
-        customer: action.payload
-      };
 
     case ActionTypes.START_NEW_ORDER:
       return {
