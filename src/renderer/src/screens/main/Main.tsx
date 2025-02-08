@@ -12,6 +12,9 @@ import { getConfiguration } from '../../configuration/getConfiguration';
 import classNames from 'classnames';
 import barcode from '../../assets/barcode.svg';
 import { Customer } from './customer/Customer';
+import { Product } from '../../api/products/Product';
+import { setCustomer } from '../../state/customer/setCustomer';
+import { changeCartQuantity } from '../../state/cart/changeCartQuantity';
 
 export function Main() {
   const { dispatch } = useAppContext();
@@ -32,18 +35,54 @@ export function Main() {
   }
 
   function handleBarcodeEvent(e: BarcodeEvent) {
-    dispatch({
-      type: ActionTypes.SCANNER_INPUT,
-      payload: {
-        products: productsQuery.data,
-        customers: customersQuery.data,
-        scannerInput: e.value
-      }
-    });
+    if (!(e.value)) {
+      return;
+    }
+    if (e.value.startsWith('qdm')) {
+      memberInput(e.value);
+    } else {
+      barcodeInput(e.value);
+    }
   }
 
+  function memberInput(barcode: string) {
+    const memberId = barcode.substring('qdm'.length).replaceAll('\'', '-');
+    if (!customersQuery.data) {
+      return;
+    }
+
+    const customer = customersQuery.data.find((customer) => customer.member_id === memberId);
+    if (customer) {
+      dispatch(setCustomer(customer));
+    } else {
+      console.log('No customer found with memberId ' + barcode);
+
+    }
+  }
+
+  function barcodeInput(barcode: string) {
+    if (!productsQuery.data) {
+      return;
+    }
+    const products = productsQuery.data.filter((product: Product) => {
+      return product.barcode === barcode;
+    });
+    switch (products.length) {
+      case 0:
+        console.log('Nothing found for ' + barcode);
+        break;
+      case 1:
+        dispatch(changeCartQuantity(1, products[0]));
+        break;
+      default:
+        console.log('Found multiple found for ' + barcode);
+        break;
+    }
+  }
+
+
   function loginUser() {
-    dispatch({type: ActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213)});
+    dispatch({ type: ActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213) });
   }
 
 

@@ -19,15 +19,6 @@ export type SearchAction = {
   };
 };
 
-export type ScannerInputAction = {
-  type: ActionTypes.SCANNER_INPUT;
-  payload: {
-    scannerInput: string;
-    products: Product[] | undefined;
-    customers: Customer[] | undefined;
-  };
-};
-
 export type ChangeCartQuantityAction = {
   type: ActionTypes.CHANGE_CART_QUANTITY;
   payload: {
@@ -59,7 +50,6 @@ export type StartNewOrderAction = {
 
 export type Action =
   | SearchAction
-  | ScannerInputAction
   | ChangeCartQuantityAction
   | SetCartQuantityAction
   | EmptyCartAction
