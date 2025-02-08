@@ -1,14 +1,11 @@
 import { Product } from '../api/products/Product';
 import { Customer } from '../api/customers/Customer';
+import { CartAction } from './cart/cartAction';
 
 export enum ActionTypes {
   SEARCH = 'SEARCH',
-  CHANGE_CART_QUANTITY = 'CHANGE_CART_QUANTITY',
-  SET_CART_QUANTITY = 'SET_CART_QUANTITY',
-  EMPTY_CART = 'EMPTY_CART',
   SET_CUSTOMER = 'SET_CUSTOMER',
   START_NEW_ORDER = 'START_NEW_ORDER',
-  SCANNER_INPUT = 'SCANNER_INPUT'
 }
 
 export type SearchAction = {
@@ -19,29 +16,9 @@ export type SearchAction = {
   };
 };
 
-export type ChangeCartQuantityAction = {
-  type: ActionTypes.CHANGE_CART_QUANTITY;
-  payload: {
-    product: Product;
-    quantity: number;
-  };
-};
-
-export type SetCartQuantityAction = {
-  type: ActionTypes.SET_CART_QUANTITY;
-  payload: {
-    product: Product;
-    quantity: number;
-  };
-};
-
 export type SetCustomerAction = {
   type: ActionTypes.SET_CUSTOMER;
   payload?: Customer;
-};
-
-export type EmptyCartAction = {
-  type: ActionTypes.EMPTY_CART;
 };
 
 export type StartNewOrderAction = {
@@ -49,9 +26,7 @@ export type StartNewOrderAction = {
 };
 
 export type Action =
+  | CartAction
   | SearchAction
-  | ChangeCartQuantityAction
-  | SetCartQuantityAction
-  | EmptyCartAction
   | SetCustomerAction
   | StartNewOrderAction;

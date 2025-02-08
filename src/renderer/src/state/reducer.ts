@@ -1,7 +1,8 @@
 import { Action, ActionTypes } from './action';
 import { Product } from '../api/products/Product';
-import { Cart, Item } from '../api/orders/Cart';
+import { Cart } from '../api/orders/Cart';
 import { Customer } from '../api/customers/Customer';
+import { cartReducer } from './cart/cartReducer';
 
 export type State = {
   searchTerm: string;
@@ -18,30 +19,14 @@ export const initialState: State = {
 };
 
 export function reducer(state: State, action: Action) {
+  state = cartReducer(state, action);
+
   switch (action.type) {
     case ActionTypes.SEARCH:
       return {
         ...state,
         searchTerm: action.payload.searchTerm,
         products: search(action.payload.searchTerm, action.payload.products)
-      };
-
-    case ActionTypes.CHANGE_CART_QUANTITY:
-      return {
-        ...state,
-        cart: changeCartQuantity(state.cart, action.payload)
-      };
-
-    case ActionTypes.SET_CART_QUANTITY:
-      return {
-        ...state,
-        cart: setCartQuantity(state.cart, action.payload)
-      };
-
-    case ActionTypes.EMPTY_CART:
-      return {
-        ...state,
-        cart: { ...initialState.cart }
       };
 
     case ActionTypes.SET_CUSTOMER:
@@ -73,72 +58,4 @@ function search(searchTerm: string, products: Product[] | undefined) {
   return products.filter(
     (product) => product.name.includes(searchTerm) || product.artikel_id?.includes(searchTerm)
   );
-}
-
-function changeCartQuantity(cart: Cart, delta: Item) {
-  const alreadyInCart = cart.items.find((item) => item.product.id === delta.product.id);
-  let items: Item[] = [];
-  if (Number.isNaN(delta.quantity)) {
-    throw new Error('NaN');
-  }
-
-  if (alreadyInCart) {
-    items = cart.items.map((item) => {
-      if (item.product.id === delta.product.id) {
-        return { product: item.product, quantity: item.quantity + delta.quantity };
-      } else {
-        return item;
-      }
-    });
-    if (delta.quantity != 0) {
-      items = items.filter((item) => item.quantity > 0);
-    }
-  } else {
-    if (delta.quantity <= 0) {
-      throw new Error(`quantity must be positive for a new item but is ${delta.quantity}`);
-    }
-    items = [...cart.items, delta];
-  }
-
-  const price = items.reduce((accumulator, item) => accumulator + item.product.price * item.quantity, 0);
-
-  const quantity = items.reduce(
-    (accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0),
-    0
-  );
-  return { price, quantity, items };
-}
-
-function setCartQuantity(cart: Cart, delta: Item) {
-  const alreadyInCart = cart.items.find((item) => item.product.id === delta.product.id);
-  let items: Item[] = [];
-  if (alreadyInCart) {
-    items = cart.items.map((item) => {
-      if (item.product.id === delta.product.id) {
-        if (Number.isNaN(delta.quantity)) {
-          return { product: item.product, quantity: 0 };
-        } else {
-          return { product: item.product, quantity: delta.quantity };
-        }
-      } else {
-        return item;
-      }
-    });
-    if (!Number.isNaN(delta.quantity) && delta.quantity != 0) {
-      items = items.filter((item) => item.quantity > 0);
-    }
-  } else {
-    if (delta.quantity <= 0) {
-      throw new Error(`quantity must be positive for a new item but is ${delta.quantity}`);
-    }
-    items = [...cart.items, delta];
-  }
-
-  const price = items.reduce((accumulator, item) => accumulator + item.product.price * item.quantity, 0);
-
-  const quantity = items.reduce(
-    (accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0),
-    0
-  );
-  return { price, quantity, items };
 }

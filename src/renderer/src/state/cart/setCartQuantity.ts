@@ -1,9 +1,10 @@
-import { Action, ActionTypes } from '../action';
+import { Action } from '../action';
 import { Product } from '../../api/products/Product';
+import { CartActionTypes } from './cartAction';
 
 export function setCartQuantity(delta: number, product: Product): Action {
   return {
-    type: ActionTypes.SET_CART_QUANTITY,
+    type: CartActionTypes.SET_CART_QUANTITY,
     payload: {
       product: product,
       quantity: delta
