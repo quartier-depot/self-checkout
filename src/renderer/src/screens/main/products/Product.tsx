@@ -18,13 +18,13 @@ export function Product({ product }: ProductProps) {
     <div
       role="button"
       className={
-        'select-none cursor-pointer transition-shadow overflow-hidden rounded-2xl bg-white shadow hover:shadow-lg p-8 text-center'
+        'select-none cursor-pointer transition-shadow overflow-hidden rounded-2xl bg-white shadow p-2 text-center'
       }
       onClick={handleAddToCart}
     >
-      <h2 className={'text-4xl'}>{product.artikel_id}</h2>
-      <p className={'flex-grow truncate mr-1'}>{product.name}</p>
-      <p className={'nowrap font-semibold'}>{formatPrice(product.price)}</p>
+      <h2 className={'text-2xl font-bold'}>{product.artikel_id}</h2>
+      <p className={'grow truncate mr-1'}>{product.name}</p>
+      <p className={'nowrap text-l'}>{formatPrice(product.price)}</p>
     </div>
   );
 }

@@ -90,16 +90,14 @@ export function Main() {
 
   return (
     <>
-      <div className={'text-slate-950 text-xl h-screen flex flex-row hide-print bg-slate-100 p-1'}>
-        <div className={'bg-white rounded-3xl m-1 shadow p-1 flex-grow'}>
+      <div className={'text-slate-950 text-xl h-screen flex flex-row hide-print bg-slate-100'}>
+        <div className={'w-3/5 bg-white rounded-3xl m-2 shadow p-1 flex flex-col'}>
           <Search />
-          <Products />
+          <Products className={'grow'} />
         </div>
-        <div className={'flex flex-col w-2/5'}>
-          <div className={'bg-white rounded-3xl m-1 shadow p-2'}>
-            <Customer />
-          </div>
-          <div className={'bg-white rounded-3xl m-1 shadow p-1 flex-grow'}>
+        <div className={'w-2/5 flex flex-col'}>
+          <Customer className={'bg-white rounded-3xl shadow p-3'} />
+          <div className={'bg-white rounded-3xl m-2 shadow p-2 grow flex flex-col overflow-hidden'}>
             <Cart />
             <Payment />
           </div>

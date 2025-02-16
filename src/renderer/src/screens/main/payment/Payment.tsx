@@ -23,7 +23,7 @@ export function Payment() {
   const [orderId, setOrderId] = useState('');
 
   const paymentEnabled =
-    walletQuery.isSuccess && walletQuery.data != undefined && walletQuery.data >= state.cart.price;
+    walletQuery.isSuccess && walletQuery.data && walletQuery.data >= state.cart.price;
 
   const queryClient = useQueryClient();
   const createOrderMutation = useCreateOrder();
@@ -64,8 +64,8 @@ export function Payment() {
 
   return (
     <>
-      <div className={'select-none h-auto w-full text-center pt-3 pb-4 px-4'}>
-        <div className={'flex mb-3 text-lg font-semibold text-blue-gray-700'}>
+      <div className={'w-full text-center mt-2'}>
+        <div className={'flex'}>
           <div>TOTAL</div>
           <div className={'text-right w-full'}>CHF {formatPrice(state.cart.price)}</div>
         </div>
@@ -73,12 +73,12 @@ export function Payment() {
           disabled={!paymentEnabled}
           onClick={handlePayment}
           className={classNames(
-            'rounded-2xl text-lg w-full py-3 focus:outline-none',
-            { 'text-white bg-orange-900': !paymentEnabled },
-            { 'text-white bg-emerald-700': paymentEnabled }
+            'rounded-2xl w-full mt-2 p-2 border-2 uppercase',
+            { 'text-slate-950 bg-slate-300 border-slate-300 active:border-slate-200 active:bg-slate-200': !paymentEnabled },
+            { 'text-white bg-emerald-700 border-emerald-700  active:border-emerald-600 active:bg-emerald-600': paymentEnabled }
           )}
         >
-          {paymentEnabled ? 'BEZAHLEN' : 'Nicht genügend Kredit'}
+          Bezahlen
         </button>
       </div>
 
