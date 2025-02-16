@@ -13,16 +13,14 @@ export function Customer() {
 
   function handleClick() {
     if (!loggedIn) {
-      if (!loggedIn) {
         setShowModal(!showModal);
       }
-    }
   }
 
   return (
     <>
-      <div className="flex h-16 bg-white rounded-3xl p-4 w-full shadow" onClick={handleClick}>
-        <div>
+      <div onClick={handleClick}>
+         <div>
           {name}
         </div>
         <div className="text-right flex-grow">

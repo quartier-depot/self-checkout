@@ -90,18 +90,18 @@ export function Main() {
 
   return (
     <>
-      <div className={'hide-print flex flex-row h-screen antialiased text-blue-gray-800'}>
-        <div className={'flex-grow flex'}>
-          <div className={'flex flex-col bg-slate-50 h-full w-full py-4'}>
-            <Search />
-            <Products />
-          </div>
-          <div className={'w-5/12 flex flex-col bg-slate-50 h-full pr-4 pl-2 py-4'}>
+      <div className={'text-slate-950 text-xl h-screen flex flex-row hide-print bg-slate-100 p-1'}>
+        <div className={'bg-white rounded-3xl m-1 shadow p-1 flex-grow'}>
+          <Search />
+          <Products />
+        </div>
+        <div className={'flex flex-col w-2/5'}>
+          <div className={'bg-white rounded-3xl m-1 shadow p-2'}>
             <Customer />
-            <div className={'bg-white rounded-3xl flex flex-col h-full shadow mt-4'}>
-              <Cart />
-              <Payment />
-            </div>
+          </div>
+          <div className={'bg-white rounded-3xl m-1 shadow p-1 flex-grow'}>
+            <Cart />
+            <Payment />
           </div>
         </div>
         {!loadingData && (

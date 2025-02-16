@@ -21,7 +21,7 @@ async function getCustomers(): Promise<Customer[]> {
     return initial.data;
   }
 
-  const numberOfRequests = Math.ceil(total / maximumItemsPerPage);
+  const numberOfRequests = 0; // Math.ceil(total / maximumItemsPerPage);
   const promises: Promise<WooCommerceRestApiResponse<any>>[] = [];
   for (let i = 0; i < numberOfRequests; i++) {
     promises.push(
