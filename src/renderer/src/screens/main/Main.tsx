@@ -41,7 +41,7 @@ export function Main() {
     if (e.value.startsWith('qdm')) {
       memberInput(e.value);
     } else {
-      barcodeInput(e.value);
+      barcodeInput(e);
     }
   }
 
@@ -60,24 +60,68 @@ export function Main() {
     }
   }
 
-  function barcodeInput(barcode: string) {
+  function barcodeInput(barcodeEvent: BarcodeEvent) {
     if (!productsQuery.data) {
       return;
     }
-    const products = productsQuery.data.filter((product: Product) => {
-      return product.barcode === barcode;
-    });
+
+    let products: Product[] = [];
+    switch (barcodeEvent.symbology) {
+      case 'qr-code':
+        const id = getProductId(barcodeEvent.value);
+        if (id) {
+          products = productsQuery.data.filter((product: Product) => {
+            return product.id === id;
+          });
+          break;
+        }
+
+        const slug = getProductSlug(barcodeEvent.value);
+        if (slug) {
+          products = productsQuery.data.filter((product: Product) => {
+            return product.slug === slug;
+          });
+          break;
+        }
+
+        console.error('Unknown QR code for product search: ' + barcodeEvent.value);
+        break;
+
+      default:
+        products = productsQuery.data.filter((product: Product) => {
+          return product.barcode === barcodeEvent.value;
+        });
+    }
+
     switch (products.length) {
       case 0:
-        console.log('Nothing found for ' + barcode);
+        console.log('Nothing found for ' + barcodeEvent.value);
         break;
       case 1:
         dispatch(changeCartQuantity(1, products[0]));
         break;
       default:
-        console.log('Found multiple found for ' + barcode);
+        console.log('Found multiple found for ' + barcodeEvent.value);
         break;
     }
+  }
+
+  function getProductSlug(url: String) {
+    const regex = /.*\/produkt\/(.*)/;
+    const match = url.match(regex);
+    if (match) {
+      return match[1].replace(/\//g, '');
+    }
+    return undefined;
+  }
+
+  function getProductId(url: String) {
+    const regex = /.*\/?p=(\d*)/;
+    const match = url.match(regex);
+    if (match) {
+      return Number.parseInt(match[1]);
+    }
+    return undefined;
   }
 
 

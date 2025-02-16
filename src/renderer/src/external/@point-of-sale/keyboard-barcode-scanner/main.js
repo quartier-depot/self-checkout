@@ -34,7 +34,7 @@ class KeyboardBarcodeScanner {
     this.#options = Object.assign({
       debug: false,
       timing: 'auto',
-      guessSymbology: false,
+      guessSymbology: true,
       allowedSymbologies: [],
     }, options || {})
 

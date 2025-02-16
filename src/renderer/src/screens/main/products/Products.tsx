@@ -16,7 +16,7 @@ export function Products({className}: ProductProps) {
         {state.products === undefined && <NoProducts />}
         {state.products && state.products.length === 0 && <EmptySearch />}
         {state.products && state.products.length > 0 && (
-          <div className={'grid grid-cols-2 gap-2'}>
+          <div className={'grid grid-cols-2 gap-2P'}>
             {state.products!.map((product) => (
               <Product key={product.id} product={product} />
             ))}
