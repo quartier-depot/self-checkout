@@ -9,7 +9,7 @@ export function Cart() {
   return (
     <>
         <div className={'h-12 text-left flex'}>
-          <div className={'pl-3 py-3 relative'}>
+          <div className={'pl-2 py-2 relative'}>
             <img src={cart} alt="cart" className={'h-6 inline-block'} />
             <div
               className={
@@ -21,11 +21,20 @@ export function Cart() {
           </div>
         </div>
 
-        <div className={'overflow-y-auto flex-1'}>
-          <table>
+        <div className={'overflow-y-auto overflow-x-hidden flex-1 font-mono'}>
+          <table className={'table-fixed w-full'}>
+
+              <colgroup>
+                <col className="w-[45px]" /> { /* 500 */ }
+                <col className="truncate" />
+                <col className="w-1/6" /> { /* 111.11 */ }
+              </colgroup>
+              <tbody>
+
             {state.cart.items.map((item) => (
               <Item key={item.product.id} item={item} />
             ))}
+              </tbody>
           </table>
         </div>
     </>

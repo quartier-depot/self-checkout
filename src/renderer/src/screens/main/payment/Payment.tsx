@@ -64,8 +64,8 @@ export function Payment() {
 
   return (
     <>
-      <div className={'w-full text-center mt-2'}>
-        <div className={'flex'}>
+      <div className={'w-full text-center mt-2 '}>
+        <div className={'flex font-mono'}>
           <div>TOTAL</div>
           <div className={'text-right w-full'}>CHF {formatPrice(state.cart.price)}</div>
         </div>
