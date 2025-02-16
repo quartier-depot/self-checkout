@@ -25,9 +25,9 @@ export function Cart() {
           <table className={'table-fixed w-full'}>
 
               <colgroup>
-                <col className="w-[45px]" /> { /* 500 */ }
+                <col className="w-[45px]" />
                 <col className="truncate" />
-                <col className="w-1/6" /> { /* 111.11 */ }
+                <col className="w-1/6" />
               </colgroup>
               <tbody>
 
