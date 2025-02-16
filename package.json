@@ -32,7 +32,8 @@
     "@types/w3c-web-hid": "1.0.6",
     "classnames": "2.5.1",
     "jsdom": "26.0.0",
-    "woocommerce-rest-ts-api": "7.0.0"
+    "woocommerce-rest-ts-api": "7.0.0",
+    "wouter": "3.6.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "2.0.0",

@@ -1,5 +1,4 @@
 import { useProducts } from '../../api/products/useProducts';
-import { ActionTypes } from '../../state/action';
 import { useAppContext } from '../../context/useAppContext';
 import { useCustomers } from '../../api/customers/useCustomers';
 import { Search } from './search/Search';
@@ -15,6 +14,7 @@ import { Customer } from './customer/Customer';
 import { Product } from '../../api/products/Product';
 import { setCustomer } from '../../state/customer/setCustomer';
 import { changeCartQuantity } from '../../state/cart/changeCartQuantity';
+import { CustomerActionTypes } from '../../state/customer/customerAction';
 
 export function Main() {
   const { dispatch } = useAppContext();
@@ -82,7 +82,7 @@ export function Main() {
 
 
   function loginUser() {
-    dispatch({ type: ActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213) });
+    dispatch({ type: CustomerActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213) });
   }
 
 
