@@ -109,7 +109,7 @@ const product: Product = {
   product_id: '42',
   artikel_id: 'product',
   name: 'name',
-  permalink: 'permalink',
+  slug: 'slug',
   barcode: 'barcode',
   external_url: 'external_url'
 };
