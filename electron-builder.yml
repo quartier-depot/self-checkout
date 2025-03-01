@@ -1,5 +1,7 @@
 appId: com.electron.app
 productName: self-checkout
+author: 
+  name: quartier-depot
 directories:
   buildResources: build
 files:
@@ -30,14 +32,11 @@ dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
   target:
-    - AppImage
     - snap
-    - deb
-  maintainer: electronjs.org
-  category: Utility
+  category: Office
+  publish:
+    provider: snapStore
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
-publish:
-  provider: generic
-  url: https://example.com/auto-updates
+
