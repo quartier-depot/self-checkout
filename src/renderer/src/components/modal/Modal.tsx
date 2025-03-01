@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 type ModalProps = {
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export function Modal({ onClick, children }: PropsWithChildren<ModalProps>) {
