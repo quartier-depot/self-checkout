@@ -5,8 +5,6 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { AppInsightsContext, AppInsightsErrorBoundary, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { getConfiguration } from './configuration/getConfiguration';
 import { Main } from './screens/main/Main';
-import { Route, Switch } from 'wouter';
-import { Styleguide } from './screens/styleguide/Styleguide';
 
 const configuration = getConfiguration();
 const reactPlugin = new ReactPlugin();
@@ -26,10 +24,8 @@ function App() {
     <AppInsightsContext.Provider value={reactPlugin}>
       <AppInsightsErrorBoundary onError={() => <h1>Something went wrong</h1>} appInsights={reactPlugin}>
         <QueryClientProvider client={queryClient}>
-          <Switch>
-            <Route path={'/'} component={Main} />
-            <Route path={'/styleguide'} component={Styleguide} />
-          </Switch>
+          <Main />
+          {/*<Styleguide />*/}
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </AppInsightsErrorBoundary>
