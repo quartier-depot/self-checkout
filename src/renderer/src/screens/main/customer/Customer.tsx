@@ -43,7 +43,7 @@ export function Customer({className}:CustomerProps) {
         </div>
       </div>
 
-      {showModal && <Modal />}
+      {showModal && <Modal onClick={() => setShowModal(false)}/>}
     </>
   );
 }
