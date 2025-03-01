@@ -4,10 +4,14 @@ import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 
 function createWindow(): void {
+
+  // enable Wayland support in Electron
+  app.commandLine.appendSwitch('enable-features', 'WaylandWindowDecorations');
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
+    fullscreen: true,
+    frame: false,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -95,7 +99,7 @@ function createWindow(): void {
     return true;
   });
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
