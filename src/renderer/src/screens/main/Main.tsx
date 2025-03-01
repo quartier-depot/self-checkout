@@ -19,6 +19,7 @@ export function Main() {
   const customersQuery = useCustomers();
   const configuration = getConfiguration();
 
+  // test only
   function loginUser() {
     dispatch({ type: CustomerActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213) });
   }

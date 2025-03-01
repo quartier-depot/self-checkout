@@ -53,6 +53,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "7.37.4",
     "globals": "15.14.0",
+    "msw": "2.7.1",
     "postcss": "8.5.1",
     "prettier": "3.4.2",
     "react": "19.0.0",
