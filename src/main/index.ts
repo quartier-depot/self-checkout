@@ -95,21 +95,6 @@ function createWindow(): void {
     return true;
   });
 
-  mainWindow.webContents.executeJavaScript(
-    `
-      function clickButton() {
-        const button = document.querySelector("#scanner-button");
-        if (button) {
-          console.log('click scanner button');
-          button.click();
-        } else {
-          window.setTimeout(clickButton, 300);
-        }
-      }
-      clickButton()`,
-    true
-  );
-
   mainWindow.webContents.openDevTools();
 }
 
