@@ -1,6 +1,7 @@
 {
   "name": "self-checkout",
   "version": "0.0.1",
+  "description": "Self-checkout frontend using a WooCommerce backend",
   "main": "./out/main/index.js",
   "author": "Christian Abegg",
   "homepage": "https://www.quartier-depot.ch",
