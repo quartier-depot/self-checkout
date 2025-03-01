@@ -20,20 +20,16 @@ export function Customer({className}:CustomerProps) {
 
   function handleClick() {
     if (!loggedIn) {
+        // TODO if test
+        dispatch({ type: CustomerActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213) });
+        // else
         setShowModal(!showModal);
       }
   }
 
-  function handleDoubleClick() {
-    if (!loggedIn) {
-        // TODO test only
-        dispatch({ type: CustomerActionTypes.SET_CUSTOMER, payload: customersQuery.data?.find(c => c.id === 213) });
-    }
-  }
-
   return (
     <>
-      <div onClick={handleClick} onDoubleClick={handleDoubleClick} className={`m-2 ${className}`}>
+      <div onClick={handleClick} className={`m-2 ${className}`}>
          <div>
           {name}
         </div>
