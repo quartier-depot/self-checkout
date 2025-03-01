@@ -99,8 +99,8 @@ function createWindow(): void {
     `
       function clickButton() {
         const button = document.querySelector("#scanner-button");
-        console.log('click');
         if (button) {
+          console.log('click scanner button');
           button.click();
         } else {
           window.setTimeout(clickButton, 300);
