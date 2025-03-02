@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { getApi } from '../getApi';
+import { useApi } from '../useApi';
 import { Customer } from '../customers/Customer';
 import { Cart } from './Cart';
 
@@ -11,7 +11,7 @@ export function useCreateOrder() {
 }
 
 async function createOrder(customer: Customer, cart: Cart) {
-  const api = getApi();
+  const api = useApi();
 
   const order = {
     status: 'pending',

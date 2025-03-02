@@ -1,8 +1,8 @@
-import { getConfiguration } from '../configuration/getConfiguration';
 import WooCommerceRestApi, { WooRestApiOptions } from 'woocommerce-rest-ts-api';
+import { useConfiguration } from '../state/configuration/useConfiguration';
 
-export function getApi() {
-  const configuration = getConfiguration();
+export function useApi() {
+  const configuration = useConfiguration();
 
   const options: WooRestApiOptions = {
     url: configuration.woocommerce.url,

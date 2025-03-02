@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getApi } from '../getApi';
+import { useApi } from '../useApi';
 import { WooRestApiEndpoint } from 'woocommerce-rest-ts-api';
 
 export function useWalletBalance(customerEmail: string | undefined) {
@@ -11,7 +11,7 @@ export function useWalletBalance(customerEmail: string | undefined) {
 
 async function getWalletBalance(customerEmail: string | undefined): Promise<number | undefined> {
   if (customerEmail) {
-    const api = getApi();
+    const api = useApi();
     const response = await api.get('wallet/balance' as WooRestApiEndpoint, {
       email: customerEmail
     });

@@ -1,6 +1,7 @@
 import { Product } from '../api/products/Product';
 import { CartAction } from './cart/cartAction';
 import { CustomerAction } from './customer/customerAction';
+import { ConfigurationAction } from './configuration/configurationAction';
 
 export enum ActionTypes {
   SEARCH = 'SEARCH',
@@ -21,6 +22,7 @@ export type StartNewOrderAction = {
 
 export type Action =
   | CartAction
+  | ConfigurationAction
   | CustomerAction
   | SearchAction
   | StartNewOrderAction;

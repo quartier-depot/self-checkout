@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { getApi } from '../getApi';
+import { useApi } from '../useApi';
 import { WooRestApiEndpoint } from 'woocommerce-rest-ts-api';
 
 export function useUpdateOrder() {
@@ -26,6 +26,6 @@ type OrderUpdate = {
 };
 
 async function updateOrder(update: OrderUpdate) {
-  const api = getApi();
+  const api = useApi();
   return await api.put(`orders/${update.id}` as WooRestApiEndpoint, update);
 }

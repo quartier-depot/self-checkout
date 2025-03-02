@@ -4,24 +4,40 @@ import { Cart } from '../api/orders/Cart';
 import { Customer } from '../api/customers/Customer';
 import { cartReducer } from './cart/cartReducer';
 import { customerReducer } from './customer/customerReducer';
+import { configurationReducer } from './configuration/configurationReducer';
 
 export type State = {
   searchTerm: string;
   products: Product[] | undefined;
   cart: Cart;
   customer?: Customer;
+  configuration: Configuration | undefined;
+};
+
+export type Configuration = {
+  woocommerce: {
+    url: string;
+    consumerKey: string;
+    consumerSecret: string;
+  },
+  appInsights: {
+    connectionString: string
+  }
+  electron: boolean
 };
 
 export const initialState: State = {
   products: undefined,
   searchTerm: '',
   cart: { price: 0, quantity: 0, items: [] },
-  customer: undefined
+  customer: undefined,
+  configuration: undefined
 };
 
 export function reducer(state: State, action: Action) {
   state = cartReducer(state, action);
   state = customerReducer(state, action);
+  state = configurationReducer(state, action);
 
   switch (action.type) {
     case ActionTypes.SEARCH:

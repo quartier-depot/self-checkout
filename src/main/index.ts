@@ -2,6 +2,10 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'path';
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
+let configuration: any = {};
 
 function createWindow(): void {
 
@@ -118,6 +122,18 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'));
+
+  const configPath = path.join(app.getPath('userData'), 'config.json');
+  try {
+    const data = fs.readFileSync(configPath, 'utf8');
+    configuration = JSON.parse(data)
+    configuration.electron = true;
+  } catch (error) {
+    console.error('Error reading config file: ' + error);
+    app.quit();
+  }
+
+  ipcMain.handle('get-config', () => configuration);
 
   createWindow();
 

@@ -1,7 +1,7 @@
 import { ProductsMainParams } from 'woocommerce-rest-ts-api';
 import { useQuery } from '@tanstack/react-query';
 import { Product } from './Product';
-import { getApi } from '../getApi';
+import { useApi } from '../useApi';
 import { WooCommerceRestApiResponse } from '../WooCommerceRestApiResponse';
 
 export function useProducts() {
@@ -13,7 +13,7 @@ export function useProducts() {
 
 async function getProducts(): Promise<Product[]> {
   const maximumItemsPerPage = 100;
-  const api = getApi();
+  const api = useApi();
 
   const initial = await api.get('products', {
     status: 'publish'

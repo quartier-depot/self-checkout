@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Customer } from './Customer';
 import { WooCommerceRestApiResponse } from '../WooCommerceRestApiResponse';
-import { getApi } from '../getApi';
+import { useApi } from '../useApi';
 
 export function useCustomers() {
   return useQuery({
@@ -12,7 +12,7 @@ export function useCustomers() {
 
 async function getCustomers(): Promise<Customer[]> {
   const maximumItemsPerPage = 100;
-  const api = getApi();
+  const api = useApi();
 
   const initial = await api.get('customers');
   const total = initial.headers['x-wp-total'];
