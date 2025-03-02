@@ -5,3 +5,4 @@ out
 *.log*
 .env.development
 test-results
+notes.md
