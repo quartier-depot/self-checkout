@@ -11,6 +11,7 @@ import { useAppContext } from './context/useAppContext';
 
 const queryClient = new QueryClient();
 
+// configuration taken from .env.development file
 const developmentConfiguration: Configuration = {
   woocommerce: {
     url: import.meta.env.VITE_WOOCOMMERCE_URL,
