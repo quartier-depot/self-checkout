@@ -13,6 +13,8 @@ electronLanguages:
   - en-US
 asarUnpack:
   - resources/**
+npmRebuild: false
+
 win:
   executableName: self-checkout
 nsis:
@@ -20,6 +22,7 @@ nsis:
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
@@ -30,13 +33,11 @@ mac:
   notarize: false
 dmg:
   artifactName: ${name}-${version}.${ext}
+
 linux:
   target:
-    - snap
+    - deb
+  maintainer: electronjs.org
   category: Office
-  publish:
-    provider: snapStore
-appImage:
-  artifactName: ${name}-${version}.${ext}
-npmRebuild: false
+
 

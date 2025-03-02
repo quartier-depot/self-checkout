@@ -1,0 +1,38 @@
+name: quartier-depot-self-checkout
+version: '0.0.1'
+summary: A little description for the app.
+description: A longer description for the app.
+base: core22
+grade: devel
+confinement: strict
+
+parts:
+  slack:
+    plugin: dump
+    source: dist/self-checkout_0.0.1_amd64.deb
+    source-type: deb
+    after:
+      - desktop-gtk3
+    stage-packages:
+      - libasound2
+      - libnotify4
+      - libnspr4
+      - libnss3
+      - libpcre3
+      - libpulse0
+      - libxss1
+      - libxtst6
+  electron-launch:
+    plugin: dump
+    source: files/
+    prepare: |
+      chmod +x bin/electron-launch
+
+apps:
+  myApp:
+    command: bin/electron-launch $SNAP/usr/lib/self-checkout/self-checkout
+    desktop: usr/share/applications/self-checkout.desktop
+    # Correct the TMPDIR path for Chromium Framework/Electron to ensure
+    # libappindicator has readable resources.
+    environment:
+      TMPDIR: $XDG_RUNTIME_DIR
