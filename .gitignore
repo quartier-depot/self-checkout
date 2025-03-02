@@ -6,3 +6,4 @@ out
 .env.development
 test-results
 notes.md
+cmake*
