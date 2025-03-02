@@ -33,7 +33,6 @@ function App() {
     if (isElectron) {
       const getConfiguration = async () => {
         const config = await window.api.getConfig();
-        console.log('Loaded config:', config);
         dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: config });
       };
       getConfiguration().catch((e) => console.log(e));

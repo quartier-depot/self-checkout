@@ -2,17 +2,17 @@ import { useMutation } from '@tanstack/react-query';
 import { useApi } from '../useApi';
 import { Customer } from '../customers/Customer';
 import { Cart } from './Cart';
+import WooCommerceRestApi, { WooRestApiOptions } from 'woocommerce-rest-ts-api';
 
 export function useCreateOrder() {
+  const api = useApi();
   return useMutation({
     mutationFn: async (param: { customer: Customer; cart: Cart }) =>
-      createOrder(param.customer, param.cart)
+      createOrder(api, param.customer, param.cart)
   });
 }
 
-async function createOrder(customer: Customer, cart: Cart) {
-  const api = useApi();
-
+async function createOrder(api: WooCommerceRestApi<WooRestApiOptions>, customer: Customer, cart: Cart) {
   const order = {
     status: 'pending',
     customer_id: customer.id,
