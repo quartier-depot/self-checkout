@@ -13,4 +13,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['tests.setup.js'],
   },
+  server: {
+    proxy: {
+      '/wp-json': {
+        target: 'https://quartierdepot-april2024.local',
+        changeOrigin: true
+      },
+    },
+  },
 });
