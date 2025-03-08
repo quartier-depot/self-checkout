@@ -1,7 +1,6 @@
 import { QueryClient, useMutation } from '@tanstack/react-query';
-import { useApi } from '../useApi';
+import { useApi, WooCommerceRestApi } from '../useApi';
 import { Customer } from '../customers/Customer';
-import WooCommerceRestApi, { WooRestApiEndpoint, WooRestApiOptions } from 'woocommerce-rest-ts-api';
 
 export function usePayWithWallet(queryClient: QueryClient) {
   const api = useApi();
@@ -15,8 +14,8 @@ export function usePayWithWallet(queryClient: QueryClient) {
   });
 }
 
-async function payWithWallet(api: WooCommerceRestApi<WooRestApiOptions>, customer: Customer, amount: number, note: string) {
-  const response = await api.post('wallet' as WooRestApiEndpoint, {
+async function payWithWallet(api: WooCommerceRestApi, customer: Customer, amount: number, note: string) {
+  const response = await api.post('wallet', {
     email: customer.email,
     type: 'debit',
     amount: amount,

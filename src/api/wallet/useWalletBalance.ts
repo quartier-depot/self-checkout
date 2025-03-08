@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useApi } from '../useApi';
-import WooCommerceRestApi, { WooRestApiEndpoint, WooRestApiOptions } from 'woocommerce-rest-ts-api';
+import { useApi, WooCommerceRestApi } from '../useApi';
 
 export function useWalletBalance(customerEmail: string | undefined) {
   const api = useApi();
@@ -10,9 +9,9 @@ export function useWalletBalance(customerEmail: string | undefined) {
   });
 }
 
-async function getWalletBalance(api: WooCommerceRestApi<WooRestApiOptions>, customerEmail: string | undefined): Promise<number | undefined> {
+async function getWalletBalance(api: WooCommerceRestApi, customerEmail: string | undefined): Promise<number | undefined> {
   if (customerEmail) {
-    const response = await api.get('wallet/balance' as WooRestApiEndpoint, {
+    const response = await api.get('wallet/balance', {
       email: customerEmail,
     });
     return Number.parseFloat(response.data.balance);

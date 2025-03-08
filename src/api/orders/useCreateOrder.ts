@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { useApi } from '../useApi';
+import { useApi, WooCommerceRestApi } from '../useApi';
 import { Customer } from '../customers/Customer';
 import { Cart } from './Cart';
-import WooCommerceRestApi, { WooRestApiOptions } from 'woocommerce-rest-ts-api';
 
 export function useCreateOrder() {
   const api = useApi();
@@ -12,7 +11,7 @@ export function useCreateOrder() {
   });
 }
 
-async function createOrder(api: WooCommerceRestApi<WooRestApiOptions>, customer: Customer, cart: Cart) {
+async function createOrder(api: WooCommerceRestApi, customer: Customer, cart: Cart) {
   const order = {
     status: 'pending',
     customer_id: customer.id,

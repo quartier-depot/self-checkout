@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Customer } from './Customer';
 import { WooCommerceRestApiResponse } from '../WooCommerceRestApiResponse';
-import { useApi } from '../useApi';
-import WooCommerceRestApi, { WooRestApiOptions } from 'woocommerce-rest-ts-api';
+import { useApi, WooCommerceRestApi } from '../useApi';
 
 export function useCustomers() {
   const api = useApi();
@@ -12,11 +11,15 @@ export function useCustomers() {
   });
 }
 
-async function getCustomers(api: WooCommerceRestApi<WooRestApiOptions>): Promise<Customer[]> {
+async function getCustomers(api: WooCommerceRestApi): Promise<Customer[]> {
   const maximumItemsPerPage = 100;
 
   const initial = await api.get('customers');
-  const total = initial.headers['x-wp-total'];
+  const totalHeader = initial.headers.get('x-wp-total');
+  let total = 0;
+  if (totalHeader !== null) {
+    total = parseInt(totalHeader, 10);
+  }
 
   if (initial.data.length === total) {
     return initial.data;
