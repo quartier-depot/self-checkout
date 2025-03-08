@@ -25,9 +25,9 @@ parts:
 
   dist:
     plugin: dump
-    source: .
+    source: dist/
     organize:
-      dist: dist
+      "*": dist/
 
   express:
     plugin: dump
