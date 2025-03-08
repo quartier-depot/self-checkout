@@ -1,0 +1,46 @@
+name: quartier-depot-self-checkout
+base: core22
+version: "1.0"
+summary: Self Checkout for Quartier-Depot
+description: Self-checkout cash register for a self-service store using a WooCommerce backend.
+
+grade: devel
+confinement: devmode
+
+apps:
+  webserver:
+    command: bin/start-webserver.sh
+    daemon: simple
+    restart-condition: always
+    plugs:
+      - network
+      - network-bind
+
+parts:
+  node:
+    plugin: npm
+    source: .
+    npm-node-version: 22.14.0
+    npm-include-node: true
+
+  web-files:
+    plugin: dump
+    source: web
+    organize:
+      "index.html": "web/index.html"
+
+  scripts:
+    plugin: dump
+    source: bin
+    organize:
+      "start-webserver.sh": "bin/start-webserver.sh"
+    override-build: |
+      set -eux
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      install -m 755 $SNAPCRAFT_PROJECT_DIR/bin/start-webserver.sh $SNAPCRAFT_PART_INSTALL/bin/start-webserver.sh 
+
+plugs:
+  graphics-core22:
+    interface: content
+    target: $SNAP/graphics
+    default-privder: ubuntu-frame
