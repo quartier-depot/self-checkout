@@ -31,9 +31,9 @@ parts:
 
   express:
     plugin: dump
-    source: .
+    source: express
     organize:
-      "express.cjs": "express.cjs"
+      "express.cjs": "express/express.cjs"
 
   bin:
     plugin: dump
