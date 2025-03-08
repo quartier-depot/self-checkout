@@ -25,9 +25,9 @@ parts:
 
   web-files:
     plugin: dump
-    source: web
+    source: .
     organize:
-      "index.html": "web/index.html"
+      dist: dist
 
   scripts:
     plugin: dump
@@ -37,10 +37,4 @@ parts:
     override-build: |
       set -eux
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
-      install -m 755 $SNAPCRAFT_PROJECT_DIR/bin/start-webserver.sh $SNAPCRAFT_PART_INSTALL/bin/start-webserver.sh 
-
-plugs:
-  graphics-core22:
-    interface: content
-    target: $SNAP/graphics
-    default-privder: ubuntu-frame
+      install -m 755 $SNAPCRAFT_PROJECT_DIR/bin/start-webserver.sh $SNAPCRAFT_PART_INSTALL/bin/start-webserver.sh
