@@ -23,13 +23,19 @@ parts:
     npm-node-version: 22.14.0
     npm-include-node: true
 
-  web-files:
+  dist:
     plugin: dump
     source: .
     organize:
       dist: dist
 
-  scripts:
+  express:
+    plugin: dump
+    source: .
+    organize:
+      "express.cjs": "express.cjs"
+
+  bin:
     plugin: dump
     source: bin
     organize:
