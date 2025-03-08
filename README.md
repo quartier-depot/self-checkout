@@ -25,7 +25,7 @@ Note, while developing with a browser, these values are taken from the `.env.dev
 
 ## Techstack
 
-- Electron (electron-vite)
+- Vite
 - React
 - Typescript
 - Tanstack Query
@@ -35,7 +35,7 @@ Note, while developing with a browser, these values are taken from the `.env.dev
 
 Kudos to the following projects for inspiration.
 
-- Electron Vite: https://electron-vite.org/
+- Point of Sale: https://point-of-sale.dev/
 - Tailwind POS: https://github.com/emsifa/tailwind-pos
 - WooCommerce POS: https://wcpos.com / https://github.com/wcpos
 - Context/Reducer with TypeScript: https://github.com/m-oniqu3/context-reducer

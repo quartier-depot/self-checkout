@@ -1,17 +1,17 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Quartier Depot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       content="default-src 'self';connect-src 'self' https://quartierdepot-april2024.local https://quartier-depot.ch https://js.monitor.azure.com https://switzerlandnorth-0.in.applicationinsights.azure.com; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
       http-equiv="Content-Security-Policy"
     />
   </head>
-
   <body>
     <div id="root"></div>
-    <script src="/src/main.tsx" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
