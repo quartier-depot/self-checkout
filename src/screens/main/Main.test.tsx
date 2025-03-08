@@ -6,22 +6,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppInsightsContext, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 
 describe('Main', () => {
-  test.skip('on change cart quantity by +1 sets product once', async () => {
-    renderMain();
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
-    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
-  });
+    test.skip('on change cart quantity by +1 sets product once', async () => {
+        renderMain();
+        expect(screen.getByText('Loading...')).toBeInTheDocument();
+        await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
+    });
 });
 
 function renderMain() {
-  const queryClient = new QueryClient();
-  const reactPlugin = new ReactPlugin();
-  render(
-    <AppContextProvider>
-      <AppInsightsContext.Provider value={reactPlugin}>
-        <QueryClientProvider client={queryClient}>
-          <Main />
-        </QueryClientProvider>
-      </AppInsightsContext.Provider>
-    </AppContextProvider>);
+    const queryClient = new QueryClient();
+    const reactPlugin = new ReactPlugin();
+    render(
+            <AppContextProvider>
+                <AppInsightsContext.Provider value={reactPlugin}>
+                    <QueryClientProvider client={queryClient}>
+                        <Main />
+                    </QueryClientProvider>
+                </AppInsightsContext.Provider>
+            </AppContextProvider>);
 }

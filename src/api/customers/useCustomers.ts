@@ -8,7 +8,7 @@ export function useCustomers() {
   const api = useApi();
   return useQuery({
     queryKey: ['customers'],
-    queryFn: () => getCustomers(api)
+    queryFn: () => getCustomers(api),
   });
 }
 
@@ -28,8 +28,8 @@ async function getCustomers(api: WooCommerceRestApi<WooRestApiOptions>): Promise
     promises.push(
       api.get('customers', {
         per_page: maximumItemsPerPage,
-        page: i + 1
-      })
+        page: i + 1,
+      }),
     );
   }
 

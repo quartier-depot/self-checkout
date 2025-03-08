@@ -4,7 +4,7 @@ export function formatPrice(amount: unknown): string {
   }
   return Intl.NumberFormat('de-CH', {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(amount);
 }
 

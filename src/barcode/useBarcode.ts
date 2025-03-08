@@ -83,7 +83,7 @@ export const useBarcode = (callback?: (barcode: string) => void) => {
 
       lastInputTimeRef.current = currentInputTime;
     },
-    [avgTimeInputThreshold, prefix, suffix, minLength, callback]
+    [avgTimeInputThreshold, prefix, suffix, minLength, callback],
   );
 
   /**
@@ -97,7 +97,7 @@ export const useBarcode = (callback?: (barcode: string) => void) => {
         handleKeyInput(e.key);
       }
     },
-    [handleKeyInput]
+    [handleKeyInput],
   );
 
   useEffect(
@@ -111,6 +111,6 @@ export const useBarcode = (callback?: (barcode: string) => void) => {
           clearTimeout(timeoutRef.current);
         }
       };
-    }, [onKeyUp])
+    }, [onKeyUp]),
   );
 };

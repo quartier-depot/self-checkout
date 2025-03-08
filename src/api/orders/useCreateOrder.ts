@@ -8,7 +8,7 @@ export function useCreateOrder() {
   const api = useApi();
   return useMutation({
     mutationFn: async (param: { customer: Customer; cart: Cart }) =>
-      createOrder(api, param.customer, param.cart)
+      createOrder(api, param.customer, param.cart),
   });
 }
 
@@ -20,8 +20,8 @@ async function createOrder(api: WooCommerceRestApi<WooRestApiOptions>, customer:
     line_items: cart.items.map((item) => ({
       name: item.product.name,
       product_id: item.product.id,
-      quantity: item.quantity
-    }))
+      quantity: item.quantity,
+    })),
   };
 
   const response = await api.post('orders', order);

@@ -7,7 +7,7 @@ export function setCartQuantity(delta: number, product: Product): Action {
     type: CartActionTypes.SET_CART_QUANTITY,
     payload: {
       product: product,
-      quantity: delta
-    }
+      quantity: delta,
+    },
   };
 }

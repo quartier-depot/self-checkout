@@ -31,7 +31,7 @@ export const initialState: State = {
   searchTerm: '',
   cart: { price: 0, quantity: 0, items: [] },
   customer: undefined,
-  configuration: undefined
+  configuration: undefined,
 };
 
 export function reducer(state: State, action: Action) {
@@ -44,14 +44,14 @@ export function reducer(state: State, action: Action) {
       return {
         ...state,
         searchTerm: action.payload.searchTerm,
-        products: search(action.payload.searchTerm, action.payload.products)
+        products: search(action.payload.searchTerm, action.payload.products),
       };
 
 
     case ActionTypes.START_NEW_ORDER:
       return {
         ...initialState,
-        initialized: true
+        initialized: true,
       };
 
     default:
@@ -69,6 +69,6 @@ function search(searchTerm: string, products: Product[] | undefined) {
   }
 
   return products.filter(
-    (product) => product.name.includes(searchTerm) || product.artikel_id?.includes(searchTerm)
+    (product) => product.name.includes(searchTerm) || product.artikel_id?.includes(searchTerm),
   );
 }

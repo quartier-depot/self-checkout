@@ -7,11 +7,11 @@ export function usePayWithWallet(queryClient: QueryClient) {
   const api = useApi();
   return useMutation({
     mutationFn: async (param: { customer: Customer; amount: number; note: string }) => {
-      return await payWithWallet(api, param.customer, param.amount, param.note)
+      return await payWithWallet(api, param.customer, param.amount, param.note);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries( {queryKey: ['wallet'] });
-    }
+      await queryClient.invalidateQueries({ queryKey: ['wallet'] });
+    },
   });
 }
 
@@ -20,7 +20,7 @@ async function payWithWallet(api: WooCommerceRestApi<WooRestApiOptions>, custome
     email: customer.email,
     type: 'debit',
     amount: amount,
-    note: note
+    note: note,
   });
 
   if (response.data.response === 'error') {

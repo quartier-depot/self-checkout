@@ -7,7 +7,7 @@ export function changeCartQuantity(delta: number, product: Product): Action {
     type: CartActionTypes.CHANGE_CART_QUANTITY,
     payload: {
       product: product,
-      quantity: delta
-    }
+      quantity: delta,
+    },
   };
 }

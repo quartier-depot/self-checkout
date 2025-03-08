@@ -8,8 +8,8 @@ export const server = setupServer(...handlers);
 
 beforeAll(() => {
   server.listen({
-      onUnhandledRequest: 'error'
-    }
+      onUnhandledRequest: 'error',
+    },
   );
 });
 

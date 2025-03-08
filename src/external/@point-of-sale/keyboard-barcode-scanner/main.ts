@@ -35,7 +35,7 @@ class KeyboardBarcodeScanner {
       debug: false,
       timing: 'auto',
       guessSymbology: true,
-      allowedSymbologies: []
+      allowedSymbologies: [],
     }, options || {});
 
     this.#internal = {
@@ -48,8 +48,8 @@ class KeyboardBarcodeScanner {
       keystrokes: 0,
       timestamp: {
         first: null,
-        last: null
-      }
+        last: null,
+      },
     };
 
     if (this.#options.timing !== 'auto' && typeof this.#options.timing === 'number') {
@@ -70,13 +70,17 @@ class KeyboardBarcodeScanner {
     this.#close();
   }
 
+  addEventListener(n: any, f: any) {
+    this.#internal.emitter.on(n, f);
+  }
+
   async #open() {
     document.addEventListener('keydown', this.#internal.keydown);
     // @ts-ignore
     this.#internal.interval = setInterval(() => this.#check(), 50);
 
     this.#internal.emitter.emit('connected', {
-      type: 'keyboard'
+      type: 'keyboard',
     });
   }
 
@@ -176,7 +180,7 @@ class KeyboardBarcodeScanner {
         let keyMapping = {
           'Enter': 0x0d,
           'Tab': 0x09,
-          'Escape:': 0x1b
+          'Escape:': 0x1b,
         };
 
         // @ts-ignore
@@ -238,15 +242,15 @@ class KeyboardBarcodeScanner {
           // @ts-ignore
           `received ${this.#internal.keystrokes} keystrokes in ${parseInt(this.#internal.timestamp.last - this.#internal.timestamp.first, 10)}ms, ` +
           // @ts-ignore
-          `that is an average of ${parseInt((this.#internal.timestamp.last - this.#internal.timestamp.first) / this.#internal.keystrokes, 10)}ms per keystroke`
+          `that is an average of ${parseInt((this.#internal.timestamp.last - this.#internal.timestamp.first) / this.#internal.keystrokes, 10)}ms per keystroke`,
         );
       }
 
       let result: any = {
         value: String.fromCharCode.apply(null, buffer),
         bytes: [
-          new Uint8Array(buffer)
-        ]
+          new Uint8Array(buffer),
+        ],
       };
 
       /* If the last character of value is a carriage return, remove it */
@@ -309,12 +313,8 @@ class KeyboardBarcodeScanner {
     this.#internal.keystrokes = 0;
     this.#internal.timestamp = {
       first: null,
-      last: null
+      last: null,
     };
-  }
-
-  addEventListener(n: any, f: any) {
-    this.#internal.emitter.on(n, f);
   }
 }
 

@@ -5,7 +5,7 @@ import WooCommerceRestApi, { WooRestApiEndpoint, WooRestApiOptions } from 'wooco
 export function useUpdateOrder() {
   const api = useApi();
   return useMutation({
-    mutationFn: async (update: OrderUpdate) => updateOrder(api, update)
+    mutationFn: async (update: OrderUpdate) => updateOrder(api, update),
   });
 }
 

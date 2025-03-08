@@ -11,8 +11,8 @@ export function useApi() {
     version: 'wc/v3',
     queryStringAuth: false,
     axiosConfig: {
-      insecureHTTPParser: true
-    }
+      insecureHTTPParser: true,
+    },
   };
 
   return new WooCommerceRestApi(options);

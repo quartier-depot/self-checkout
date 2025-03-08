@@ -6,7 +6,8 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 
 ### Configuration
 
-A configuration file is expected to be at `<userData>/config.json` (i.e. `/Users/<usr>/Library/Application Support/self-checkout/config.json` on Mac)
+A configuration file is expected to be at `<userData>/config.json` (
+i.e. `/Users/<usr>/Library/Application Support/self-checkout/config.json` on Mac)
 
 ```json
 {

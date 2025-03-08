@@ -6,14 +6,14 @@ export function useWalletBalance(customerEmail: string | undefined) {
   const api = useApi();
   return useQuery({
     queryKey: ['wallet', customerEmail ? customerEmail : 'undefined'],
-    queryFn: async () => await getWalletBalance(api, customerEmail)
+    queryFn: async () => await getWalletBalance(api, customerEmail),
   });
 }
 
 async function getWalletBalance(api: WooCommerceRestApi<WooRestApiOptions>, customerEmail: string | undefined): Promise<number | undefined> {
   if (customerEmail) {
     const response = await api.get('wallet/balance' as WooRestApiEndpoint, {
-      email: customerEmail
+      email: customerEmail,
     });
     return Number.parseFloat(response.data.balance);
   } else {

@@ -9,7 +9,7 @@ describe('customerReducer', () => {
     test('on set customer sets customer', () => {
       const actual = reducer(
         withoutCustomer,
-        setCustomer(customer)
+        setCustomer(customer),
       );
 
       expect(actual.customer).toBe(customer);
@@ -33,6 +33,6 @@ const customer: Customer = {
     address_2: 'address_2',
     city: 'city',
     postcode: '8000',
-    country: 'country'
-  }
+    country: 'country',
+  },
 };

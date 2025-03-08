@@ -8,7 +8,7 @@ export function useProducts() {
   const api = useApi();
   return useQuery({
     queryKey: ['products'],
-    queryFn: () => getProducts(api)
+    queryFn: () => getProducts(api),
   });
 }
 
@@ -16,7 +16,7 @@ async function getProducts(api: WooCommerceRestApi<WooRestApiOptions>): Promise<
   const maximumItemsPerPage = 100;
 
   const initial = await api.get('products', {
-    status: 'publish'
+    status: 'publish',
   });
   const total = initial.headers['x-wp-total'];
 
@@ -31,8 +31,8 @@ async function getProducts(api: WooCommerceRestApi<WooRestApiOptions>): Promise<
       api.get('products', {
         status: 'publish',
         per_page: maximumItemsPerPage,
-        page: i + 1
-      })
+        page: i + 1,
+      }),
     );
   }
 

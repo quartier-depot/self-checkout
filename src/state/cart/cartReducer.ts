@@ -8,19 +8,19 @@ export function cartReducer(state: State, action: Action) {
     case CartActionTypes.CHANGE_CART_QUANTITY:
       return {
         ...state,
-        cart: changeCartQuantity(state.cart, action.payload)
+        cart: changeCartQuantity(state.cart, action.payload),
       };
 
     case CartActionTypes.SET_CART_QUANTITY:
       return {
         ...state,
-        cart: setCartQuantity(state.cart, action.payload)
+        cart: setCartQuantity(state.cart, action.payload),
       };
 
     case CartActionTypes.EMPTY_CART:
       return {
         ...state,
-        cart: { ...initialState.cart }
+        cart: { ...initialState.cart },
       };
 
     default:
@@ -58,7 +58,7 @@ function changeCartQuantity(cart: Cart, delta: Item) {
 
   const quantity = items.reduce(
     (accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0),
-    0
+    0,
   );
   return { price, quantity, items };
 }
@@ -92,7 +92,7 @@ function setCartQuantity(cart: Cart, delta: Item) {
 
   const quantity = items.reduce(
     (accumulator, item) => accumulator + (item.quantity !== undefined ? item.quantity : 0),
-    0
+    0,
   );
   return { price, quantity, items };
 }

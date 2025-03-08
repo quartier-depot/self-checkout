@@ -8,7 +8,7 @@ export function customerReducer(state: State, action: Action) {
     case CustomerActionTypes.SET_CUSTOMER:
       return {
         ...state,
-        customer: action.payload
+        customer: action.payload,
       };
 
     default:

@@ -3,6 +3,6 @@ import { CartActionTypes } from './cartAction';
 
 export function emptyCart(): Action {
   return {
-    type: CartActionTypes.EMPTY_CART
+    type: CartActionTypes.EMPTY_CART,
   };
 }

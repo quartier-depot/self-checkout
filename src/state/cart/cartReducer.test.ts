@@ -13,7 +13,7 @@ describe('cartReducer', () => {
     test('on change cart quantity by +1 sets product once', () => {
       const actual = reducer(
         withoutProducts,
-        changeCartQuantity(1, product)
+        changeCartQuantity(1, product),
       );
 
       expectProductOnce(actual);
@@ -22,7 +22,7 @@ describe('cartReducer', () => {
     test('on set cart quantity to 2 sets product twice', () => {
       const actual = reducer(
         withoutProducts,
-        setCartQuantity(2, product)
+        setCartQuantity(2, product),
       );
 
       expectProductTwice(actual);
@@ -31,7 +31,7 @@ describe('cartReducer', () => {
     test('on empty cart empties cart', () => {
       const actual = reducer(
         withoutProducts,
-        emptyCart()
+        emptyCart(),
       );
 
       expectEmptyCart(actual);
@@ -43,7 +43,7 @@ describe('cartReducer', () => {
     test('on change cart quantity by +1 sets product twice', () => {
       const actual = reducer(
         withProductOnce,
-        changeCartQuantity(1, product)
+        changeCartQuantity(1, product),
       );
 
       expectProductTwice(actual);
@@ -52,7 +52,7 @@ describe('cartReducer', () => {
     test('on change cart quantity by -1 empties cart', () => {
       const actual = reducer(
         withProductOnce,
-        changeCartQuantity(-1, product)
+        changeCartQuantity(-1, product),
       );
 
       expectEmptyCart(actual);
@@ -61,7 +61,7 @@ describe('cartReducer', () => {
     test('on set cart quantity to 2 sets product twice', () => {
       const actual = reducer(
         withProductOnce,
-        setCartQuantity(2, product)
+        setCartQuantity(2, product),
       );
 
       expectProductTwice(actual);
@@ -73,7 +73,7 @@ describe('cartReducer', () => {
     test('on change cart quantity by +1 sets product twice', () => {
       const actual = reducer(
         withProductThreeTimes,
-        changeCartQuantity(-1, product)
+        changeCartQuantity(-1, product),
       );
 
       expectProductTwice(actual);
@@ -111,7 +111,7 @@ const product: Product = {
   name: 'name',
   slug: 'slug',
   barcode: 'barcode',
-  external_url: 'external_url'
+  external_url: 'external_url',
 };
 
 const withProductOnce: State = {
@@ -119,8 +119,8 @@ const withProductOnce: State = {
   cart: {
     price: product.price,
     quantity: 1,
-    items: [{ product: product, quantity: 1 }]
-  }
+    items: [{ product: product, quantity: 1 }],
+  },
 };
 
 const withProductThreeTimes: State = {
@@ -128,6 +128,6 @@ const withProductThreeTimes: State = {
   cart: {
     price: product.price * 3,
     quantity: 3,
-    items: [{ product: product, quantity: 3 }]
-  }
+    items: [{ product: product, quantity: 3 }],
+  },
 };
