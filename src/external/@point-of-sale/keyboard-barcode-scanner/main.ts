@@ -1,5 +1,6 @@
-import EventEmitter from '../event-emitter.js';
-import { Aim, GS1, Detector } from '@point-of-sale/barcode-parser';
+import EventEmitter from '../event-emitter.ts';
+// @ts-ignore
+import { Aim, Detector, GS1 } from '@point-of-sale/barcode-parser';
 
 class KeyboardBarcodeScanner {
 
@@ -29,31 +30,30 @@ class KeyboardBarcodeScanner {
   #timeoutAfterLastKeystroke = 200;
 
 
-
-  constructor(options) {
+  constructor(options?: any) {
     this.#options = Object.assign({
       debug: false,
       timing: 'auto',
       guessSymbology: true,
-      allowedSymbologies: [],
-    }, options || {})
+      allowedSymbologies: []
+    }, options || {});
 
     this.#internal = {
-      state:          'unknown',
-      command:        [],
-      keydown:        this.#keydown.bind(this),
-      interval:       null,
-      emitter:        new EventEmitter(),
-      buffer:         [],
-      keystrokes:     0,
-      timestamp:      {
-        first:      null,
-        last:       null
-      },
+      state: 'unknown',
+      command: [],
+      keydown: this.#keydown.bind(this),
+      interval: null,
+      emitter: new EventEmitter(),
+      buffer: [],
+      keystrokes: 0,
+      timestamp: {
+        first: null,
+        last: null
+      }
     };
 
     if (this.#options.timing !== 'auto' && typeof this.#options.timing === 'number') {
-      this.#timeBetweenKeystrokes = this.#options.timing
+      this.#timeBetweenKeystrokes = this.#options.timing;
       this.#timeoutAfterLastKeystroke = this.#options.timing * 5;
     }
   }
@@ -72,21 +72,23 @@ class KeyboardBarcodeScanner {
 
   async #open() {
     document.addEventListener('keydown', this.#internal.keydown);
+    // @ts-ignore
     this.#internal.interval = setInterval(() => this.#check(), 50);
 
     this.#internal.emitter.emit('connected', {
-      type:       'keyboard'
+      type: 'keyboard'
     });
   }
 
   async #close() {
     document.removeEventListener('keydown', this.#internal.keydown);
+    // @ts-ignore
     clearInterval(this.#internal.interval);
 
     this.#internal.emitter.emit('disconnected');
   }
 
-  #keydown(e) {
+  #keydown(e: any) {
     let now = performance.now();
 
     /* Do not process if the event target is a form field */
@@ -109,14 +111,17 @@ class KeyboardBarcodeScanner {
     /* Set the starting timestamp for this - perhaps series of - keydown events */
 
     if (this.#internal.timestamp.first === null) {
+      // @ts-ignore
       this.#internal.timestamp.first = now; // e.timeStamp;
     }
 
     /* Parse buffer on timeout */
 
     if (this.#internal.keystrokes > 1 && this.#internal.state === 'unknown') {
+      // @ts-ignore
       if (now - this.#internal.timestamp.last > this.#timeBetweenKeystrokes) {
         if (this.#options.debug) {
+          // @ts-ignore
           console.log(`forcing parse because ${this.#timeBetweenKeystrokes}ms since last keydown`, now, this.#internal.timestamp.last, now - this.#internal.timestamp.last);
         }
 
@@ -128,6 +133,7 @@ class KeyboardBarcodeScanner {
     /* If we've received more than 2 keystrokes in less than 30ms each, we're in data mode */
 
     if (this.#internal.keystrokes > 2 && this.#internal.state === 'unknown') {
+      // @ts-ignore
       if (now - this.#internal.timestamp.first < this.#internal.keystrokes * 30) {
         this.#internal.state = 'data';
       }
@@ -139,15 +145,14 @@ class KeyboardBarcodeScanner {
 
       if (this.#internal.state !== 'command') {
         this.#internal.state = 'command';
-      }
-
-      else if (this.#internal.state === 'command') {
+      } else if (this.#internal.state === 'command') {
         this.#command();
         this.#internal.state = 'data';
       }
 
       if (this.#internal.buffer.length > 0) {
         this.#internal.keystrokes++;
+        // @ts-ignore
         this.#internal.timestamp.last = now;
       }
 
@@ -161,6 +166,7 @@ class KeyboardBarcodeScanner {
       /* Just a regular keypress */
 
       if (e.key.length === 1) {
+        // @ts-ignore
         this.#internal.buffer.push(e.key.charCodeAt(0));
       }
 
@@ -168,21 +174,24 @@ class KeyboardBarcodeScanner {
 
       else {
         let keyMapping = {
-          'Enter':    0x0d,
-          'Tab':      0x09,
-          'Escape:':  0x1b
-        }
+          'Enter': 0x0d,
+          'Tab': 0x09,
+          'Escape:': 0x1b
+        };
 
+        // @ts-ignore
         if (keyMapping[e.key]) {
+          // @ts-ignore
           this.#internal.buffer.push(keyMapping[e.key]);
         }
       }
-    }
-    else {
+    } else {
+      // @ts-ignore
       this.#internal.command.push({ key: e.key, code: e.code });
     }
 
     this.#internal.keystrokes++;
+    // @ts-ignore
     this.#internal.timestamp.last = now;
   }
 
@@ -193,8 +202,10 @@ class KeyboardBarcodeScanner {
       return;
     }
 
+    // @ts-ignore
     if (now - this.#internal.timestamp.last > this.#timeoutAfterLastKeystroke) {
       if (this.#options.debug) {
+        // @ts-ignore
         console.log(`forcing parse because ${this.#timeoutAfterLastKeystroke}ms have passed`, now, this.#internal.timestamp.last, now - this.#internal.timestamp.last);
       }
 
@@ -210,24 +221,28 @@ class KeyboardBarcodeScanner {
 
     let command = this.#internal.command.shift();
 
+    // @ts-ignore
     if (command.code == 'AltLeft') {
-      let payload = this.#internal.command.map(c => c.key).join('');
+      let payload = this.#internal.command.map((c: any) => c.key).join('');
+      // @ts-ignore
       this.#internal.buffer.push(parseInt(payload, 10));
     }
 
     this.#internal.command = [];
   }
 
-  #parse(buffer) {
+  #parse(buffer: any) {
     if (buffer.length > 4) {
       if (this.#options.debug) {
         console.log(
+          // @ts-ignore
           `received ${this.#internal.keystrokes} keystrokes in ${parseInt(this.#internal.timestamp.last - this.#internal.timestamp.first, 10)}ms, ` +
+          // @ts-ignore
           `that is an average of ${parseInt((this.#internal.timestamp.last - this.#internal.timestamp.first) / this.#internal.keystrokes, 10)}ms per keystroke`
         );
       }
 
-      let result = {
+      let result: any = {
         value: String.fromCharCode.apply(null, buffer),
         bytes: [
           new Uint8Array(buffer)
@@ -281,8 +296,7 @@ class KeyboardBarcodeScanner {
       /* Emit the barcode event */
 
       if (this.#options.allowedSymbologies.length === 0 ||
-        this.#options.allowedSymbologies.includes(result.symbology))
-      {
+        this.#options.allowedSymbologies.includes(result.symbology)) {
         this.#internal.emitter.emit('barcode', result);
       }
     }
@@ -294,12 +308,12 @@ class KeyboardBarcodeScanner {
     this.#internal.state = 'unknown';
     this.#internal.keystrokes = 0;
     this.#internal.timestamp = {
-      first:      null,
-      last:       null
+      first: null,
+      last: null
     };
   }
 
-  addEventListener(n, f) {
+  addEventListener(n: any, f: any) {
     this.#internal.emitter.on(n, f);
   }
 }

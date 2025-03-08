@@ -24,22 +24,12 @@ const developmentConfiguration: Configuration = {
   electron: false
 };
 
-const isElectron = 'undefined' != typeof window && 'object' == typeof window.process && 'renderer' === window.process.type || (!('undefined' == typeof process || 'object' != typeof process.versions || !process.versions.electron) || 'object' == typeof navigator && 'string' == typeof navigator.userAgent && navigator.userAgent.indexOf('Electron') >= 0);
-
 function App() {
   const { dispatch, state } = useAppContext();
   const [reactPlugin, setReactPlugin] = useState<ReactPlugin | undefined>(undefined);
 
   useEffect(() => {
-    if (isElectron) {
-      const getConfiguration = async () => {
-        const config = await window.api.getConfig();
-        dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: config });
-      };
-      getConfiguration().catch((e) => console.log(e));
-    } else {
       dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: developmentConfiguration });
-    }
   }, []);
 
   useEffect(() => {

@@ -21,6 +21,7 @@
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.2.0",
     "classnames": "2.5.1",
+    "http-server": "14.1.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "tailwindcss": "4.0.12",
@@ -37,6 +38,7 @@
     "eslint-plugin-react-refresh": "0.4.19",
     "globals": "15.15.0",
     "jsdom": "26.0.0",
+    "msw": "2.7.3",
     "typescript": "5.7.2",
     "typescript-eslint": "8.24.1",
     "vite": "6.2.0"
