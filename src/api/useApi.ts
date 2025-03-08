@@ -1,5 +1,3 @@
-import { useConfiguration } from '../state/configuration/useConfiguration';
-
 export interface WooCommerceRestApi {
   get: (path: string, params?: any) => Promise<{ status: number, headers: Headers, data: any}>;
   post: (path: string, data: any, params?: any) => Promise<{ status: number, headers: Headers, data: any }>;
@@ -10,10 +8,8 @@ export interface WooCommerceRestApi {
  * The intention was to use @woocommerce/woocommerce-rest-api but there are problems with the crypto create HMAC functionality used internally.
  */
 export function useApi(): WooCommerceRestApi {
-  const configuration = useConfiguration();
-
   const options = {
-    url: configuration.woocommerce.url,
+    url: '.',
     version: 'wc/v3',
     queryStringAuth: false,
   };
