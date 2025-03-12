@@ -2,13 +2,18 @@ const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const path = require('path');
 const dotenv = require('dotenv');
+const { useAzureMonitor } = require("@azure/monitor-opentelemetry");
+const { NodeTracerProvider } = require('@opentelemetry/sdk-trace-node');
+const { registerInstrumentations } = require('@opentelemetry/instrumentation');
+const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
+const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
 
 const snap = process.env.SNAP;
 
 let root = "";
 let config = {
   woocommerce: {},
-  appInsights: {}
+  applicationInsights: {}
 };
 
 if (snap) {   // executed in snap environment
@@ -19,11 +24,25 @@ if (snap) {   // executed in snap environment
 }
 
 // set config
-config.woocommerce.url = process.env.WOOCOMMERCE_URL;
-config.woocommerce.consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
-config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
-config.appInsights.connectionString = process.env.APPINSIGHTS_CONNECTION_STRING;
-console.log(config);
+config.woocommerce.url = process.env.WOOCOMMERCE_URL || process.env.VITE_WOOCOMMERCE_URL;
+config.woocommerce.consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY || process.env.VITE_WOOCOMMERCE_CONSUMER_KEY;
+config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET || process.env.VITE_WOOCOMMERCE_CONSUMER_SECRE;
+config.applicationInsights.connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING;
+
+
+// setup open telemetry
+useAzureMonitor();
+
+const provider = new NodeTracerProvider();
+provider.register();
+
+registerInstrumentations({
+  instrumentations: [
+    // Express instrumentation expects HTTP layer to be instrumented
+    new HttpInstrumentation(),
+    new ExpressInstrumentation(),
+  ],
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,7 +60,7 @@ app.use('/wp-json', createProxyMiddleware({
 
 // Configuration
 app.get('/api/configuration', (_, res) => {
-  res.json({ appInsights: config.appInsights});
+  res.json({ applicationInsights: config.applicationInsights});
 });
 
 // Fallback to index.html for SPA
