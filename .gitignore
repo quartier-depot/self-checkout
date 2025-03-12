@@ -1,3 +1,6 @@
+# build
+quartier-depot-self-checkout*
+
 # env
 .env
 .env.development
