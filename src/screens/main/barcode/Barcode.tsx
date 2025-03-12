@@ -47,6 +47,7 @@ export function Barcode() {
     function memberInput(barcode: string) {
         const memberId = barcode.substring('qdm'.length).replaceAll('\'', '-');
         if (!customersQuery.data) {
+            console.log("Member barcode not processed because customersQuery.data is "+customersQuery.data)
             return;
         }
 
