@@ -33,7 +33,7 @@ config.applicationInsights.connectionString = process.env.APPLICATIONINSIGHTS_CO
 // setup open telemetry
 const options = {
   azureMonitorExporterOptions: {
-    connectionString: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
+    connectionString: config.applicationInsights.connectionString
   },
 }
 useAzureMonitor(options);
