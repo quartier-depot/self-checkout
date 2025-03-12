@@ -22,7 +22,7 @@ async function getCustomers(api: WooCommerceRestApi): Promise<Customer[]> {
   }
 
   if (initial.data.length === total) {
-    return initial.data;
+    return initial.data.map((customer:any) => new Customer(customer));
   }
 
   const numberOfRequests = Math.ceil(total / maximumItemsPerPage);
