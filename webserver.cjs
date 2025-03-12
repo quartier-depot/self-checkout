@@ -31,7 +31,12 @@ config.applicationInsights.connectionString = process.env.APPLICATIONINSIGHTS_CO
 
 
 // setup open telemetry
-useAzureMonitor();
+const options = {
+  azureMonitorExporterOptions: {
+    connectionString: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING
+  },
+}
+useAzureMonitor(options);
 
 const provider = new NodeTracerProvider();
 provider.register();
