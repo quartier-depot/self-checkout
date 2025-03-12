@@ -13,20 +13,17 @@ let config = {
 
 if (snap) {   // executed in snap environment
   root = path.join(snap, 'dist');
-  config.url = "";
-  config.woocommerce.url = "";
-  config.woocommerce.consumerKey = "";
-  config.woocommerce.consumerSecret = "";
-  config.appInsights.connectionString = "";
-
 } else { // executed in development environment
   root = path.join(__dirname, '..', 'dist');
   dotenv.config({path: path.join(__dirname, '..', '.env')});
-  config.woocommerce.url = process.env.VITE_WOOCOMMERCE_URL;
-  config.woocommerce.consumerKey = process.env.VITE_WOOCOMMERCE_CONSUMER_KEY;
-  config.woocommerce.consumerSecret = process.env.VITE_WOOCOMMERCE_CONSUMER_SECRET;
-  config.appInsights.connectionString = process.env.VITE_APPINSIGHTS_CONNECTION_STRING;
 }
+
+// set config
+config.woocommerce.url = process.env.WOOCOMMERCE_URL;
+config.woocommerce.consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY;
+config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET;
+config.appInsights.connectionString = process.env.APPINSIGHTS_CONNECTION_STRING;
+console.log(config);
 
 const app = express();
 const PORT = process.env.PORT || 3000;

@@ -15,7 +15,23 @@ apps:
     plugs:
       - network
       - network-bind
-
+    options:
+      woocommerce-url:
+        type: string
+        default: https://webshop.quartier-depot.ch/
+        description: The WooCommerce root url
+      woocommerce-consumer-key:
+        type: string
+        default: ck
+        description: The WooCommerce consumer key
+      woocommerce-consumer-secret:
+        type: string
+        default: cs
+        description: The WooCommerce consumer secret
+      appinsights-connection-string:
+        type: string
+        default: appInsights
+        description: The AppInsights connection string
 parts:
   node:
     plugin: npm
