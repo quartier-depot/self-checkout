@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
       setupFiles: ['tests.setup.js'],
     },
     server: {
+      host: true,
       proxy: {
         '/wp-json': {
           target: env.VITE_WOOCOMMERCE_URL,
