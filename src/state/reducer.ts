@@ -20,7 +20,7 @@ export type Configuration = {
     consumerKey: string;
     consumerSecret: string;
   },
-  appInsights: {
+  applicationInsights: {
     connectionString: string
   }
   electron: boolean

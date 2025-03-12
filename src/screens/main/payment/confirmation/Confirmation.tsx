@@ -12,11 +12,11 @@ type Props = {
 }
 
 export function Confirmation(props: Props) {
-    const appInsights = useAppInsightsContext();
+    const applicationInsights = useAppInsightsContext();
 
     function close(choice: string) {
         console.log('tracking' + choice);
-        appInsights.getAppInsights().trackEvent({ name: 'survey' }, { choice: choice });
+        applicationInsights.getAppInsights().trackEvent({ name: 'survey' }, { choice: choice });
         props.onClose();
     }
 

@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/wp-json': {
-          target: process.env.VITE_WOOCOMMERCE_URL,
+          target: env.VITE_WOOCOMMERCE_URL,
           changeOrigin: true,
           auth: `${env.VITE_WOOCOMMERCE_CONSUMER_KEY}:${env.VITE_WOOCOMMERCE_CONSUMER_SECRET}`,
           secure: false

@@ -18,7 +18,7 @@ const developmentConfiguration: Configuration = {
         consumerKey: import.meta.env.VITE_WOOCOMMERCE_CONSUMER_KEY,
         consumerSecret: import.meta.env.VITE_WOOCOMMERCE_CONSUMER_SECRET
     },
-    appInsights: {
+    applicationInsights: {
         connectionString: import.meta.env.VITE_APPINSIGHTS_CONNECTION_STRING
     },
     electron: false
@@ -30,22 +30,30 @@ function App() {
 
     useEffect(() => {
         dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: developmentConfiguration });
-    }, []);
 
-    useEffect(() => {
-        if (state.configuration) {
-            const reactPlugin = new ReactPlugin();
-            const appInsights = new ApplicationInsights({
-                config: {
-                    connectionString: state.configuration.appInsights.connectionString,
-                    enableAutoRouteTracking: true,
-                    extensions: [reactPlugin]
-                }
-            });
-            appInsights.loadAppInsights();
-            setReactPlugin(reactPlugin);
+        async function bootstrap() {
+            const url = "/api/configuration";
+            const response = await fetch(url);
+            if (response.ok) {
+                const configuration = await response.json();
+                dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: configuration });
+
+                const reactPlugin = new ReactPlugin();
+                const appInsights = new ApplicationInsights({
+                    config: {
+                        connectionString: configuration.applicationInsights.connectionString,
+                        enableAutoRouteTracking: true,
+                        extensions: [reactPlugin]
+                    }
+                });
+                appInsights.loadAppInsights();
+                setReactPlugin(reactPlugin);
+            } else {
+                throw new Error('Cannot load configuration, return code ' + response.status);
+            }
         }
-    }, [state.configuration]);
+        bootstrap();
+    }, []);
 
     if (!reactPlugin || !state.configuration) {
         return <h1>Loading configuration...</h1>;
