@@ -6,23 +6,13 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 
 ### Configuration
 
-A configuration file is expected to be at `<userData>/config.json` (
-i.e. `/Users/<usr>/Library/Application Support/self-checkout/config.json` on Mac)
+- [Configurable](https://docs.snapcraft.io/configuration-in-snaps/510) properties:
+    - `woocommerce-url`
+    - `woocommerce-consumer-key`
+    - `woocommerce-consumer-secret`
+    - `appinsights-connection-string`
 
-```json
-{
-  "woocommerce": {
-    "url": "https://...",
-    "consumerKey": "ck_42...",
-    "consumerSecret": "cs_42..."
-  },
-  "appInsights": {
-    "connectionString": "InstrumentationKey=42..."
-  }
-}
-```
-
-Note, while developing with a browser, these values are taken from the `.env.development` file.
+Note, while developing with a browser, these values are taken from the `.env` file.
 
 ## Techstack
 
