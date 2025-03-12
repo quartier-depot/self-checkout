@@ -9,4 +9,4 @@ WOOCOMMERCE_CONSUMER_KEY=$(snapctl get woocommerce-consumer-key)
 WOOCOMMERCE_CONSUMER_SECRET=$(snapctl get woocommerce-consumer-secret)
 APPINSIGHTS_CONNECTION_STRING=$(snapctl get appinsights-connection-string)
 
-$SNAP/bin/node $SNAP/node_modules/quartier-depot-self-checkout/webserver.cjs
+$SNAP/bin/node $SNAP/lib/node_modules/self-checkout/webserver.cjs
