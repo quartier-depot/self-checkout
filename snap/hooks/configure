@@ -1,2 +1,2 @@
 #!/bin/bash -e
-snapctl res
+snapctl restart "$SNAP_NAME"
