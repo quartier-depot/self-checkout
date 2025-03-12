@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Customer } from './Customer';
-import { WooCommerceRestApiResponse } from '../WooCommerceRestApiResponse';
 import { useApi, WooCommerceRestApi } from '../useApi';
 
 export function useCustomers() {

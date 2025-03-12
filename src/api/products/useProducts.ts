@@ -16,6 +16,7 @@ async function getProducts(api: WooCommerceRestApi): Promise<Product[]> {
   const initial = await api.get('products', {
     status: 'publish',
     per_page: maximumItemsPerPage,
+    page: 1
   });
   const totalPages = parseInt(initial.headers.get('x-wp-totalpages') || '0');
 
