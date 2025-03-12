@@ -1,6 +1,6 @@
 name: quartier-depot-self-checkout
 base: core22
-version: "1.0"
+version: "0.0.1"
 summary: Self Checkout for Quartier-Depot
 description: Self-checkout cash register for a self-service store using a WooCommerce backend.
 
@@ -8,7 +8,7 @@ grade: devel
 confinement: devmode
 
 apps:
-  webserver:
+  quartier-depot-self-checkout:
     command: bin/start-webserver.sh
     daemon: simple
     restart-condition: always
@@ -28,12 +28,6 @@ parts:
     source: dist/
     organize:
       "*": dist/
-
-  express:
-    plugin: dump
-    source: express
-    organize:
-      "express.cjs": "express/express.cjs"
 
   bin:
     plugin: dump
