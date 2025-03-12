@@ -6,33 +6,23 @@ import { Main } from './screens/main/Main';
 import { useEffect, useState } from 'react';
 import { ConfigurationActionTypes } from './state/configuration/configurationAction';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import { Configuration } from './state/reducer';
 import { useAppContext } from './context/useAppContext';
 
-const queryClient = new QueryClient();
-
-// configuration taken from .env.development file
-const developmentConfiguration: Configuration = {
-    woocommerce: {
-        url: import.meta.env.VITE_WOOCOMMERCE_URL,
-        consumerKey: import.meta.env.VITE_WOOCOMMERCE_CONSUMER_KEY,
-        consumerSecret: import.meta.env.VITE_WOOCOMMERCE_CONSUMER_SECRET
-    },
-    applicationInsights: {
-        connectionString: import.meta.env.VITE_APPINSIGHTS_CONNECTION_STRING
-    },
-    electron: false
-};
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            networkMode: 'always' // Force queries to execute regardless of browser's online/offline detection (webkit issue)
+        }
+    }
+});
 
 function App() {
     const { dispatch, state } = useAppContext();
     const [reactPlugin, setReactPlugin] = useState<ReactPlugin | undefined>(undefined);
 
     useEffect(() => {
-        dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: developmentConfiguration });
-
         async function bootstrap() {
-            const url = "/api/configuration";
+            const url = '/api/configuration';
             const response = await fetch(url);
             if (response.ok) {
                 const configuration = await response.json();
@@ -52,6 +42,7 @@ function App() {
                 throw new Error('Cannot load configuration, return code ' + response.status);
             }
         }
+
         bootstrap();
     }, []);
 
