@@ -4,15 +4,11 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 
 ## Install
 
-### Configuration
-
-- [Configurable](https://docs.snapcraft.io/configuration-in-snaps/510) properties:
-    - `woocommerce-url`
-    - `woocommerce-consumer-key`
-    - `woocommerce-consumer-secret`
-    - `appinsights-connection-string`
-
-Note, while developing with a browser, these values are taken from the `.env` file.
+1. Setup [Ubuntu Core 22](https://ubuntu.com/core/docs/install-with-dd)
+2. `snap install ubuntu-frame`
+3. `snap install wpe-webkit-mit-kiosk`
+4. `snap set wpe-webkit-mit-kiosk url=http://localhost:3000`
+5. `snap set quartier-depot-self-checkout woocommerce-url=... woocommerce-consumer-key=... woocommerce-consumer-secret=... appinsights-connection-string=...`
 
 ## Techstack
 
@@ -21,6 +17,10 @@ Note, while developing with a browser, these values are taken from the `.env` fi
 - Typescript
 - Tanstack Query
 - Tailwind
+
+## Development
+
+While developing with a browser, configuration values are taken from the `.env` file. 
 
 ## Credits
 
