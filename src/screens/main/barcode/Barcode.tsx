@@ -6,6 +6,7 @@ import { useAppContext } from '../../../context/useAppContext';
 import { setCustomer } from '../../../state/customer/setCustomer';
 import { changeCartQuantity } from '../../../state/cart/changeCartQuantity';
 import { Product } from '../../../api/products/Product';
+import { Customer } from '../../../api/customers/Customer.ts';
 
 interface BarcodeEvent {
     value: string;
@@ -18,40 +19,42 @@ export function Barcode() {
     const customersQuery = useCustomers();
 
     useEffect(() => {
-        const keyboardScanner = new KeyboardBarcodeScanner();
-        keyboardScanner.addEventListener('connected', () => {
-            console.log(`Connected to barcode scanner(s) in keyboard emulation mode.`);
-        });
-        keyboardScanner.addEventListener('disconnected', () => {
-            console.log(`Disconnected from barcode scanner(s) in keyboard emulation mode.`);
-        });
-        keyboardScanner.connect();
-        keyboardScanner.addEventListener('barcode', handleBarcodeEvent);
+        if (productsQuery.isSuccess && customersQuery.isSuccess) {
+            const keyboardScanner = new KeyboardBarcodeScanner();
+            keyboardScanner.addEventListener('connected', () => {
+                console.log(`Connected to barcode scanner(s) in keyboard emulation mode.`);
+            });
+            keyboardScanner.addEventListener('disconnected', () => {
+                console.log(`Disconnected from barcode scanner(s) in keyboard emulation mode.`);
+            });
+            keyboardScanner.connect();
+            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customersQuery.data, productsQuery.data));
 
-        return () => {
-            keyboardScanner.disconnect();
-        };
-    }, []);
+            return () => {
+                keyboardScanner.disconnect();
+            };
+        }
+    }, [productsQuery.status, customersQuery.status]);
 
-    function handleBarcodeEvent(e: BarcodeEvent) {
+    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[]) {
         if (!(e.value)) {
             return;
         }
         if (e.value.startsWith('qdm')) {
-            memberInput(e.value);
+            memberInput(e.value, customers);
         } else {
-            barcodeInput(e);
+            barcodeInput(e, products);
         }
     }
 
-    function memberInput(barcode: string) {
+    function memberInput(barcode: string, customers: Customer[]) {
         const memberId = barcode.substring('qdm'.length).replaceAll('\'', '-');
-        if (!customersQuery.data) {
-            console.log("Member barcode not processed because customersQuery.data is "+customersQuery.data)
+        if (!customers || customers.length === 0) {
+            console.log('Member barcode not processed because customersQuery.data is ' + customers);
             return;
         }
 
-        const customer = customersQuery.data.find((customer) => customer.member_id === memberId);
+        const customer = customers.find((customer) => customer.member_id === memberId);
         if (customer) {
             dispatch(setCustomer(customer));
         } else {
@@ -59,17 +62,18 @@ export function Barcode() {
         }
     }
 
-    function barcodeInput(barcodeEvent: BarcodeEvent) {
-        if (!productsQuery.data) {
+    function barcodeInput(barcodeEvent: BarcodeEvent, products: Product[]) {
+        if (!products || products.length === 0) {
+            console.log('Products barcode not processed because products is ' + products);
             return;
         }
 
-        let products: Product[] = [];
+        let matchingProducts: Product[] = [];
         switch (barcodeEvent.symbology) {
             case 'qr-code':
                 const id = getProductId(barcodeEvent.value);
                 if (id) {
-                    products = productsQuery.data.filter((product: Product) => {
+                    matchingProducts = products.filter((product: Product) => {
                         return product.id === id;
                     });
                     break;
@@ -77,7 +81,7 @@ export function Barcode() {
 
                 const slug = getProductSlug(barcodeEvent.value);
                 if (slug) {
-                    products = productsQuery.data.filter((product: Product) => {
+                    matchingProducts = products.filter((product: Product) => {
                         return product.slug === slug;
                     });
                     break;
@@ -87,17 +91,17 @@ export function Barcode() {
                 break;
 
             default:
-                products = productsQuery.data.filter((product: Product) => {
+                matchingProducts = products.filter((product: Product) => {
                     return product.barcode === barcodeEvent.value;
                 });
         }
 
-        switch (products.length) {
+        switch (matchingProducts.length) {
             case 0:
                 console.log('Nothing found for ' + barcodeEvent.value);
                 break;
             case 1:
-                dispatch(changeCartQuantity(1, products[0]));
+                dispatch(changeCartQuantity(1, matchingProducts[0]));
                 break;
             default:
                 console.log('Found multiple found for ' + barcodeEvent.value);
