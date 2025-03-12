@@ -14,32 +14,31 @@ export function useCustomers() {
 async function getCustomers(api: WooCommerceRestApi): Promise<Customer[]> {
   const maximumItemsPerPage = 100;
 
-  const initial = await api.get('customers');
-  const totalHeader = initial.headers.get('x-wp-total');
-  let total = 0;
-  if (totalHeader !== null) {
-    total = parseInt(totalHeader, 10);
-  }
-
-  if (initial.data.length === total) {
-    return initial.data.map((customer:any) => new Customer(customer));
-  }
-
-  const numberOfRequests = Math.ceil(total / maximumItemsPerPage);
-  const promises: Promise<WooCommerceRestApiResponse<any>>[] = [];
-  for (let i = 0; i < numberOfRequests; i++) {
-    promises.push(
-      api.get('customers', {
-        per_page: maximumItemsPerPage,
-        page: i + 1,
-      }),
-    );
-  }
+  const initial = await api.get('customers',
+    {
+      per_page: maximumItemsPerPage,
+      page: 1,
+    });
+  const totalPages = parseInt(initial.headers.get('x-wp-totalpages') || '0');
 
   let customers: any[] = [];
-  const responses = await Promise.all(promises);
-  for (const response of responses) {
-    customers = customers.concat(response.data);
+  if (totalPages === 1) {
+    customers = initial.data;
+  } else {
+    const promises: Promise<any>[] = [];
+    for (let i = 1; i < totalPages; i++) {
+      promises.push(
+        api.get('customers', {
+          per_page: maximumItemsPerPage,
+          page: i + 1,
+        }),
+      );
+    }
+
+    const responses = await Promise.all(promises);
+    for (const response of responses) {
+      customers = customers.concat(response.data);
+    }
   }
 
   return customers.map((customer) => new Customer(customer));
