@@ -22,25 +22,41 @@ function App() {
 
     useEffect(() => {
         async function bootstrap() {
-            const url = '/api/configuration';
-            const response = await fetch(url);
-            if (response.ok) {
-                const configuration = await response.json();
-                dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: configuration });
 
-                const reactPlugin = new ReactPlugin();
-                const appInsights = new ApplicationInsights({
-                    config: {
-                        connectionString: configuration.applicationInsights.connectionString,
-                        enableAutoRouteTracking: true,
-                        extensions: [reactPlugin]
+            let configuration = undefined;
+            if (import.meta.env.VITE_WOOCOMMERCE_URL) {
+                configuration = {
+                    woocommerce: {
+                        url: import.meta.env.VITE_WOOCOMMERCE_URL,
+                        consumerKey: import.meta.env.VITE_WOOCOMMERCE_CONSUMER_KEY,
+                        consumerSecret: import.meta.env.VITE_WOOCOMMERCE_CONSUMER_SECRET
+                    },
+                    applicationInsights: {
+                        connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING
                     }
-                });
-                appInsights.loadAppInsights();
-                setReactPlugin(reactPlugin);
+                }
             } else {
-                throw new Error('Cannot load configuration, return code ' + response.status);
+                const url = '/api/configuration';
+                const response = await fetch(url);
+                if (response.ok) {
+                    configuration = await response.json();
+                } else {
+                    throw new Error('Cannot load configuration, return code ' + response.status);
+                }
             }
+
+            dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: configuration });
+
+            const reactPlugin = new ReactPlugin();
+            const appInsights = new ApplicationInsights({
+                config: {
+                    connectionString: configuration.applicationInsights.connectionString,
+                    enableAutoRouteTracking: true,
+                    extensions: [reactPlugin]
+                }
+            });
+            appInsights.loadAppInsights();
+            setReactPlugin(reactPlugin);
         }
 
         bootstrap();
@@ -51,15 +67,15 @@ function App() {
     }
 
     return (
-            <AppInsightsContext.Provider value={reactPlugin}>
-                <AppInsightsErrorBoundary onError={() => <h1>Something went wrong</h1>} appInsights={reactPlugin}>
-                    <QueryClientProvider client={queryClient}>
-                        <Main />
-                        {/*<Styleguide />*/}
-                        <ReactQueryDevtools initialIsOpen={false} />
-                    </QueryClientProvider>
-                </AppInsightsErrorBoundary>
-            </AppInsightsContext.Provider>
+        <AppInsightsContext.Provider value={reactPlugin}>
+            <AppInsightsErrorBoundary onError={() => <h1>Something went wrong</h1>} appInsights={reactPlugin}>
+                <QueryClientProvider client={queryClient}>
+                    <Main />
+                    {/*<Styleguide />*/}
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
+            </AppInsightsErrorBoundary>
+        </AppInsightsContext.Provider>
     );
 }
 

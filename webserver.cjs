@@ -16,16 +16,13 @@ const snap = process.env.SNAP;
 if (snap) {   // executed in snap environment
   root = path.join(snap, 'dist');
 } else { // executed in development environment
-  root = path.join(__dirname, '..', 'dist');
-  const dotenv = require('dotenv');
-  dotenv.config({path: path.join(__dirname, '..', '.env')});
+  root = path.join(__dirname, 'dist');
 }
 
 config.woocommerce.url = process.env.WOOCOMMERCE_URL || process.env.VITE_WOOCOMMERCE_URL;
 config.woocommerce.consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY || process.env.VITE_WOOCOMMERCE_CONSUMER_KEY;
-config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET || process.env.VITE_WOOCOMMERCE_CONSUMER_SECRE;
+config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET || process.env.VITE_WOOCOMMERCE_CONSUMER_SECRET;
 config.applicationInsights.connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING;
-
 
 // tracking
 const options = {
