@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import { ConfigurationActionTypes } from './state/configuration/configurationAction';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { useAppContext } from './context/useAppContext';
+import { BrowserRouter, Route, Routes } from 'react-router';
+import { Styleguide } from './screens/styleguide/Styleguide';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -70,8 +72,12 @@ function App() {
         <AppInsightsContext.Provider value={reactPlugin}>
             <AppInsightsErrorBoundary onError={() => <h1>Something went wrong</h1>} appInsights={reactPlugin}>
                 <QueryClientProvider client={queryClient}>
-                    <Main />
-                    {/*<Styleguide />*/}
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<Main />} />
+                            <Route path="styleguide" element={<Styleguide />} />
+                        </Routes>
+                    </BrowserRouter>
                     <ReactQueryDevtools initialIsOpen={false} />
                 </QueryClientProvider>
             </AppInsightsErrorBoundary>
