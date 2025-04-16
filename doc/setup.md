@@ -50,9 +50,20 @@
 1. `sudo editor /etc/pam.d/gdm-password`, add `auth sufficient pam_succeed_if.so user ingroup nopasswdlogin`
 1. `sudo gpasswd --add kasse nopasswdlogin`
 1. As "kasse":
-1. Accessiblity > Screen Keyboard > on
-1. Open browser, set on screen Keyboard to 
+1. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644
 
+## firefox-kiosk.desktop
+
+```
+[Desktop Entry]
+Type=Application
+Exec=firefox --kiosk http://localhost:3000
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Firefox Kiosk Mode
+Comment=Start Firefox in kiosk mode on login
+```
 
 todo:
 1. Remove the logout option from the system menu: `gsettings set org.gnome.desktop.lockdown disable-log-out true` (see also https://help.gnome.org/admin/system-admin-guide/stable/dconf-lockdown.html.en)
