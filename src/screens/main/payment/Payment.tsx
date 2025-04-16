@@ -73,8 +73,8 @@ export function Payment() {
                             disabled={!paymentEnabled}
                             onClick={handlePayment}
                             className={classNames(
-                                    'rounded-2xl w-full mt-2 p-2 border-2 uppercase',
-                                    { 'text-slate-950 bg-slate-300 border-slate-300 active:border-slate-200 active:bg-slate-200': !paymentEnabled },
+                                    'rounded-lg w-full mt-2 p-2 border-2 uppercase text-white',
+                                    { 'text-slate-950 bg-slate-500 border-slate-500 active:border-slate-400 active:bg-slate-400': !paymentEnabled },
                                     { 'text-white bg-emerald-700 border-emerald-700  active:border-emerald-600 active:bg-emerald-600': paymentEnabled }
                             )}
                     >

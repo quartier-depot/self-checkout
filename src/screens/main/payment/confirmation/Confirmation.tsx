@@ -32,19 +32,19 @@ export function Confirmation(props: Props) {
                     <p className={'font-bold'}>Welche Funktionalität wünschst du dir am meisten?</p>
                 </div>
                 <div className=" p-4 flex justify-end gap-2">
-                    <button className={'rounded-2xl text-lg w-full py-3 focus:outline-none text-white bg-emerald-700 h-96'}
+                    <button className={'rounded-lg text-lg w-full py-3 focus:outline-none text-white bg-emerald-700 h-96'}
                             onClick={() => close('abo')}>Anzeige<br /> deiner aktuellen <br />Abo-Bestellung
                     </button>
-                    <button className={'rounded-2xl text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
+                    <button className={'rounded-lg text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
                             onClick={() => close('favoriten')}>Anzeige<br /> deiner meistgekauften<br /> Artikel
                     </button>
-                    <button className={'rounded-2xl text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
+                    <button className={'rounded-lg text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
                             onClick={() => close('twint')}>Bezahlen <br />mit Twint
                     </button>
-                    <button className={'rounded-2xl text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
+                    <button className={'rounded-lg text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
                             onClick={() => close('wallet')}>Bezahlen<br />mit Bezahlkarte<br />im Handy-Wallet
                     </button>
-                    <button className={'rounded-2xl text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
+                    <button className={'rounded-lg text-lg w-full py-3 focus:outline-none text-white bg-emerald-700'}
                             onClick={() => close('badge')}>Bezahlen <br />mit Schlüssel-Badge
                     </button>
                 </div>

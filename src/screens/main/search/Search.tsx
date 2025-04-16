@@ -38,7 +38,7 @@ export function Search() {
     }
 
     return (
-            <div className={`flex flex-row px-8 m-2 relative border-2 border-slate-500 rounded-full`}>
+            <div className={`flex flex-row px-8 m-2 relative border-2 border-emerald-700 rounded-full`}>
                 <div className={'absolute left-1 top-1 p-2 rounded-full bg-emerald-700'}>
                     <img src={magnifier} alt="magnifier" className={'h-6 w-6'} />
                 </div>

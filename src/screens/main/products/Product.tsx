@@ -18,7 +18,7 @@ export function Product({ product }: ProductProps) {
             <div
                     role="button"
                     className={
-                        'select-none cursor-pointer transition- overflow-hidden rounded-2xl bg-slate-50  p-2 text-center'
+                        'select-none cursor-pointer transition- overflow-hidden rounded-lg bg-slate-50  p-2 text-center'
                     }
                     onClick={handleAddToCart}
             >

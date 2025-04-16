@@ -19,7 +19,7 @@ export function Styleguide() {
 
                 <div className={'bg-slate-50 p-2'}>
                     <button
-                            className={'rounded-lg w-full py-2 bg-slate-500 text-white border-4 border-slate-500 active:border-slate-200 active:bg-slate-200 uppercase'}>Disabled
+                            className={'rounded-lg w-full py-2 bg-slate-500 text-white border-4 border-slate-500 active:border-slate-400 active:bg-slate-400 uppercase'}>Disabled
                         Button
                     </button>
                 </div>
