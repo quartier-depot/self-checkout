@@ -5,11 +5,7 @@ import * as React from 'react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useProducts } from '../../../api/products/useProducts';
 
-type SearchProps = {
-    className?: string
-}
-
-export function Search(props: SearchProps) {
+export function Search() {
     const { dispatch, state } = useAppContext();
     const productQuery = useProducts();
     const [inputValue, setInputValue] = useState('');
@@ -42,14 +38,14 @@ export function Search(props: SearchProps) {
     }
 
     return (
-            <div className={`flex flex-row px-2 my-2 relative ${props.className}`}>
-                <div className={'absolute left-5 top-3 p-2 rounded-full bg-emerald-700'}>
+            <div className={`flex flex-row px-8 m-2 relative border-2 border-slate-500 rounded-full`}>
+                <div className={'absolute left-1 top-1 p-2 rounded-full bg-emerald-700'}>
                     <img src={magnifier} alt="magnifier" className={'h-6 w-6'} />
                 </div>
                 <input
                         type="text"
                         className={
-                            'bg-white rounded-3xl shadow text-lg full w-full h-16 py-4 pl-16 transition-shadow focus:shadow-2xl focus:outline-none'
+                            'text-xl full w-full h-12 py-2 pl-6 focus:outline-none placeholder:text-slate-500'
                         }
                         placeholder="Suche"
                         value={inputValue}

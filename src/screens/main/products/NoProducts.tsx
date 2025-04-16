@@ -5,7 +5,7 @@ export function NoProducts() {
             <>
                 <div
                         className={
-                            'select-none bg-slate-400 rounded-3xl flex flex-wrap content-center justify-center h-full opacity-25'
+                            'select-none bg-slate-400  flex flex-wrap content-center justify-center h-full opacity-25'
                         }
                 >
                     <div className={'w-full text-center'}>

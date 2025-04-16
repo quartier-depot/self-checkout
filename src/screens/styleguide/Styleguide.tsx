@@ -12,22 +12,14 @@ export function Styleguide() {
 
                 <div className={'bg-slate-50 p-2'}>
                     <button
-                            className={'rounded-lg w-full py-4 bg-emerald-700 text-white border-4 border-emerald-700 active:border-emerald-600 active:bg-emerald-600 uppercase'}>Primary
+                            className={'rounded-lg w-full py-2 bg-emerald-700 text-white border-4 border-emerald-700 active:border-emerald-600 active:bg-emerald-600 uppercase'}>Primary
                         Button
                     </button>
                 </div>
 
                 <div className={'bg-slate-50 p-2'}>
                     <button
-                            className={'rounded-lg w-full py-4 bg-slate-500 text-white border-4 border-slate-500 active:border-slate-200 active:bg-slate-200 uppercase'}>Disabled
-                        Button
-                    </button>
-                </div>
-
-
-                <div className={'bg-slate-50 p-2'}>
-                    <button
-                            className={'rounded-lg w-full py-4 bg-emerald-400 border-4 border-emerald-400 text-emerald-950 active:border-emerald-300 active:bg-emerald-300 uppercase'}>Secondary
+                            className={'rounded-lg w-full py-2 bg-slate-500 text-white border-4 border-slate-500 active:border-slate-200 active:bg-slate-200 uppercase'}>Disabled
                         Button
                     </button>
                 </div>
@@ -35,14 +27,22 @@ export function Styleguide() {
 
                 <div className={'bg-slate-50 p-2'}>
                     <button
-                            className={'rounded-lg w-full py-4 bg-emerald-400 border-4 border-emerald-700 text-emerald-950 active:border-emerald-300 active:bg-emerald-300 uppercase'}>Secondary
+                            className={'rounded-lg w-full py-2 bg-emerald-400 border-4 border-emerald-400 text-emerald-950 active:border-emerald-300 active:bg-emerald-300 uppercase'}>Secondary
+                        Button
+                    </button>
+                </div>
+
+
+                <div className={'bg-slate-50 p-2'}>
+                    <button
+                            className={'rounded-lg w-full py-2 bg-emerald-400 border-4 border-emerald-700 text-emerald-950 active:border-emerald-300 active:bg-emerald-300 uppercase'}>Secondary
                         Button toggled
                     </button>
                 </div>
 
                 <div className={'bg-slate-50 p-2'}>
                     <button
-                            className={'rounded-lg w-full py-4 border-4 border-slate-500 uppercase text-slate-950'}>Tertiary
+                            className={'rounded-lg w-full py-2 border-4 border-slate-500 uppercase text-slate-950'}>Tertiary
                         Button
                     </button>
                 </div>

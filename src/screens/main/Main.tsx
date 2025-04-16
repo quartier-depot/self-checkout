@@ -16,14 +16,14 @@ export function Main() {
 
     return (
             <>
-                <div className={'text-slate-950 text-xl h-screen flex flex-row hide-print bg-slate-100'}>
-                    <div className={'w-3/5 bg-white rounded-3xl m-2 shadow p-1 flex flex-col'}>
+                <div className={'bg-slate-950 text-slate-950 h-screen flex flex-row hide-print'}>
+                    <div className={'w-3/5 bg-slate-50 p-2 flex flex-col'}>
                         <Search />
                         <Products className={'grow'} />
                     </div>
                     <div className={'w-2/5 flex flex-col'}>
-                        <Customer className={'bg-white rounded-3xl shadow p-3'} />
-                        <div className={'bg-white rounded-3xl m-2 shadow p-2 grow flex flex-col overflow-hidden'}>
+                        <Customer className={'bg-slate-50 p-3 ml-3 mb-3 mt-0 mr-0'} />
+                        <div className={'bg-slate-50 ml-3 mb-0 mt-0 mr-0 p-2 grow flex flex-col overflow-hidden'}>
                             <Cart />
                             <Payment />
                         </div>
