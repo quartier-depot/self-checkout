@@ -9,6 +9,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { useAppContext } from './context/useAppContext';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
+import { Statistics } from './screens/statistics/Statistics';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -76,6 +77,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Main />} />
                             <Route path="styleguide" element={<Styleguide />} />
+                            <Route path="statistics" element={<Statistics />} />
                         </Routes>
                     </BrowserRouter>
                     <ReactQueryDevtools initialIsOpen={false} />
