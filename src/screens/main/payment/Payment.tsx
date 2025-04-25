@@ -1,7 +1,6 @@
 import { useAppContext } from '../../../context/useAppContext';
 import { formatPrice } from '../../../format/formatPrice';
 import { useWalletBalance } from '../../../api/wallet/useWalletBalance';
-import classNames from 'classnames';
 import { useCreateOrder } from '../../../api/orders/useCreateOrder';
 import { usePayWithWallet } from '../../../api/wallet/usePayWithWallet';
 import { useUpdateOrder } from '../../../api/orders/useUpdateOrder';
@@ -24,7 +23,7 @@ export function Payment() {
     const [orderId, setOrderId] = useState('');
 
     const paymentEnabled =
-            walletQuery.isSuccess && walletQuery.data && walletQuery.data >= state.cart.price;
+        walletQuery.isSuccess && walletQuery.data && walletQuery.data >= state.cart.price;
 
     const queryClient = useQueryClient();
     const createOrderMutation = useCreateOrder();
@@ -64,19 +63,19 @@ export function Payment() {
     }
 
     return (
-            <>
-                <div className={'w-full text-center mt-2 '}>
-                    <div className={'flex font-mono'}>
-                        <div>TOTAL</div>
-                        <div className={'text-right w-full'}>CHF {formatPrice(state.cart.price)}</div>
-                    </div>
-                    <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>Bezahlen</Button>
+        <>
+            <div className={'w-full text-center mt-2 '}>
+                <div className={'flex font-mono'}>
+                    <div>TOTAL</div>
+                    <div className={'text-right w-full'}>CHF {formatPrice(state.cart.price)}</div>
                 </div>
+                <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>Bezahlen</Button>
+            </div>
 
-                {showLoading && <Loading />}
+            {showLoading && <Loading />}
 
-                {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
-                                                   transactionId={transactionId} onClose={closeThankYou} />}
-            </>
+            {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
+                transactionId={transactionId} onClose={closeThankYou} />}
+        </>
     );
 }
