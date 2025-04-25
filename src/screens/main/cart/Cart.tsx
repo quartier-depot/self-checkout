@@ -6,10 +6,12 @@ import { Item } from './Item';
 import { Numpad } from '../../../components/numpad/Numpad';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { setCartQuantity } from '../../../state/cart/setCartQuantity';
+import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 
 export function Cart() {
     const { state } = useAppContext();
     const { dispatch } = useAppContext();
+    const applicationInsights = useAppInsightsContext();
 
     const [dialogItem, setDialogItem] = useState<ItemType | null>(null);
 
@@ -20,6 +22,10 @@ export function Cart() {
     function closeDialog(quantity: number): void {
         dispatch(setCartQuantity(quantity, dialogItem!.product));
         setDialogItem(null);
+    }
+
+    function reportError(item: ItemType): void {
+        applicationInsights.getAppInsights().trackEvent({ name: 'product-error' }, { location: 'cart', product: item.product.artikel_id });
     }
 
     return (
@@ -54,7 +60,12 @@ export function Cart() {
                 </table>
             </div>
 
-            {dialogItem && <Dialog><Numpad text={dialogItem.product.name} value={dialogItem.quantity} onChange={(quantity) => closeDialog(quantity)} /></Dialog>}
+            {dialogItem && <Dialog><Numpad
+                text={dialogItem.product.name}
+                value={dialogItem.quantity}
+                onChange={(quantity) => closeDialog(quantity)}
+                onReportError={() => reportError(dialogItem)} />
+            </Dialog>}
         </>
     );
 }

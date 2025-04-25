@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Button } from "../button/Button";
+import classNames from "classnames";
 
 type NumpadProps = {
     value: number,
     text: string,
     onChange: (value: number) => void
+    onReportError?: () => void
 }
 
-export function Numpad({ value, text, onChange }: NumpadProps) {
+export function Numpad({ value, text, onChange, onReportError }: NumpadProps) {
     const [count, setCount] = useState(value);
+    const [errorReported, setErrorReported] = useState(false);
 
     const increase = () => {
         setCount(count + 1);
@@ -26,6 +29,11 @@ export function Numpad({ value, text, onChange }: NumpadProps) {
 
     const removeLastNumber = () => {
         setCount(Math.floor(count / 10));
+    }
+
+    const reportError = () => {
+        setErrorReported(true);
+        onReportError!();
     }
 
     const onOk = () => {
@@ -67,7 +75,10 @@ export function Numpad({ value, text, onChange }: NumpadProps) {
             <div>
                 <Button onClick={() => add(3)} type={'secondary'} className={'py-4'}>3</Button>
             </div>
-            <div />
+            {onReportError && <div className={classNames('text-center mt-6', { 'text-rose-500': !errorReported })} onClick={reportError}>
+                {errorReported ? 'Fehler gemeldet, Danke' : 'Fehler melden'}
+            </div>}
+            {!onReportError && <div />}
             <div><Button onClick={() => add(0)} type={'secondary'} className={'py-4'} disabled={count === 0}>0</Button></div>
             <div><Button onClick={removeLastNumber} type={'secondary'} className={'py-4 font-bold'} disabled={count === 0}>⌫</Button></div>
             <div className={'col-span-3'}><Button onClick={onOk} type={'primary'} className={'py-4'}>OK</Button></div>
