@@ -1,12 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { Product } from './Product';
 import { useApi, WooCommerceRestApi } from '../useApi';
 
-export function useProducts() {
+export function useProducts(options?: Omit<UseQueryOptions<Product[], Error>, 'queryKey' | 'queryFn'>) {
   const api = useApi();
   return useQuery({
     queryKey: ['products'],
     queryFn: () => getProducts(api),
+    ...options
   });
 }
 

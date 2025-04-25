@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { useProducts } from '../../api/products/useProducts';
 
 export const Statistics: React.FC = () => {
-    const productsQuery = useProducts();
     const [showMissingBarcodes, setShowMissingBarcodes] = useState(false);
 
-    if (productsQuery.isLoading) {
+    const { data: products = [], isLoading, isError, error } = useProducts({
+        refetchInterval: 5 * 60 * 1000,
+    });
+
+    if (isLoading) {
         return <div>Loading products...</div>;
     }
 
-    if (productsQuery.isError) {
-        return <div>Error loading products: {productsQuery.error.message}</div>;
+    if (isError) {
+        return <div>Error loading products: {error.message}</div>;
     }
 
-    const products = productsQuery.data || [];
     const totalProducts = products.length;
     
     // Calculate barcode statistics
@@ -108,7 +110,7 @@ export const Statistics: React.FC = () => {
                                 <div className="grid gap-2">
                                     {productsWithoutBarcode.map(product => (
                                         <div key={product.id} className="p-2 bg-slate-100 rounded">
-                                            <div ><span className="font-medium">{product.artikel_id}</span> {product.name}</div>
+                                            <div><span className="font-medium">{product.artikel_id}</span> {product.name}</div>
                                         </div>
                                     ))}
                                 </div>
