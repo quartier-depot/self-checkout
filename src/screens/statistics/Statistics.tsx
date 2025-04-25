@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useProducts } from '../../api/products/useProducts';
 
+const NO_BARCODE_VALUE = 'KEIN BARCODE';
+
 export const Statistics: React.FC = () => {
     const [showMissingBarcodes, setShowMissingBarcodes] = useState(false);
 
@@ -17,10 +19,10 @@ export const Statistics: React.FC = () => {
     }
 
     const totalProducts = products.length;
-    
+
     // Calculate barcode statistics
-    const noBarcode = products.filter(product => product.barcode === 'KEIN BARCODE').length;
-    const hasValidBarcode = products.filter(product => product.barcode && product.barcode !== 'KEIN BARCODE').length;
+    const noBarcode = products.filter(product => product.barcode === NO_BARCODE_VALUE).length;
+    const hasValidBarcode = products.filter(product => product.barcode && product.barcode !== NO_BARCODE_VALUE).length;
     const productsWithoutBarcode = products.filter(product => !product.barcode);
 
     // Calculate percentages
@@ -30,62 +32,63 @@ export const Statistics: React.FC = () => {
 
     return (
         <div className="p-4">
-            <h1 className="text-2xl font-bold mb-6">Statistics</h1>
+            <h1 className="text-2xl font-bold mb-6">Statistik</h1>
             <div className="space-y-6">
                 <div className="bg-slate-50 p-4 rounded-lg shadow">
-                    <h2 className="text-lg font-semibold mb-4">Total Products: {totalProducts}</h2>
-                    
+                    <h2 className="text-lg font-semibold mb-4">Total Produkte: {totalProducts}</h2>
+
                     {/* Visual Bar Chart */}
                     <div className="mb-6">
                         <div className="w-full h-8 flex rounded-lg overflow-hidden">
-                            <div 
-                                className="bg-yellow-500 h-full" 
-                                style={{ width: `${noBarcodePercentage}%` }}
-                                title={`KEIN BARCODE: ${noBarcodePercentage}%`}
-                            />
-                            <div 
-                                className="bg-emerald-500 h-full" 
+
+                            <div
+                                className="bg-emerald-500 h-full"
                                 style={{ width: `${hasValidBarcodePercentage}%` }}
-                                title={`Valid Barcode: ${hasValidBarcodePercentage}%`}
+                                title={`Mit Barcode: ${hasValidBarcodePercentage}%`}
                             />
-                            <div 
-                                className="bg-red-500 h-full" 
+                            <div
+                                className="bg-yellow-500 h-full"
+                                style={{ width: `${noBarcodePercentage}%` }}
+                                title={`Ohne Barcode: ${noBarcodePercentage}%`}
+                            />
+                            <div
+                                className="bg-red-500 h-full"
                                 style={{ width: `${missingBarcodePercentage}%` }}
-                                title={`Missing Barcode: ${missingBarcodePercentage}%`}
+                                title={`Nicht erfasst: ${missingBarcodePercentage}%`}
                             />
                         </div>
-                        {/* Legend */}
                         <div className="mt-4 flex flex-wrap gap-4">
                             <div className="flex items-center">
                                 <div className="w-4 h-4 bg-red-500 rounded mr-2" />
-                                <span>KEIN BARCODE</span>
+                                <span>Ohne Barcode</span>
                             </div>
                             <div className="flex items-center">
                                 <div className="w-4 h-4 bg-emerald-500 rounded mr-2" />
-                                <span>Valid Barcode</span>
+                                <span>Mit Barcode</span>
                             </div>
                             <div className="flex items-center">
                                 <div className="w-4 h-4 bg-yellow-500 rounded mr-2" />
-                                <span>Missing Barcode</span>
+                                <span>Nicht erfasst</span>
                             </div>
                         </div>
                     </div>
 
                     <div className="space-y-4">
                         <div>
-                            <h3 className="font-medium">Products with 'KEIN BARCODE'</h3>
-                            <p className="text-emerald-700">
-                                {noBarcode} products ({noBarcodePercentage}%)
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="font-medium">Products with valid barcode</h3>
+                            <h3 className="font-medium">Produkte mit Barcode</h3>
                             <p className="text-emerald-700">
                                 {hasValidBarcode} products ({hasValidBarcodePercentage}%)
                             </p>
                         </div>
                         <div>
-                            <h3 className="font-medium">Products without barcode</h3>
+                            <h3 className="font-medium">Produkte ohne Barcode</h3>
+                            <p className="text-emerald-700">
+                                {noBarcode} products ({noBarcodePercentage}%)
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 className="font-medium">Nicht erfasste Produkte</h3>
                             <p className="text-emerald-700">
                                 {productsWithoutBarcode.length} products ({missingBarcodePercentage}%)
                             </p>
@@ -93,13 +96,12 @@ export const Statistics: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Products without barcode list */}
                 <div className="bg-slate-50 p-4 rounded-lg shadow">
-                    <button 
+                    <button
                         onClick={() => setShowMissingBarcodes(!showMissingBarcodes)}
                         className="w-full flex justify-between items-center text-left font-semibold text-lg mb-2"
                     >
-                        <span>Products Without Barcode ({productsWithoutBarcode.length})</span>
+                        <span>Nicht erfasste Produkte: ({productsWithoutBarcode.length})</span>
                         <span className="text-emerald-700">{showMissingBarcodes ? '▼' : '▶'}</span>
                     </button>
                     {showMissingBarcodes && (
