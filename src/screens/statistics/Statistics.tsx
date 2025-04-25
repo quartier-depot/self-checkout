@@ -39,7 +39,7 @@ export const Statistics: React.FC = () => {
                     <div className="mb-6">
                         <div className="w-full h-8 flex rounded-lg overflow-hidden">
                             <div 
-                                className="bg-red-500 h-full" 
+                                className="bg-yellow-500 h-full" 
                                 style={{ width: `${noBarcodePercentage}%` }}
                                 title={`KEIN BARCODE: ${noBarcodePercentage}%`}
                             />
@@ -49,7 +49,7 @@ export const Statistics: React.FC = () => {
                                 title={`Valid Barcode: ${hasValidBarcodePercentage}%`}
                             />
                             <div 
-                                className="bg-yellow-500 h-full" 
+                                className="bg-red-500 h-full" 
                                 style={{ width: `${missingBarcodePercentage}%` }}
                                 title={`Missing Barcode: ${missingBarcodePercentage}%`}
                             />
