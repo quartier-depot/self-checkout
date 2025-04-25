@@ -78,7 +78,7 @@ function setCartQuantity(cart: Cart, delta: Item) {
         return item;
       }
     });
-    if (!Number.isNaN(delta.quantity) && delta.quantity != 0) {
+    if (delta.quantity === 0 || Number.isNaN(delta.quantity)) {
       items = items.filter((item) => item.quantity > 0);
     }
   } else {

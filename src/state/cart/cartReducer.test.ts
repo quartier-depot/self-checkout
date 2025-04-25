@@ -66,6 +66,15 @@ describe('cartReducer', () => {
 
       expectProductTwice(actual);
     });
+
+    test('on set cart quantity to 0 empties cart', () => {
+      const actual = reducer(
+        withProductOnce,
+        setCartQuantity(0, product),
+      );
+
+      expectEmptyCart(actual);
+    });
   });
 
   describe('when cart contains product three times', () => {
