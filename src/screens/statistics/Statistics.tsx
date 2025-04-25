@@ -59,12 +59,12 @@ export const Statistics: React.FC = () => {
                         </div>
                         <div className="mt-4 flex flex-wrap gap-4">
                             <div className="flex items-center">
-                                <div className="w-4 h-4 bg-red-500 rounded mr-2" />
-                                <span>Ohne Barcode</span>
-                            </div>
-                            <div className="flex items-center">
                                 <div className="w-4 h-4 bg-emerald-500 rounded mr-2" />
                                 <span>Mit Barcode</span>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="w-4 h-4 bg-red-500 rounded mr-2" />
+                                <span>Ohne Barcode</span>
                             </div>
                             <div className="flex items-center">
                                 <div className="w-4 h-4 bg-yellow-500 rounded mr-2" />
