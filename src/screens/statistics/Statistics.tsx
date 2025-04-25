@@ -32,7 +32,6 @@ export const Statistics: React.FC = () => {
 
     return (
         <div className={'p-4'}>
-            <h1 className={'text-2xl font-bold mb-6'}>Statistik</h1>
             <div className={'space-y-6'}>
                 <div className={'bg-slate-50 p-4 rounded-lg shadow'}>
                     <h2 className={'text-lg font-semibold mb-4'}>Total Produkte: {totalProducts}</h2>
