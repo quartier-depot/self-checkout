@@ -77,20 +77,20 @@ export const Statistics: React.FC = () => {
                         <div>
                             <h3 className="font-medium">Produkte mit Barcode</h3>
                             <p className="text-emerald-700">
-                                {hasValidBarcode} products ({hasValidBarcodePercentage}%)
+                                {hasValidBarcode} Produkte ({hasValidBarcodePercentage}%)
                             </p>
                         </div>
                         <div>
                             <h3 className="font-medium">Produkte ohne Barcode</h3>
                             <p className="text-emerald-700">
-                                {noBarcode} products ({noBarcodePercentage}%)
+                                {noBarcode} Produkte ({noBarcodePercentage}%)
                             </p>
                         </div>
 
                         <div>
                             <h3 className="font-medium">Nicht erfasste Produkte</h3>
                             <p className="text-emerald-700">
-                                {productsWithoutBarcode.length} products ({missingBarcodePercentage}%)
+                                {productsWithoutBarcode.length} Produkte ({missingBarcodePercentage}%)
                             </p>
                         </div>
                     </div>
