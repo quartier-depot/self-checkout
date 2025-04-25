@@ -1,13 +1,14 @@
-import { Product } from '../../../api/products/Product';
+import { Item as ItemType } from '../../../api/orders/Cart';
 import { formatPrice } from '../../../format/formatPrice';
 
 interface ItemProps {
-    item: { product: Product; quantity: number };
+    item: ItemType;
+    onClick: (item: ItemType) => void;
 }
 
-export function Item({ item }: ItemProps) {
+export function Item({ item, onClick }: ItemProps) {
     return (
-            <tr>
+            <tr onClick={() => onClick(item)}>
                 <td>{item.quantity}</td>
                 <td className={`truncate`}>
                     {item.product.name} ({item.product.artikel_id?.substring(0, 3)})
