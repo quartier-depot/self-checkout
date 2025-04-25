@@ -11,34 +11,70 @@ export function useCustomers() {
 }
 
 async function getCustomers(api: WooCommerceRestApi): Promise<Customer[]> {
-  const maximumItemsPerPage = 100;
+  try {
+    const maximumItemsPerPage = 100;
 
-  const initial = await api.get('customers',
-    {
-      per_page: maximumItemsPerPage,
-      page: 1,
+    const initial = await api.get('customers',
+      {
+        per_page: maximumItemsPerPage,
+        page: 1,
+      });
+
+    if (!initial.headers) {
+      throw new Error('No headers received in API response');
+    }
+
+    const totalPages = parseInt(initial.headers.get('x-wp-totalpages') || '0');
+    if (totalPages === 0) {
+      console.warn('No total pages header found in API response');
+    }
+
+    let customers: any[] = [];
+    if (totalPages === 1) {
+      if (!initial.data) {
+        throw new Error('No data received in API response');
+      }
+      customers = initial.data;
+    } else {
+      const promises: Promise<any>[] = [];
+      for (let i = 1; i < totalPages; i++) {
+        promises.push(
+          api.get('customers', {
+            per_page: maximumItemsPerPage,
+            page: i + 1,
+          }),
+        );
+      }
+
+      try {
+        const responses = await Promise.all(promises);
+        for (const response of responses) {
+          if (!response.data) {
+            console.warn('Received response without data:', response);
+            continue;
+          }
+          customers = customers.concat(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching additional customer pages:', error);
+        throw new Error('Failed to fetch additional customer pages');
+      }
+    }
+
+    if (!customers.length) {
+      console.warn('No customers found in API response');
+    }
+
+    return customers.map((customer, index) => {
+      try {
+        return new Customer(customer);
+      } catch (error) {
+        console.error(`Error creating Customer instance at index ${index}:`, error, 'Customer data:', customer);
+        throw new Error(`Failed to create Customer instance at index ${index}`);
+      }
     });
-  const totalPages = parseInt(initial.headers.get('x-wp-totalpages') || '0');
-
-  let customers: any[] = [];
-  if (totalPages === 1) {
-    customers = initial.data;
-  } else {
-    const promises: Promise<any>[] = [];
-    for (let i = 1; i < totalPages; i++) {
-      promises.push(
-        api.get('customers', {
-          per_page: maximumItemsPerPage,
-          page: i + 1,
-        }),
-      );
-    }
-
-    const responses = await Promise.all(promises);
-    for (const response of responses) {
-      customers = customers.concat(response.data);
-    }
+  } catch (error) {
+    console.error('Error in getCustomers:', error);
+    throw error instanceof Error ? error : new Error('Unknown error in getCustomers');
   }
-
-  return customers.map((customer) => new Customer(customer));
 }

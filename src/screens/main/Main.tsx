@@ -14,6 +14,14 @@ export function Main() {
 
     const loadingData = !productsQuery.isSuccess || !customersQuery.isSuccess;
 
+    if (productsQuery.isError) {
+        throw new Error('Error loading products: ' + productsQuery.error?.message);
+    }
+
+    if (customersQuery.isError) {
+        throw new Error('Error loading customers: ' + customersQuery.error?.message);
+    }
+
     return (
             <>
                 <div className={'bg-slate-950 text-slate-950 h-screen flex flex-row hide-print'}>
