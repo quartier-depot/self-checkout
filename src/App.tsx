@@ -10,7 +10,7 @@ import { useAppContext } from './context/useAppContext';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
 import { Statistics } from './screens/statistics/Statistics';
-import { Test } from './screens/test/Test';
+
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -78,7 +78,6 @@ function App() {
                             <Route path="/" element={<Main />} />
                             <Route path="styleguide" element={<Styleguide />} />
                             <Route path="statistics" element={<Statistics />} />
-                            <Route path="test" element={<Test />} />
                         </Routes>
                     </BrowserRouter>
                     <ReactQueryDevtools initialIsOpen={false} />
