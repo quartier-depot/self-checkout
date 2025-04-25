@@ -38,7 +38,7 @@ async function getProducts(api: WooCommerceRestApi): Promise<Product[]> {
       products = initial.data;
     } else {
       const promises: Promise<any>[] = [];
-      for (let i = 1; i < totalPages; i++) {
+      for (let i = 0; i < totalPages; i++) {
         promises.push(
           api.get('products', {
             status: 'publish',

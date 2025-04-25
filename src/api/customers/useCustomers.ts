@@ -37,7 +37,7 @@ async function getCustomers(api: WooCommerceRestApi): Promise<Customer[]> {
       customers = initial.data;
     } else {
       const promises: Promise<any>[] = [];
-      for (let i = 1; i < totalPages; i++) {
+      for (let i = 0; i < totalPages; i++) {
         promises.push(
           api.get('customers', {
             per_page: maximumItemsPerPage,
