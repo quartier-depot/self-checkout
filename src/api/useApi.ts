@@ -31,6 +31,9 @@ export function useApi(): WooCommerceRestApi {
       const response = await fetch(`${url}${query}`, {
         method: 'POST',
         body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       return await handleResponse(response);
@@ -43,6 +46,9 @@ export function useApi(): WooCommerceRestApi {
       const response = await fetch(`${url}${query}`, {
         method: 'PUT',
         body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       return await handleResponse(response);
