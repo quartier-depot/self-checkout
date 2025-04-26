@@ -40,21 +40,25 @@ export function Barcode() {
         if (!(e.value)) {
             return;
         }
-        if (e.value.startsWith('qdm')) {
+        if (isMemberBarcode(e.value)) {
             memberInput(e.value, customers);
         } else {
             barcodeInput(e, products);
         }
     }
 
+    function isMemberBarcode(barcode: string) {
+        // starts with M and is 11 characters long
+        return barcode.startsWith('M') && barcode.length === 11;
+    }
+
     function memberInput(barcode: string, customers: Customer[]) {
-        const memberId = barcode.substring('qdm'.length).replaceAll('\'', '-');
         if (!customers || customers.length === 0) {
             console.log('Member barcode not processed because customersQuery.data is ' + customers);
             return;
         }
 
-        const customer = customers.find((customer) => customer.member_id === memberId);
+        const customer = customers.find((customer) => customer.member_id === barcode);
         if (customer) {
             dispatch(setCustomer(customer));
         } else {
