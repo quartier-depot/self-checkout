@@ -63,7 +63,7 @@ async function handleResponse(response: Response) {
 
   if (response.status < 200 || response.status >= 300) {
     console.log(response.status);
-    throw Error("NOK response status: "+response.status);
+    throw Error("NOK response status: "+response.status + " " + response.statusText);
   }
 
   try {
