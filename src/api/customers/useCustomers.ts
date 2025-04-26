@@ -29,15 +29,16 @@ async function getCustomers(api: WooCommerceRestApi): Promise<Customer[]> {
       console.warn('No total pages header found in API response');
     }
 
-    let customers: any[] = [];
-    if (totalPages === 1) {
-      if (!initial.data) {
-        throw new Error('No data received in API response');
-      }
-      customers = initial.data;
-    } else {
+    if (!initial.data) {
+      throw new Error('No data received in API response');
+    }
+
+    let customers = [...initial.data];
+
+    if (totalPages > 1) {
       const promises: Promise<any>[] = [];
-      for (let i = 0; i < totalPages; i++) {
+      // Start from page 2 since we already have page 1
+      for (let i = 1; i < totalPages; i++) {
         promises.push(
           api.get('customers', {
             per_page: maximumItemsPerPage,

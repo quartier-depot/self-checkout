@@ -30,15 +30,16 @@ async function getProducts(api: WooCommerceRestApi): Promise<Product[]> {
       console.warn('No total pages header found in products API response');
     }
 
-    let products: any[] = [];
-    if (totalPages === 1) {
-      if (!initial.data) {
-        throw new Error('No data received in products API response');
-      }
-      products = initial.data;
-    } else {
+    if (!initial.data) {
+      throw new Error('No data received in products API response');
+    }
+
+    let products = [...initial.data];
+
+    if (totalPages > 1) {
       const promises: Promise<any>[] = [];
-      for (let i = 0; i < totalPages; i++) {
+      // Start from page 2 since we already have page 1
+      for (let i = 1; i < totalPages; i++) {
         promises.push(
           api.get('products', {
             status: 'publish',
