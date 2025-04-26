@@ -3,7 +3,7 @@ quartier-depot-self-checkout*
 
 # env
 .env
-.env.development
+.env*
 nodes.md
 notes.md
 
