@@ -14,7 +14,10 @@ import { Statistics } from './screens/statistics/Statistics';
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            networkMode: 'always' // Force queries to execute regardless of browser's online/offline detection (webkit issue)
+            throwOnError: true
+        },
+        mutations: {
+            throwOnError: true
         }
     }
 });
