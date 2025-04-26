@@ -32,15 +32,24 @@ export function Payment() {
 
     async function handlePayment() {
         setShowLoading(true);
+
         const { orderId, orderTotal } = await createOrderMutation.mutateAsync({
             customer: state.customer!,
             cart: state.cart
         });
+        if (createOrderMutation.isError) {
+            throw new Error('Order creation failed: ' + createOrderMutation.error);
+        }
+
         const walletTransactionId = await payWithWalletMutation.mutateAsync({
             customer: state.customer!,
             amount: orderTotal,
             note: `For self-checkout-order payment #${orderId}`
         });
+        if (payWithWalletMutation.isError) {
+            throw new Error('Payment with wallet failed: ' + payWithWalletMutation.error);
+        }
+
         await updateOrderMutation.mutateAsync({
             id: orderId,
             payment_method: 'wallet',
@@ -48,14 +57,18 @@ export function Payment() {
             status: 'completed',
             transaction_id: walletTransactionId.toString()
         });
+        if (updateOrderMutation.isError) {
+            throw new Error('Order update failed: ' + updateOrderMutation.error);
+        }
+
         const newBalance = (await walletQuery.refetch()).data;
         dispatch({ type: ActionTypes.START_NEW_ORDER });
         setNewBalance(newBalance!);
         setTotal(orderTotal);
         setTransactionId(walletTransactionId);
         setOrderId(orderId);
-        setShowLoading(false);
         setShowConfirmation(true);
+        setShowLoading(false);
     }
 
     function closeThankYou() {
