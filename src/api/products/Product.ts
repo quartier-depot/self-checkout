@@ -9,6 +9,7 @@ export class Product {
   external_url: string | undefined;
   artikel_id: string | undefined;
   barcode: string | undefined;
+  gestell: string | undefined;
 
   constructor(dto: any) {
     this.id = dto.id;
@@ -19,5 +20,6 @@ export class Product {
     this.external_url = dto.external_url;
     this.artikel_id = getMetaData('artikel-id', dto);
     this.barcode = getMetaData('barcode', dto);
+    this.gestell = getMetaData('gestell', dto);
   }
 }
