@@ -20,7 +20,7 @@ export function Products({ className }: ProductProps) {
                 <div className={`${className} overflow-scroll`}>
                     <div className={'grid grid-cols-2 gap-2P'}>
                         {state.products!.map((product) => (
-                            <Product key={product.id} product={product} />
+                            <Product key={product.id || product.gestell} product={product} />
                         ))}
                     </div>
                 </div>
