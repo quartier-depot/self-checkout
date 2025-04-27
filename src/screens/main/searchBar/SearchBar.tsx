@@ -5,7 +5,7 @@ import * as React from 'react';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useProducts } from '../../../api/products/useProducts';
 
-export function Search() {
+export function SearchBar() {
     const { dispatch, state } = useAppContext();
     const productQuery = useProducts();
     const [inputValue, setInputValue] = useState('');

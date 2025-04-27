@@ -5,6 +5,8 @@ import { ConfigurationAction } from './configuration/configurationAction';
 
 export enum ActionTypes {
   SEARCH = 'SEARCH',
+  BROWSE = 'BROWSE',
+  BROWSE_GESTELL = 'BROWSE_GESTELL',
   START_NEW_ORDER = 'START_NEW_ORDER',
 }
 
@@ -13,6 +15,13 @@ export type SearchAction = {
   payload: {
     searchTerm: string;
     products: Product[] | undefined;
+  };
+};
+
+export type BrowseAction = {
+  type: ActionTypes.BROWSE;
+  payload: {
+    products: Product[] | { gestell: string; products: Product[] }[];
   };
 };
 
@@ -25,4 +34,5 @@ export type Action =
   | ConfigurationAction
   | CustomerAction
   | SearchAction
+  | BrowseAction
   | StartNewOrderAction;

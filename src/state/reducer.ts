@@ -47,6 +47,11 @@ export function reducer(state: State, action: Action) {
         products: search(action.payload.searchTerm, action.payload.products),
       };
 
+    case ActionTypes.BROWSE:
+      return {
+        ...state,
+        products: action.payload.products,
+      };
 
     case ActionTypes.START_NEW_ORDER:
       return {
@@ -69,6 +74,6 @@ function search(searchTerm: string, products: Product[] | undefined) {
   }
 
   return products.filter(
-    (product) => product.name.includes(searchTerm) || product.artikel_id?.includes(searchTerm),
+    (product) => product.artikel_id && product.artikel_id.endsWith(searchTerm) && product.artikel_id.length === searchTerm.length + 1,
   );
 }
