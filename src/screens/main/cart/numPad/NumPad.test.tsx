@@ -1,19 +1,19 @@
 import { render, screen } from '@testing-library/react';
-import { Numpad } from './Numpad';
+import { NumPad } from './NumPad';
 import { describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
 describe('Numpad', () => {
 
     it('renders initial value and text', () => {
-        render(<Numpad value={42} text="Test Text" onChange={vi.fn()} />);
+        render(<NumPad value={42} text="Test Text" onChange={vi.fn()} />);
         
         expect(screen.getByText('Test Text')).toBeInTheDocument();
         expect(screen.getByText('42')).toBeInTheDocument();
     });
 
     it('increases value when + button is clicked', async () => {
-        render(<Numpad value={42} text="Test Text" onChange={vi.fn()} />);
+        render(<NumPad value={42} text="Test Text" onChange={vi.fn()} />);
         
         const plusButton = screen.getByText('+');
         const user = userEvent.setup();
@@ -23,7 +23,7 @@ describe('Numpad', () => {
     });
 
     it('decreases value when - button is clicked', async () => {
-        render(<Numpad value={42} text="Test Text" onChange={vi.fn()} />);
+        render(<NumPad value={42} text="Test Text" onChange={vi.fn()} />);
         
         const minusButton = screen.getByText('-');
         const user = userEvent.setup();
@@ -33,7 +33,7 @@ describe('Numpad', () => {
     });
 
     it('leaves value at 0 when - button is clicked', async () => {
-        render(<Numpad value={0} text="Test Text" onChange={vi.fn()} />);
+        render(<NumPad value={0} text="Test Text" onChange={vi.fn()} />);
         
         const minusButton = screen.getByText('-');
         const user = userEvent.setup();
@@ -44,7 +44,7 @@ describe('Numpad', () => {
     });
 
     it('adds button value at the end when number button is clicked', async () => {
-        render(<Numpad value={42} text="Test Text" onChange={vi.fn()} />);
+        render(<NumPad value={42} text="Test Text" onChange={vi.fn()} />);
         
         const numberButton = screen.getByText('1');
         const user = userEvent.setup();
@@ -54,7 +54,7 @@ describe('Numpad', () => {
     });
 
     it('removes last number when backspace button is clicked', async () => {
-        render(<Numpad value={421} text="Test Text" onChange={vi.fn()} />);
+        render(<NumPad value={421} text="Test Text" onChange={vi.fn()} />);
         
         const backspaceButton = screen.getByText('⌫');
         const user = userEvent.setup();
@@ -65,7 +65,7 @@ describe('Numpad', () => {
 
     it('calls onChange when ok button is clicked', async () => {
         const onChange = vi.fn();
-        render(<Numpad value={42} text="Test Text" onChange={onChange} />);
+        render(<NumPad value={42} text="Test Text" onChange={onChange} />);
         
         const okButton = screen.getByText('OK');
         const user = userEvent.setup();

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "../../../../../components/button/Button";
-import { Numpad } from "../../../../../components/numpad/Numpad";
 import { useProducts } from "../../../../../api/products/useProducts";
 import { ActionTypes } from "../../../../../state/action";
 import { useAppContext } from "../../../../../context/useAppContext";

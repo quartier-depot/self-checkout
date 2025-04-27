@@ -3,7 +3,7 @@ import { Item as ItemType } from '../../../api/orders/Cart';
 import cart from '../../../assets/cart.svg';
 import { useAppContext } from '../../../context/useAppContext';
 import { Item } from './Item';
-import { Numpad } from '../../../components/numpad/Numpad';
+import { NumPad } from './numPad/NumPad';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { setCartQuantity } from '../../../state/cart/setCartQuantity';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
@@ -60,7 +60,7 @@ export function Cart() {
                 </table>
             </div>
 
-            {dialogItem && <Dialog><Numpad
+            {dialogItem && <Dialog><NumPad
                 text={dialogItem.product.name}
                 value={dialogItem.quantity}
                 onChange={(quantity) => closeDialog(quantity)}

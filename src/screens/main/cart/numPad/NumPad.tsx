@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { Button } from "../button/Button";
+import { Button } from "../../../../components/button/Button";
 import classNames from "classnames";
 
-type NumpadProps = {
+type NumPadProps = {
     value: number,
     text: string,
     onChange: (value: number) => void
     onReportError?: () => void
 }
 
-export function Numpad({ value, text, onChange, onReportError }: NumpadProps) {
+export function NumPad({ value, text, onChange, onReportError }: NumPadProps) {
     const [count, setCount] = useState(value);
     const [errorReported, setErrorReported] = useState(false);
 
