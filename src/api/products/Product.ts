@@ -2,7 +2,6 @@ import { getMetaData } from '../getMetaData';
 
 export class Product {
   id: number;
-  product_id: string;
   name: string;
   slug: string;
   price: number;
@@ -13,7 +12,6 @@ export class Product {
 
   constructor(dto: any) {
     this.id = dto.id;
-    this.product_id = dto.product_id;
     this.name = dto.name;
     this.slug = dto.slug;
     this.price = parseFloat(dto.price);

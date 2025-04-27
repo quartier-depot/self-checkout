@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Browse } from "./browse/Browse";
 import { Search } from "./search/Search";
 import { Button } from "../../../../components/button/Button";
+import { Favourites } from "./favourites/Favourites";
 
 export function Menu() {
     const [active, setActive] = useState('');
@@ -9,9 +10,7 @@ export function Menu() {
     return (
         <div className="flex gap-2 pb-2">
             <Browse active={active === 'scroll'} onClick={() => setActive('scroll')} />
-            <Button type="secondary" disabled onClick={() => { }}>
-                Favoriten
-            </Button>
+            <Favourites active={active === 'favourites'} onClick={() => setActive('favourites')} />
             <Button type="secondary" disabled onClick={() => { }}>
                 Bestellung
             </Button>
