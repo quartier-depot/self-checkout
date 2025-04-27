@@ -75,6 +75,11 @@ async function getProducts(api: WooCommerceRestApi): Promise<Product[]> {
         console.error(`Error creating Product instance at index ${index}:`, error, 'Product data:', product);
         throw new Error(`Failed to create Product instance at index ${index}`);
       }
+    }).sort((a, b) => {
+      if (!a.artikel_id && !b.artikel_id) return 0;
+      if (!a.artikel_id) return 1; 
+      if (!b.artikel_id) return -1;
+      return a.artikel_id.localeCompare(b.artikel_id);
     });
   } catch (error) {
     console.error('Error in getProducts:', error);

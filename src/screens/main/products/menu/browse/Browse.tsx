@@ -24,7 +24,9 @@ export function Browse({ active, onClick }: BrowseProps) {
                 gestell: g!,
                 products: productQuery.data.filter(p => p.gestell === g && p.barcode === "KEIN BARCODE")
             }
-        }).filter(i => i.products.length > 0);
+        })
+        .filter(i => i.products.length > 0)
+        .sort((a, b) => a.gestell.localeCompare(b.gestell));
     }, [productQuery]);
 
     const handleClick = () => {
