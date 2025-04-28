@@ -11,9 +11,6 @@ export function Menu() {
         <div className="flex gap-2 pb-2">
             <Browse active={active === 'scroll'} onClick={() => setActive('scroll')} />
             <Favourites active={active === 'favourites'} onClick={() => setActive('favourites')} />
-            <Button type="secondary" disabled onClick={() => { }}>
-                Bestellung
-            </Button>
             <Search active={active === 'search'} onClick={() => setActive('search')} />
         </div>
     );
