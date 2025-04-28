@@ -56,7 +56,7 @@ export function reducer(state: State, action: Action) {
     case ActionTypes.START_NEW_ORDER:
       return {
         ...initialState,
-        initialized: true,
+        configuration: state.configuration,
       };
 
     default:
