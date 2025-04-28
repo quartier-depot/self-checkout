@@ -23,10 +23,10 @@ export function SearchPad({ onSearch }: SearchPadProps) {
     return (
         <div className="grid grid-cols-3 gap-4 p-4">
             <div className="col-span-3 text-4xl mt-5 text-center h-12">
-                {value}<span className="animate-pulse">|</span>
+                <span className="text-slate-500">*</span>{value}
             </div>
             <div className="col-span-3 text-2xl text-center text-ellipsis overflow-hidden whitespace-nowrap">
-                Zur Suche Artikelnummer ohne führenden Buchstaben eingeben.
+                Suche mit Artikelnummer ohne führenden Buchstaben
             </div>
             <div>
                 <Button onClick={() => add(7)} type={'secondary'} className={'py-4'}>7</Button>
@@ -58,7 +58,9 @@ export function SearchPad({ onSearch }: SearchPadProps) {
             <div />
             <div><Button onClick={() => add(0)} type={'secondary'} className={'py-4'}>0</Button></div>
             <div><Button onClick={removeLastNumber} type={'secondary'} className={'py-4 font-bold'}>⌫</Button></div>
-            <div className={'col-span-3'}><Button onClick={handleClick} type={'primary'} className={'py-4'}>Suchen</Button></div>
+            <div className={'col-span-3'}><Button onClick={handleClick} type={'primary'} className={'py-4'}>
+                {value.length > 0 ? 'Suchen' : 'Abbrechen'}
+            </Button></div>
         </div>
     )
 }

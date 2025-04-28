@@ -3,7 +3,7 @@ import { NumPad } from './NumPad';
 import { describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
-describe('Numpad', () => {
+describe('NumPad', () => {
 
     it('renders initial value and text', () => {
         render(<NumPad value={42} text="Test Text" onChange={vi.fn()} />);
