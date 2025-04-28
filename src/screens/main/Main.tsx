@@ -1,6 +1,5 @@
 import { useProducts } from '../../api/products/useProducts';
 import { useCustomers } from '../../api/customers/useCustomers';
-import { SearchBar } from './searchBar/SearchBar';
 import { Products } from './products/Products';
 import { Cart } from './cart/Cart';
 import { Payment } from './payment/Payment';
