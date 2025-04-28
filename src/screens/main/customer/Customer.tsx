@@ -5,6 +5,7 @@ import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../../components/button/Button';
+import info from '../../../assets/info.svg';
 
 type CustomerProps = {
     className?: string
@@ -15,7 +16,7 @@ export function Customer({ className }: CustomerProps) {
     const [showDialog, setShowDialog] = useState(false);
     const walletQuery = useWalletBalance(state.customer?.email);
     const loggedIn = Boolean(state.customer);
-    const name = loggedIn ? `${state.customer?.first_name} ${state.customer?.last_name}` : 'Unbekannte Kundin';
+    const name = loggedIn ? `${state.customer?.first_name} ${state.customer?.last_name}` : 'Mitgliedsausweis zeigen';
 
     function handleClick() {
         if (!loggedIn) {
@@ -37,7 +38,7 @@ export function Customer({ className }: CustomerProps) {
                 </div>
                 <div className="text-right grow">
                     {loggedIn && walletQuery.isSuccess && formatPrice(walletQuery.data)}
-                    {!loggedIn && formatPrice(0)}
+                    {!loggedIn && <img src={info} alt="info" className="h-6 inline-block" />}
                 </div>
             </div>
 
