@@ -76,7 +76,7 @@ export function Payment() {
                 <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>Bezahlen</Button>
             </div>
 
-            {showLoading && <Loading />}
+            {showLoading && <Loading text={'Bezahlvorgang'} />}
 
             {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
                 transactionId={transactionId} onClose={closeThankYou} />}

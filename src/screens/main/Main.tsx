@@ -29,7 +29,7 @@ export function Main() {
                     </div>
                 </div>
 
-                {loadingData && <Loading />}
+                {loadingData && <Loading text={'Initialisierung'} />}
                 <Barcode />
             </>
     );
