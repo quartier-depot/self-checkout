@@ -39,7 +39,7 @@ export function Customer({ className }: CustomerProps) {
                 </div>
                 <div className="text-right grow">
                     {!loggedIn && <img src={info} alt="info" className="h-6 inline-block" />}
-                    {loggedIn && walletQuery.isLoading && <Spinner text="Loading..." className='h-5 w-5 inline-block' />}
+                    {loggedIn && walletQuery.isLoading && <span className='animate-pulse'>Guthaben laden</span>}
                     {loggedIn && walletQuery.isSuccess && formatPrice(walletQuery.data)}
                 </div>
             </div>
