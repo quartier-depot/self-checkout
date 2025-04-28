@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../../components/button/Button';
 import info from '../../../assets/info.svg';
+import { Spinner } from '../../../components/spinner/Spinner';
 
 type CustomerProps = {
     className?: string
@@ -37,8 +38,9 @@ export function Customer({ className }: CustomerProps) {
                     {name}
                 </div>
                 <div className="text-right grow">
-                    {loggedIn && walletQuery.isSuccess && formatPrice(walletQuery.data)}
                     {!loggedIn && <img src={info} alt="info" className="h-6 inline-block" />}
+                    {loggedIn && walletQuery.isLoading && <Spinner text="Loading..." className='h-5 w-5 inline-block' />}
+                    {loggedIn && walletQuery.isSuccess && formatPrice(walletQuery.data)}
                 </div>
             </div>
 
