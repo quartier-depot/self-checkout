@@ -12,7 +12,7 @@ export function MemberDialog({ show, onClose }: MemberDialogProps) {
 
     return (
         <Dialog title="Mitgliedsausweis zeigen" onBackdropClick={onClose}>
-            <div className={'p-4 flex-grow'}>
+            <div className={'p-4 flex-grow'} onClick={onClose}>
                 <div className={'flex justify-center items-center'}>
                     <QRCodeSVG value="https://peloso.ch/quartier-depot" className='h-72 w-72' />
                 </div>
