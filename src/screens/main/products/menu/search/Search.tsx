@@ -38,7 +38,7 @@ export function Search({ active, onClick}: SearchProps) {
                 Nummer
             </Button>
 
-            {active && dialogOpen && <Dialog><SearchPad onSearch={handleSearch} /></Dialog>}
+            {active && dialogOpen && <Dialog onBackdropClick={() => setDialogOpen(false)}><SearchPad onSearch={handleSearch} /></Dialog>}
         </>
     );
 }

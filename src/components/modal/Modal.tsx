@@ -6,13 +6,15 @@ type ModalProps = {
 
 export function Modal({ onBackdropClick, children }: PropsWithChildren<ModalProps>) {
     return (
-        <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center z-10">
+        <div 
+            className="h-screen w-full fixed left-0 top-0 flex justify-center items-center z-10"
+            onClick={onBackdropClick}
+        >
             <div 
-                className="absolute inset-0 bg-slate-950"
-                onClick={onBackdropClick}
+                className="absolute inset-0 bg-slate-950/80"
             />
             <div 
-                className="relative z-20 w-full h-full flex justify-center items-center"
+                className="relative z-20"
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}

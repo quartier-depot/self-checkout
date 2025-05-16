@@ -45,7 +45,7 @@ export function Customer({ className }: CustomerProps) {
             </div>
 
             {showDialog && (
-                <Dialog title="Mitgliedsausweis zeigen" onClick={() => setShowDialog(false)}>
+                <Dialog title="Mitgliedsausweis zeigen" onBackdropClick={() => setShowDialog(false)}>
                         <div className={'p-4 flex-grow'}>
                             <div className={'flex justify-center items-center'}>
                                 <QRCodeSVG value="https://peloso.ch/quartier-depot" className='h-72 w-72' />
