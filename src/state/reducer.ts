@@ -8,7 +8,7 @@ import { configurationReducer } from './configuration/configurationReducer';
 
 export type State = {
   searchTerm: string;
-  products: Product[] | undefined;
+  products: Product[] | { gestell: string; products: Product[] }[] | undefined;
   cart: Cart;
   customer?: Customer;
   configuration: Configuration | undefined;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useProducts } from '../../api/products/useProducts';
 
-const NO_BARCODE_VALUE = 'KEIN BARCODE';
+
 
 export const Statistics: React.FC = () => {
     const [showMissingBarcodes, setShowMissingBarcodes] = useState(false);
@@ -21,9 +21,9 @@ export const Statistics: React.FC = () => {
     const totalProducts = products.length;
 
     // Calculate barcode statistics
-    const noBarcode = products.filter(product => product.barcode === NO_BARCODE_VALUE).length;
-    const hasValidBarcode = products.filter(product => product.barcode && product.barcode !== NO_BARCODE_VALUE).length;
-    const productsWithoutBarcode = products.filter(product => !product.barcode);
+    const noBarcode = products.filter(product => !product.hasBarcodes()).length;
+    const hasValidBarcode = products.filter(product => product.hasBarcodes()).length;
+    const productsWithoutBarcode = products.filter(product => !product.barcodes);
 
     // Calculate percentages
     const noBarcodePercentage = (noBarcode / totalProducts * 100).toFixed(1);

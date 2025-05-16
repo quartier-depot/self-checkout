@@ -115,12 +115,14 @@ function expectEmptyCart(actual: State) {
 const product: Product = {
   price: 42.24,
   id: 42,
-  product_id: '42',
   artikel_id: 'product',
   name: 'name',
   slug: 'slug',
-  barcode: 'barcode',
+  barcodes: ['barcode'],
+  gestell: 'gestell',
   external_url: 'external_url',
+  hasBarcodes: () => true,
+  hasMatchingBarcode: (_: string) => true,
 };
 
 const withProductOnce: State = {

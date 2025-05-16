@@ -8,7 +8,7 @@ describe('SearchPad', () => {
     it('renders text', () => {
         render(<SearchPad onSearch={vi.fn()} />);
         
-        expect(screen.getByText('Zur Suche Artikelnummer ohne führenden Buchstaben eingeben.')).toBeInTheDocument();
+        expect(screen.getByText('Suche mit Artikelnummer ohne führenden Buchstaben')).toBeInTheDocument();
     });
 
 

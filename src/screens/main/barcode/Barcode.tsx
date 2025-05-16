@@ -96,7 +96,7 @@ export function Barcode() {
 
             default:
                 matchingProducts = products.filter((product: Product) => {
-                    return product.barcode === barcodeEvent.value;
+                    return product.hasMatchingBarcode(barcodeEvent.value);
                 });
         }
 

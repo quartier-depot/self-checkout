@@ -22,7 +22,7 @@ export function Browse({ active, onClick }: BrowseProps) {
         .map(g => {
             return {
                 gestell: g!,
-                products: productQuery.data.filter(p => p.gestell === g && p.barcode === "KEIN BARCODE")
+                products: productQuery.data.filter(p => p.gestell === g && p.hasBarcodes())
             }
         })
         .filter(i => i.products.length > 0)
