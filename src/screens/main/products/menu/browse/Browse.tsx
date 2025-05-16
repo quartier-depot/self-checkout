@@ -41,7 +41,7 @@ export function Browse({ active, onClick }: BrowseProps) {
 
     return (
         <Button type="secondary" onClick={handleClick} toggled={active}>
-            Blättern
+            Kategorie
         </Button>
     );
 }

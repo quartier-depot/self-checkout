@@ -35,7 +35,7 @@ export function Search({ active, onClick}: SearchProps) {
     return (
         <>
             <Button type="secondary" onClick={handleClick} toggled={active}>
-                Suche
+                Nummer
             </Button>
 
             {active && dialogOpen && <Dialog><SearchPad onSearch={handleSearch} /></Dialog>}

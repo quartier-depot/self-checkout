@@ -29,7 +29,7 @@ export function Favourites({ active, onClick }: FavouritesProps) {
 
     return (
         <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={active} className={classNames({ 'animate-pulse': favouritesQuery.isLoading })}>
-            Favoriten
+            Verlauf
         </Button>
     );
 } 
