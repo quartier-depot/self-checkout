@@ -10,12 +10,14 @@ import { Loading } from '../../../components/modal/loading/Loading';
 import { useQueryClient } from '@tanstack/react-query';
 import { Confirmation } from './confirmation/Confirmation';
 import { Button } from '../../../components/button/Button';
+import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
 
 export function Payment() {
     const { state, dispatch } = useAppContext();
     const walletQuery = useWalletBalance(state.customer?.email);
     const [showLoading, setShowLoading] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
 
     const [total, setTotal] = useState(0);
     const [newBalance, setNewBalance] = useState(0);
@@ -31,6 +33,11 @@ export function Payment() {
     const updateOrderMutation = useUpdateOrder();
 
     async function handlePayment() {
+        if (!paymentEnabled) {
+            setShowDialog(true);
+            return;
+        }
+
         setShowLoading(true);
 
         const { orderId, orderTotal } = await createOrderMutation.mutateAsync({
@@ -80,6 +87,8 @@ export function Payment() {
 
             {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
                 transactionId={transactionId} onClose={closeThankYou} />}
+
+            <MemberDialog show={showDialog} onClose={() => setShowDialog(false)} />
         </>
     );
 }

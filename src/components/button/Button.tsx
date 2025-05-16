@@ -12,7 +12,6 @@ type ButtonProps = PropsWithChildren<{
 export function Button({ disabled, onClick, type, toggled, className, children }: ButtonProps) {
     return (
         <button
-            disabled={disabled}
             onClick={onClick}
             className={classNames(
                 'rounded-lg w-full mt-2 p-2 border-2 uppercase',
