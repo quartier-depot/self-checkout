@@ -68,7 +68,9 @@ async function getProducts(api: WooCommerceRestApi): Promise<Product[]> {
       console.warn('No products found in API response');
     }
 
-    return products.map((product, index) => {
+    return products
+      .filter(product => product && product.catalog_visibility === 'visible')
+      .map((product, index) => {
       try {
         return new Product(product);
       } catch (error) {
