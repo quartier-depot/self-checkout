@@ -30,7 +30,7 @@ interface Order {
 }
 
 
-export const woocommerceApi = createApi({
+export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ 
     baseUrl: '/wp-json/wc/v3/',
@@ -266,4 +266,4 @@ export const {
   useCreateOrderMutation,
   useUpdateOrderMutation,
   useGetCustomerOrdersQuery,
-} = woocommerceApi; 
+} = api; 

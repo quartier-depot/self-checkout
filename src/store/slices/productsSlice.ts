@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product } from '../../api/products/Product';
 import { startNewSession } from './appSlice';
 import { RootState } from '../store';
-import { woocommerceApi } from '../api/api';
+import { api } from '../api/api';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';
 
@@ -48,7 +48,7 @@ export const selectGestell = (state: RootState) => state.products.gestell;
 
 export const selectFilteredProducts = (state: RootState) => {
     const { viewMode, searchTerm } = state.products;
-    const products = woocommerceApi.endpoints.getProducts.select()(state).data;
+    const products = api.endpoints.getProducts.select()(state).data;
 
     if (!products) return undefined;
 
@@ -83,7 +83,7 @@ export const selectFilteredProducts = (state: RootState) => {
             const customerId = state.customer.customer?.id;
             if (!customerId) return [];
             
-            const orders = woocommerceApi.endpoints.getCustomerOrders.select(customerId)(state).data;
+            const orders = api.endpoints.getCustomerOrders.select(customerId)(state).data;
             if (!orders) return [];
 
             // Calculate product frequency

@@ -5,7 +5,8 @@ import cartReducer from './slices/cartSlice';
 import customerReducer from './slices/customerSlice';
 import productsReducer from './slices/productsSlice';
 import orderReducer from './slices/appSlice';
-import { woocommerceApi } from './api/api';
+import { api } from './api/api';
+import { soundMiddleware } from './middleware/soundMiddleware';
 
 // We'll add our reducers here once we create them
 const store = configureStore({
@@ -15,12 +16,14 @@ const store = configureStore({
     customer: customerReducer,
     products: productsReducer,
     order: orderReducer,
-    [woocommerceApi.reducerPath]: woocommerceApi.reducer,
+    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // This might be needed for App Insights
-    }).concat(woocommerceApi.middleware),
+    })
+    .concat(api.middleware)
+    .concat(soundMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 
