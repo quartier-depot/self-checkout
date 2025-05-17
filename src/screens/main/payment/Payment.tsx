@@ -8,9 +8,11 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { startNewSession as startNewSession } from '../../../store/slices/appSlice';
 import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/api';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
+import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 
 export function Payment() {
     const dispatch = useAppDispatch();
+    const applicationInsights = useAppInsightsContext();
     const customer = useAppSelector(state => state.customer.customer);
     const cart = useAppSelector(state => state.cart.cart);
     const { data: walletBalance, isSuccess: isWalletSuccess, refetch: refetchWalletBalance } = useGetWalletBalanceQuery(customer?.email || '', {
@@ -101,8 +103,8 @@ export function Payment() {
             setLog(paymentLog);
             console.error('Payment failed:', paymentLog);
             setShowErrorDialog(true);
+            applicationInsights.getAppInsights().trackException({error: error as Error}, { paymentLog });
         } finally {
-            
             setShowLoading(false);
         }
     }
