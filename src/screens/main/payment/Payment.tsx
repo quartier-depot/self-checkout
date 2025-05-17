@@ -5,7 +5,7 @@ import { Confirmation } from './confirmation/Confirmation';
 import { Button } from '../../../components/button/Button';
 import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { startNewOrder } from '../../../store/slices/orderSlice';
+import { startNewOrder } from '../../../store/slices/appSlice';
 import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/woocommerceApi';
 
 export function Payment() {
@@ -92,7 +92,7 @@ export function Payment() {
             {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
                 transactionId={transactionId} onClose={closeThankYou} />}
 
-            <MemberDialog show={showDialog} onClose={() => setShowDialog(false)} />
+            {showDialog && <MemberDialog onClose={() => setShowDialog(false)} />}
         </>
     );
 }

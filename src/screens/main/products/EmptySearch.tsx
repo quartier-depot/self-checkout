@@ -1,8 +1,9 @@
 import magnifier from '../../../assets/magnifier.svg';
+import { selectSearchTerm } from '../../../store/slices/productsSlice';
 import { useAppSelector } from '../../../store/store';
 
 export function EmptySearch() {
-    const searchTerm = useAppSelector(state => state.search.searchTerm);
+    const searchTerm = useAppSelector(selectSearchTerm);
 
     return (
             <>

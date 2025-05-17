@@ -4,14 +4,10 @@ import { Button } from "../../../../../components/button/Button";
 import { useState } from "react";
 import { MemberDialog } from "../../../../../components/modal/dialog/memberdialog/MemberDialog";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
-import { setProducts } from "../../../../../store/slices/browseSlice";
+import { setViewMode, selectViewMode } from "../../../../../store/slices/productsSlice";
 
-type FavouritesProps = {
-    active: boolean;
-    onClick: () => void;
-}
 
-export function Favourites({ active, onClick }: FavouritesProps) {
+export function Favourites() {
     const dispatch = useAppDispatch();
     const customer = useAppSelector(state => state.customer.customer);
     const { data: products = [] } = useGetProductsQuery();
@@ -20,6 +16,8 @@ export function Favourites({ active, onClick }: FavouritesProps) {
         { skip: !customer?.id }
     );
     const [showDialog, setShowDialog] = useState(false);
+    const viewMode = useAppSelector(selectViewMode);
+    const isActive = viewMode === 'favourites';
 
     const disabled = !customer || !isFavouritesSuccess;
 
@@ -27,18 +25,18 @@ export function Favourites({ active, onClick }: FavouritesProps) {
         if (disabled) {
             setShowDialog(true);
             return;
+        } else {
+            dispatch(setViewMode('favourites'));
         }
-        onClick();
-        dispatch(setProducts(favourites));
     }
 
     return (
         <>
-            <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={active} className={classNames({ 'animate-pulse': isFavouritesSuccess })}>
-                Verlauf
+            <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive} className={classNames({ 'animate-pulse': isFavouritesSuccess })}>
+                Favoriten
             </Button>
             
-            <MemberDialog show={showDialog} onClose={() => setShowDialog(false)} />
+            {showDialog && <MemberDialog onClose={() => setShowDialog(false)} />}
         </>
     );
 } 

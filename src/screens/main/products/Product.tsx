@@ -1,8 +1,8 @@
 import { Product as ProductClass } from '../../../api/products/Product';
 import { formatPrice } from '../../../format/formatPrice';
 import { useAppDispatch } from '../../../store/store';
-import { setProducts } from '../../../store/slices/browseSlice';
 import { changeCartQuantity } from '../../../store/slices/cartSlice';
+import { setGestell } from '../../../store/slices/productsSlice';
 
 interface ProductProps {
     product: ProductClass | { gestell: string; products: ProductClass[] };
@@ -24,7 +24,7 @@ export function Product({ product }: ProductProps) {
                 className={
                     'select-none cursor-pointer overflow-hidden rounded-lg bg-slate-50 p-2 text-center'
                 }
-                onClick={() => dispatch(setProducts(item.products))}
+                onClick={() => dispatch(setGestell(item.gestell))}
             >
                 <h2 className={'text-2xl font-bold'}>{identifier}</h2>
                 <p className={'grow truncate mr-1'}>{title}</p>

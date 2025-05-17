@@ -3,13 +3,10 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../../button/Button';
 
 type MemberDialogProps = {
-    show: boolean;
     onClose: () => void;
 }
 
-export function MemberDialog({ show, onClose }: MemberDialogProps) {
-    if (!show) return null;
-
+export function MemberDialog({ onClose }: MemberDialogProps) {
     return (
         <Dialog title="Mitgliedsausweis zeigen" onBackdropClick={onClose}>
             <div className={'p-4 flex-grow'} onClick={onClose}>

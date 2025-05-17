@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
 import { Statistics } from './screens/statistics/Statistics';
 import { Provider } from 'react-redux';
-import { store } from './store/store';
+import  store from './store/store';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { setConfiguration } from './store/slices/configurationSlice';
 

@@ -1,46 +1,20 @@
 import { Button } from "../../../../../components/button/Button";
-import { useMemo } from "react";
-import { useAppDispatch } from "../../../../../store/store";
-import { setProducts } from "../../../../../store/slices/browseSlice";
-import { useGetProductsQuery } from "../../../../../store/api/woocommerceApi";
-import { Product } from "../../../../../api/products/Product";
+import { useAppDispatch, useAppSelector } from "../../../../../store/store";
+import { setViewMode, selectViewMode, setGestell } from "../../../../../store/slices/productsSlice";
 
-type BrowseProps = {
-    active: boolean;
-    onClick: () => void;
-}
 
-export function Browse({ active, onClick }: BrowseProps) {
+export function Browse() {
     const dispatch = useAppDispatch();
-    const { data: products } = useGetProductsQuery();
-
-    const gestelle = useMemo(() => {
-        if (!products) {
-            return [];
-        }
-
-        const gestelleMap = new Map<string, Product[]>();
-        products.forEach(product => {
-            if (product.gestell) {
-                const products = gestelleMap.get(product.gestell) || [];
-                products.push(product);
-                gestelleMap.set(product.gestell, products);
-            }
-        });
-
-        return Array.from(gestelleMap.entries()).map(([gestell, products]) => ({
-            gestell,
-            products
-        }));
-    }, [products]);
+    const viewMode = useAppSelector(selectViewMode);
+    const isActive = viewMode === 'browse';
 
     function handleClick() {
-        dispatch(setProducts(gestelle));
-        onClick();
+        dispatch(setViewMode('browse'));
+        dispatch(setGestell(''));
     }
 
     return (
-        <Button type="secondary" onClick={handleClick} toggled={active}>
+        <Button type="secondary" onClick={handleClick} toggled={isActive}>
             Gestelle
         </Button>
     );

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Customer } from '../../api/customers/Customer';
-import { startNewOrder } from './orderSlice';
+import { startNewOrder } from './appSlice';
 
 interface CustomerState {
   customer?: Customer;
@@ -20,7 +20,8 @@ const customerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(startNewOrder, (state) => {
-      state.customer = undefined;
+      console.log('startNewOrder.customer');
+      state.customer = initialState.customer;
     });
   },
 });

@@ -3,9 +3,8 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import configurationReducer from './slices/configurationSlice';
 import cartReducer from './slices/cartSlice';
 import customerReducer from './slices/customerSlice';
-import searchReducer from './slices/searchSlice';
-import browseReducer from './slices/browseSlice';
-import orderReducer from './slices/orderSlice';
+import productsReducer from './slices/productsSlice';
+import orderReducer from './slices/appSlice';
 import { woocommerceApi } from './api/woocommerceApi';
 
 // We'll add our reducers here once we create them
@@ -14,8 +13,7 @@ const store = configureStore({
     configuration: configurationReducer,
     cart: cartReducer,
     customer: customerReducer,
-    search: searchReducer,
-    browse: browseReducer,
+    products: productsReducer,
     order: orderReducer,
     [woocommerceApi.reducerPath]: woocommerceApi.reducer,
   },
@@ -31,7 +29,7 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
-export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export { store }; 
+export default store; 

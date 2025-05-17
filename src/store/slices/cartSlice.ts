@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Cart, Item } from '../../api/orders/Cart';
 import { Product } from '../../api/products/Product';
-import { startNewOrder } from './orderSlice';
+import { startNewOrder } from './appSlice';
 
 interface CartState {
   cart: Cart;
@@ -97,6 +97,7 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(startNewOrder, (state) => {
+      console.log('startNewOrder.cart');
       state.cart = initialState.cart;
     });
   },

@@ -43,7 +43,7 @@ export function Customer({ className }: CustomerProps) {
                 </div>
             </div>
 
-            <MemberDialog show={showDialog} onClose={() => setShowDialog(false)} />
+            {showDialog && <MemberDialog onClose={() => setShowDialog(false)} /> }
         </>
     );
 }
