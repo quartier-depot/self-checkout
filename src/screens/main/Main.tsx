@@ -1,4 +1,4 @@
-import { useGetProductsQuery, useGetCustomersQuery } from '../../store/api/woocommerceApi';
+import { useGetProductsQuery, useGetCustomersQuery } from '../../store/api/api';
 import { Products } from './products/Products';
 import { Cart } from './cart/Cart';
 import { Payment } from './payment/Payment';

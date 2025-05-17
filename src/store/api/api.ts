@@ -1,9 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Product } from '../../api/products/Product';
-import { Customer } from '../../api/customers/Customer';
-import { Cart } from '../../api/orders/Cart';
-import { OrderUpdate } from '../../api/orders/OrderUpdate';
-import { RootState } from '../../store/store';
+import { Product } from './products/Product';
+import { Customer } from './customers/Customer';
+import { Cart } from './cart/Cart';
+import { RootState } from '../store';
+
+export interface OrderUpdate {
+  id: string;
+  payment_method: string;
+  payment_method_title: string;
+  transaction_id: string;
+  status: string;
+} 
 
 interface CreateOrderResponse {
   orderId: string;
@@ -22,8 +29,9 @@ interface Order {
   line_items: OrderLineItem[];
 }
 
+
 export const woocommerceApi = createApi({
-  reducerPath: 'woocommerceApi',
+  reducerPath: 'api',
   baseQuery: fetchBaseQuery({ 
     baseUrl: '/wp-json/wc/v3/',
     prepareHeaders: (headers, { getState }) => {
@@ -40,12 +48,12 @@ export const woocommerceApi = createApi({
   endpoints: (builder) => ({
     // Products
     getProducts: builder.query<Product[], void>({
-      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBaseQuery) {
         const maximumItemsPerPage = 100;
         let allProducts: any[] = [];
 
         // Get first page
-        const initial = await fetchWithBQ({
+        const initial = await fetchWithBaseQuery({
           url: 'products',
           params: {
             status: 'publish',
@@ -70,7 +78,7 @@ export const woocommerceApi = createApi({
           const promises = [];
           for (let i = 1; i < totalPages; i++) {
             promises.push(
-              fetchWithBQ({
+              fetchWithBaseQuery({
                 url: 'products',
                 params: {
                   status: 'publish',
@@ -108,12 +116,12 @@ export const woocommerceApi = createApi({
 
     // Customers
     getCustomers: builder.query<Customer[], void>({
-      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBaseQuery) {
         const maximumItemsPerPage = 100;
         let allCustomers: any[] = [];
 
         // Get first page
-        const initial = await fetchWithBQ({
+        const initial = await fetchWithBaseQuery({
           url: 'customers',
           params: {
             per_page: maximumItemsPerPage,
@@ -137,7 +145,7 @@ export const woocommerceApi = createApi({
           const promises = [];
           for (let i = 1; i < totalPages; i++) {
             promises.push(
-              fetchWithBQ({
+              fetchWithBaseQuery({
                 url: 'customers',
                 params: {
                   per_page: maximumItemsPerPage,

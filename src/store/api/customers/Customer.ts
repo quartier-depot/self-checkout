@@ -1,4 +1,4 @@
-import { getMetaData } from '../getMetaData';
+import { getMetaData } from "../helper/getMetaData";
 
 export class Customer {
   id: number;

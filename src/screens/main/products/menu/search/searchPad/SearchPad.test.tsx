@@ -6,14 +6,14 @@ import userEvent from '@testing-library/user-event';
 describe('SearchPad', () => {
 
     it('renders text', () => {
-        render(<SearchPad onSearch={vi.fn()} />);
+        render(<SearchPad onCancel={vi.fn()} onChange={vi.fn()} onSearch={vi.fn()} />);
         
         expect(screen.getByText('Suche mit Artikelnummer ohne führenden Buchstaben')).toBeInTheDocument();
     });
 
 
     it('adds button value at the end when number button is clicked', async () => {
-        render(<SearchPad onSearch={vi.fn()} />);
+        render(<SearchPad onCancel={vi.fn()} onChange={vi.fn()} onSearch={vi.fn()} />);
         
         const numberButton = screen.getByText('1');
         const user = userEvent.setup();
@@ -24,7 +24,7 @@ describe('SearchPad', () => {
     });
 
     it('removes last number when backspace button is clicked', async () => {
-        render(<SearchPad onSearch={vi.fn()} />);
+        render(<SearchPad onCancel={vi.fn()} onChange={vi.fn()} onSearch={vi.fn()} />);
 
         const numberButton = screen.getByText('2');
         const user = userEvent.setup();
@@ -40,7 +40,7 @@ describe('SearchPad', () => {
 
     it('calls onSearch when search button is clicked', async () => {
         const onSearch = vi.fn();
-        render(<SearchPad onSearch={onSearch} />);
+        render(<SearchPad onCancel={vi.fn()} onChange={vi.fn()} onSearch={onSearch} />);
         
         const numberButton = screen.getByText('3');
         const user = userEvent.setup();

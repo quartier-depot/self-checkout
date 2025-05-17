@@ -1,5 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Configuration } from '../../state/reducer';
+
+interface Configuration {
+  woocommerce?: {
+    url: string;
+    consumerKey: string;
+    consumerSecret: string;
+  };
+  applicationInsights?: {
+    connectionString: string;
+  };
+}
 
 interface ConfigurationState {
   configuration: Configuration | null;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useGetProductsQuery } from '../../store/api/woocommerceApi';
+import { useGetProductsQuery } from '../../store/api/api';
 import { Product } from '../../api/products/Product';
 
 const NO_BARCODE_VALUE = 'KEIN BARCODE';

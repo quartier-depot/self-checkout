@@ -6,7 +6,7 @@ import { Button } from '../../../components/button/Button';
 import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { startNewSession as startNewSession } from '../../../store/slices/appSlice';
-import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/woocommerceApi';
+import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/api';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 
 export function Payment() {

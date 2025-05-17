@@ -5,7 +5,7 @@ import cartReducer from './slices/cartSlice';
 import customerReducer from './slices/customerSlice';
 import productsReducer from './slices/productsSlice';
 import orderReducer from './slices/appSlice';
-import { woocommerceApi } from './api/woocommerceApi';
+import { woocommerceApi } from './api/api';
 
 // We'll add our reducers here once we create them
 const store = configureStore({

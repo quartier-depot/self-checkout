@@ -1,5 +1,5 @@
-import { getMetaData } from '../getMetaData';
-import { semicolonSeparatedList } from '../semicolonSeparatedList';
+import { getMetaData } from '../helper/getMetaData';
+import { semicolonSeparatedList } from '../helper/semicolonSeparatedList';
 
 const NO_BARCODE_VALUE = 'KEIN BARCODE';
 

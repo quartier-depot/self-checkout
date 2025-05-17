@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Item as ItemType } from '../../../api/orders/Cart';
+import { Item as ItemType } from '../../../store/api/cart/Cart';
 import cartIcon from '../../../assets/cart.svg';
 import { Item } from './Item';
 import { NumPad } from './numPad/NumPad';

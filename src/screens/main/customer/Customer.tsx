@@ -1,4 +1,4 @@
-import { useGetWalletBalanceQuery } from '../../../store/api/woocommerceApi';
+import { useGetWalletBalanceQuery } from '../../../store/api/api';
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
 import info from '../../../assets/info.svg';

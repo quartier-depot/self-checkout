@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Customer } from '../../api/customers/Customer';
+import { Customer } from '../api/customers/Customer';
 import { startNewSession } from './appSlice';
 
 interface CustomerState {

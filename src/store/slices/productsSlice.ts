@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product } from '../../api/products/Product';
 import { startNewSession } from './appSlice';
 import { RootState } from '../store';
-import { woocommerceApi } from '../api/woocommerceApi';
+import { woocommerceApi } from '../api/api';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';
 
@@ -34,7 +34,6 @@ const productsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(startNewSession, (state) => {
-            console.log('startNewOrder.products');
             state.viewMode = initialState.viewMode;
             state.searchTerm = initialState.searchTerm;
             state.gestell = initialState.gestell;

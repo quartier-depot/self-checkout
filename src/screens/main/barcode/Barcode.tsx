@@ -3,9 +3,9 @@ import KeyboardBarcodeScanner from '../../../external/@point-of-sale/keyboard-ba
 import { useAppDispatch } from '../../../store/store';
 import { setCustomer } from '../../../store/slices/customerSlice';
 import { changeCartQuantity } from '../../../store/slices/cartSlice';
-import { Product } from '../../../api/products/Product';
-import { Customer } from '../../../api/customers/Customer';
-import { useGetProductsQuery, useGetCustomersQuery } from '../../../store/api/woocommerceApi';
+import { Product } from '../../../store/api/products/Product';
+import { Customer } from '../../../store/api/customers/Customer';
+import { useGetProductsQuery, useGetCustomersQuery } from '../../../store/api/api';
 
 interface BarcodeEvent {
     value: string;

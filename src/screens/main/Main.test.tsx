@@ -1,8 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Main } from './Main';
-import AppContextProvider from '../../context/AppContext';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppInsightsContext, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 
 describe('Main', () => {
@@ -14,14 +12,10 @@ describe('Main', () => {
 });
 
 function renderMain() {
-    const queryClient = new QueryClient();
     const reactPlugin = new ReactPlugin();
     render(
-            <AppContextProvider>
-                <AppInsightsContext.Provider value={reactPlugin}>
-                    <QueryClientProvider client={queryClient}>
-                        <Main />
-                    </QueryClientProvider>
-                </AppInsightsContext.Provider>
-            </AppContextProvider>);
+        <AppInsightsContext.Provider value={reactPlugin}>
+            <Main />
+        </AppInsightsContext.Provider>
+    );
 }
