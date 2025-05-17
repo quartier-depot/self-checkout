@@ -26,9 +26,8 @@ export function Product({ product }: ProductProps) {
                 }
                 onClick={() => dispatch(setGestell(item.gestell))}
             >
-                <h2 className={'text-2xl font-bold'}>{identifier}</h2>
-                <p className={'grow truncate mr-1'}>{title}</p>
-                <p className={'nowrap text-l'}>{text}</p>
+                <h2 className={'text-xl font-bold truncate'}>{title}</h2>
+                <p className={'grow truncate mr-1'}>{identifier}</p>
             </div>
         );
     } else {
