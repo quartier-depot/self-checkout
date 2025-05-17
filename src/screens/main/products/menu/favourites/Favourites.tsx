@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { Button } from "../../../../../components/button/Button";
 import { useState } from "react";
-import { MemberDialog } from "../../../../../components/modal/dialog/memberdialog/MemberDialog";
+import { MemberDialog } from "../../../../../components/modal/dialog/memberDialog/MemberDialog";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
 import { setViewMode, selectViewMode } from "../../../../../store/slices/productsSlice";
 import { useGetCustomerOrdersQuery } from "../../../../../store/api/api";

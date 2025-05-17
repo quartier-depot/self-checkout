@@ -2,7 +2,7 @@ import { useGetWalletBalanceQuery } from '../../../store/api/api';
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
 import info from '../../../assets/info.svg';
-import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
+import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 import { useAppSelector } from '../../../store/store';
 
 type CustomerProps = {
