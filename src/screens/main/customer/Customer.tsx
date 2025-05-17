@@ -1,21 +1,22 @@
-import { useAppContext } from '../../../context/useAppContext';
-import { useWalletBalance } from '../../../api/wallet/useWalletBalance';
+import { useGetWalletBalanceQuery } from '../../../store/api/woocommerceApi';
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
-import { Button } from '../../../components/button/Button';
 import info from '../../../assets/info.svg';
 import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
+import { useAppSelector } from '../../../store/store';
 
 type CustomerProps = {
     className?: string
 }
 
 export function Customer({ className }: CustomerProps) {
-    const { state } = useAppContext();
+    const customer = useAppSelector(state => state.customer.customer);
     const [showDialog, setShowDialog] = useState(false);
-    const walletQuery = useWalletBalance(state.customer?.email);
-    const loggedIn = Boolean(state.customer);
-    const name = loggedIn ? `${state.customer?.first_name} ${state.customer?.last_name}` : 'Mitgliedsausweis zeigen';
+    const { data: walletBalance, isLoading, isSuccess } = useGetWalletBalanceQuery(customer?.email || '', {
+        skip: !customer?.email
+    });
+    const loggedIn = Boolean(customer);
+    const name = loggedIn ? `${customer?.first_name} ${customer?.last_name}` : 'Mitgliedsausweis zeigen';
 
     function handleClick() {
         if (!loggedIn) {
@@ -37,8 +38,8 @@ export function Customer({ className }: CustomerProps) {
                 </div>
                 <div className="text-right grow">
                     {!loggedIn && <img src={info} alt="info" className="h-6 inline-block" />}
-                    {loggedIn && walletQuery.isLoading && <span className='animate-pulse'>Guthaben laden</span>}
-                    {loggedIn && walletQuery.isSuccess && formatPrice(walletQuery.data)}
+                    {loggedIn && isLoading && <span className='animate-pulse'>Guthaben laden</span>}
+                    {loggedIn && isSuccess && formatPrice(walletBalance)}
                 </div>
             </div>
 

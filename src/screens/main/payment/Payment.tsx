@@ -1,20 +1,20 @@
-import { useAppContext } from '../../../context/useAppContext';
 import { formatPrice } from '../../../format/formatPrice';
-import { useWalletBalance } from '../../../api/wallet/useWalletBalance';
-import { useCreateOrder } from '../../../api/orders/useCreateOrder';
-import { usePayWithWallet } from '../../../api/wallet/usePayWithWallet';
-import { useUpdateOrder } from '../../../api/orders/useUpdateOrder';
-import { ActionTypes } from '../../../state/action';
 import { useState } from 'react';
 import { Loading } from '../../../components/modal/loading/Loading';
-import { useQueryClient } from '@tanstack/react-query';
 import { Confirmation } from './confirmation/Confirmation';
 import { Button } from '../../../components/button/Button';
 import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { startNewOrder } from '../../../store/slices/orderSlice';
+import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/woocommerceApi';
 
 export function Payment() {
-    const { state, dispatch } = useAppContext();
-    const walletQuery = useWalletBalance(state.customer?.email);
+    const dispatch = useAppDispatch();
+    const customer = useAppSelector(state => state.customer.customer);
+    const cart = useAppSelector(state => state.cart.cart);
+    const { data: walletBalance, isSuccess: isWalletSuccess, refetch: refetchWalletBalance } = useGetWalletBalanceQuery(customer?.email || '', {
+        skip: !customer?.email
+    });
     const [showLoading, setShowLoading] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
@@ -24,49 +24,53 @@ export function Payment() {
     const [transactionId, setTransactionId] = useState(0);
     const [orderId, setOrderId] = useState('');
 
-    const paymentEnabled =
-        walletQuery.isSuccess && walletQuery.data && walletQuery.data >= state.cart.price;
+    const paymentEnabled = isWalletSuccess && walletBalance && walletBalance >= cart.price;
 
-    const queryClient = useQueryClient();
-    const createOrderMutation = useCreateOrder();
-    const payWithWalletMutation = usePayWithWallet(queryClient);
-    const updateOrderMutation = useUpdateOrder();
+    const [payWithWallet] = usePayWithWalletMutation();
+    const [createOrder] = useCreateOrderMutation();
+    const [updateOrder] = useUpdateOrderMutation();
 
     async function handlePayment() {
-        if (!paymentEnabled) {
+        if (!customer) {
             setShowDialog(true);
             return;
         }
 
         setShowLoading(true);
 
-        const { orderId, orderTotal } = await createOrderMutation.mutateAsync({
-            customer: state.customer!,
-            cart: state.cart
-        });
+        try {
+            const { orderId, orderTotal } = await createOrder({
+                customer: customer,
+                cart: cart
+            }).unwrap();
 
-        const walletTransactionId = await payWithWalletMutation.mutateAsync({
-            customer: state.customer!,
-            amount: orderTotal,
-            note: `For self-checkout-order payment #${orderId}`
-        });
+            const { transactionId: walletTransactionId } = await payWithWallet({
+                customer: customer,
+                amount: orderTotal,
+                note: `For self-checkout-order payment #${orderId}`
+            }).unwrap();
 
-        await updateOrderMutation.mutateAsync({
-            id: orderId,
-            payment_method: 'wallet',
-            payment_method_title: 'Virtuelles Konto',
-            status: 'completed',
-            transaction_id: walletTransactionId.toString()
-        });
+            await updateOrder({
+                id: orderId,
+                payment_method: 'wallet',
+                payment_method_title: 'Wallet',
+                transaction_id: walletTransactionId,
+                status: 'completed'
+            }).unwrap();
 
-        const newBalance = (await walletQuery.refetch()).data;
-        dispatch({ type: ActionTypes.START_NEW_ORDER });
-        setNewBalance(newBalance!);
-        setTotal(orderTotal);
-        setTransactionId(walletTransactionId);
-        setOrderId(orderId);
-        setShowConfirmation(true);
-        setShowLoading(false);
+            const { data: newBalance } = await refetchWalletBalance();
+            dispatch(startNewOrder());
+            setNewBalance(newBalance!);
+            setTotal(orderTotal);
+            setTransactionId(walletTransactionId);
+            setOrderId(orderId);
+            setShowConfirmation(true);
+        } catch (error) {
+            console.error('Payment failed:', error);
+            setShowDialog(true);
+        } finally {
+            setShowLoading(false);
+        }
     }
 
     function closeThankYou() {
@@ -78,7 +82,7 @@ export function Payment() {
             <div className={'w-full text-center mt-2 '}>
                 <div className={'flex font-mono'}>
                     <div>TOTAL</div>
-                    <div className={'text-right w-full'}>CHF {formatPrice(state.cart.price)}</div>
+                    <div className={'text-right w-full'}>CHF {formatPrice(cart.price)}</div>
                 </div>
                 <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>Bezahlen</Button>
             </div>

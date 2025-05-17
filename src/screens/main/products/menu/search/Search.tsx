@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { Button } from "../../../../../components/button/Button";
-import { useProducts } from "../../../../../api/products/useProducts";
-import { ActionTypes } from "../../../../../state/action";
-import { useAppContext } from "../../../../../context/useAppContext";
 import { Dialog } from "../../../../../components/modal/dialog/Dialog";
 import { SearchPad } from "./searchPad/SearchPad";
+import { useAppDispatch } from "../../../../../store/store";
+import { setSearchTerm } from "../../../../../store/slices/searchSlice";
+import { setProducts } from "../../../../../store/slices/browseSlice";
+import { useGetProductsQuery } from "../../../../../store/api/woocommerceApi";
+
 type SearchProps = {
     active: boolean;
     onClick: () => void;
 }
 
 export function Search({ active, onClick}: SearchProps) {
-    const productQuery = useProducts();
-    const { dispatch } = useAppContext();
+    const { data: products } = useGetProductsQuery();
+    const dispatch = useAppDispatch();
 
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -23,13 +25,8 @@ export function Search({ active, onClick}: SearchProps) {
 
     function handleSearch(value: string) {  
         setDialogOpen(false);
-        dispatch({
-            type: ActionTypes.SEARCH,
-            payload: {
-                searchTerm: value,
-                products: productQuery.data
-            }
-        });
+        dispatch(setSearchTerm(value));
+        dispatch(setProducts(products || []));
     }   
 
     return (

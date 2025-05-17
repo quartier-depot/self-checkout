@@ -1,8 +1,9 @@
-import { useProducts } from "../../../../../api/products/useProducts";
 import { Button } from "../../../../../components/button/Button";
-import { useAppContext } from "../../../../../context/useAppContext";
 import { useMemo } from "react";
-import { ActionTypes } from "../../../../../state/action";
+import { useAppDispatch } from "../../../../../store/store";
+import { setProducts } from "../../../../../store/slices/browseSlice";
+import { useGetProductsQuery } from "../../../../../store/api/woocommerceApi";
+import { Product } from "../../../../../api/products/Product";
 
 type BrowseProps = {
     active: boolean;
@@ -10,38 +11,37 @@ type BrowseProps = {
 }
 
 export function Browse({ active, onClick }: BrowseProps) {
-    const productQuery = useProducts();
-    const { dispatch } = useAppContext();
+    const dispatch = useAppDispatch();
+    const { data: products } = useGetProductsQuery();
 
-    const productsByGestell = useMemo(() => {
-        if (!productQuery.data) {
+    const gestelle = useMemo(() => {
+        if (!products) {
             return [];
         }
-        return Array.from(new Set(productQuery.data.map(p => p.gestell)))
-        .filter(g => Boolean(g))
-        .map(g => {
-            return {
-                gestell: g!,
-                products: productQuery.data.filter(p => p.gestell === g && p.hasBarcodes())
-            }
-        })
-        .filter(i => i.products.length > 0)
-        .sort((a, b) => a.gestell.localeCompare(b.gestell));
-    }, [productQuery]);
 
-    const handleClick = () => {
-        onClick();
-        dispatch({
-            type: ActionTypes.BROWSE,
-            payload: {
-                products: productsByGestell
+        const gestelleMap = new Map<string, Product[]>();
+        products.forEach(product => {
+            if (product.gestell) {
+                const products = gestelleMap.get(product.gestell) || [];
+                products.push(product);
+                gestelleMap.set(product.gestell, products);
             }
         });
+
+        return Array.from(gestelleMap.entries()).map(([gestell, products]) => ({
+            gestell,
+            products
+        }));
+    }, [products]);
+
+    function handleClick() {
+        dispatch(setProducts(gestelle));
+        onClick();
     }
 
     return (
         <Button type="secondary" onClick={handleClick} toggled={active}>
-            Kategorie
+            Gestelle
         </Button>
     );
 }

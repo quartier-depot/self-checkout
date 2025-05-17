@@ -1,8 +1,8 @@
 import magnifier from '../../../assets/magnifier.svg';
-import { useAppContext } from '../../../context/useAppContext';
+import { useAppSelector } from '../../../store/store';
 
 export function EmptySearch() {
-    const { state } = useAppContext();
+    const searchTerm = useAppSelector(state => state.search.searchTerm);
 
     return (
             <>
@@ -16,7 +16,7 @@ export function EmptySearch() {
 
                         <p className={'text-xl'}>
                             EMPTY SEARCH RESULT
-                            <br />"<span className={'font-semibold'}>{state.searchTerm}</span>"
+                            <br />"<span className={'font-semibold'}>{searchTerm}</span>"
                         </p>
                     </div>
                 </div>

@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import { Item as ItemType } from '../../../api/orders/Cart';
-import cart from '../../../assets/cart.svg';
-import { useAppContext } from '../../../context/useAppContext';
+import cartIcon from '../../../assets/cart.svg';
 import { Item } from './Item';
 import { NumPad } from './numPad/NumPad';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
-import { setCartQuantity } from '../../../state/cart/setCartQuantity';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { Button } from '../../../components/button/Button';
-import { emptyCart } from '../../../state/cart/emptyCart';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { setCartQuantity, emptyCart } from '../../../store/slices/cartSlice';
 
 export function Cart() {
-    const { state } = useAppContext();
-    const { dispatch } = useAppContext();
+    const dispatch = useAppDispatch();
+    const cart = useAppSelector(state => state.cart.cart);
     const applicationInsights = useAppInsightsContext();
 
     const [dialogItem, setDialogItem] = useState<ItemType | null>(null);
@@ -23,7 +22,7 @@ export function Cart() {
     }
 
     function closeDialog(quantity: number): void {
-        dispatch(setCartQuantity(quantity, dialogItem!.product));
+        dispatch(setCartQuantity({ product: dialogItem!.product, quantity }));
         setDialogItem(null);
     }
 
@@ -43,14 +42,14 @@ export function Cart() {
         <>
             <div className={'h-12 text-left flex'}>
                 <div className={'pl-2 py-2 relative'}>
-                    <img src={cart} alt="cart" className={'h-6 inline-block'} />
+                    <img src={cartIcon} alt="cart" className={'h-6 inline-block'} />
                     <div
                         onClick={() => setShowCartDialog(true)}
                         className={
                             'text-center absolute bg-emerald-700 text-white w-5 h-5 text-xs p-0 leading-5 rounded-full -right-2 top-3 cursor-pointer'
                         }
                     >
-                        {state.cart.quantity}
+                        {cart.quantity}
                     </div>
                 </div>
             </div>
@@ -63,7 +62,7 @@ export function Cart() {
                         <col className="w-1/6" />
                     </colgroup>
                     <tbody>
-                        {state.cart.items.map((item) => (
+                        {cart.items.map((item) => (
                             <Item key={item.product.id} item={item} onClick={() => openDialog(item)} />
                         ))}
                     </tbody>

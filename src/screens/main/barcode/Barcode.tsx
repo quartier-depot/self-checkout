@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import KeyboardBarcodeScanner from '../../../external/@point-of-sale/keyboard-barcode-scanner/main';
-import { useProducts } from '../../../api/products/useProducts';
-import { useCustomers } from '../../../api/customers/useCustomers';
-import { useAppContext } from '../../../context/useAppContext';
-import { setCustomer } from '../../../state/customer/setCustomer';
-import { changeCartQuantity } from '../../../state/cart/changeCartQuantity';
+import { useAppDispatch } from '../../../store/store';
+import { setCustomer } from '../../../store/slices/customerSlice';
+import { changeCartQuantity } from '../../../store/slices/cartSlice';
 import { Product } from '../../../api/products/Product';
-import { Customer } from '../../../api/customers/Customer.ts';
+import { Customer } from '../../../api/customers/Customer';
+import { useGetProductsQuery, useGetCustomersQuery } from '../../../store/api/woocommerceApi';
 
 interface BarcodeEvent {
     value: string;
@@ -14,12 +13,12 @@ interface BarcodeEvent {
 }
 
 export function Barcode() {
-    const { dispatch } = useAppContext();
-    const productsQuery = useProducts();
-    const customersQuery = useCustomers();
+    const dispatch = useAppDispatch();
+    const { data: products, isSuccess: isProductsSuccess } = useGetProductsQuery();
+    const { data: customers, isSuccess: isCustomersSuccess } = useGetCustomersQuery();
 
     useEffect(() => {
-        if (productsQuery.isSuccess && customersQuery.isSuccess) {
+        if (isProductsSuccess && isCustomersSuccess) {
             const keyboardScanner = new KeyboardBarcodeScanner();
             keyboardScanner.addEventListener('connected', () => {
                 console.log(`Connected to barcode scanner(s) in keyboard emulation mode.`);
@@ -28,13 +27,13 @@ export function Barcode() {
                 console.log(`Disconnected from barcode scanner(s) in keyboard emulation mode.`);
             });
             keyboardScanner.connect();
-            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customersQuery.data, productsQuery.data));
+            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products));
 
             return () => {
                 keyboardScanner.disconnect();
             };
         }
-    }, [productsQuery.status, customersQuery.status]);
+    }, [isProductsSuccess, isCustomersSuccess]);
 
     function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[]) {
         if (!(e.value)) {
@@ -66,69 +65,18 @@ export function Barcode() {
         }
     }
 
-    function barcodeInput(barcodeEvent: BarcodeEvent, products: Product[]) {
+    function barcodeInput(e: BarcodeEvent, products: Product[]) {
         if (!products || products.length === 0) {
-            console.log('Products barcode not processed because products is ' + products);
+            console.log('Product barcode not processed because productsQuery.data is ' + products);
             return;
         }
 
-        let matchingProducts: Product[] = [];
-        switch (barcodeEvent.symbology) {
-            case 'qr-code':
-                const id = getProductId(barcodeEvent.value);
-                if (id) {
-                    matchingProducts = products.filter((product: Product) => {
-                        return product.id === id;
-                    });
-                    break;
-                }
-
-                const slug = getProductSlug(barcodeEvent.value);
-                if (slug) {
-                    matchingProducts = products.filter((product: Product) => {
-                        return product.slug === slug;
-                    });
-                    break;
-                }
-
-                console.error('Unknown QR code for product search: ' + barcodeEvent.value);
-                break;
-
-            default:
-                matchingProducts = products.filter((product: Product) => {
-                    return product.hasMatchingBarcode(barcodeEvent.value);
-                });
+        const product = products.find((product) => product.hasMatchingBarcode(e.value));
+        if (product) {
+            dispatch(changeCartQuantity({ product, quantity: 1 }));
+        } else {
+            console.log('No product found with barcode ' + e.value);
         }
-
-        switch (matchingProducts.length) {
-            case 0:
-                console.log('Nothing found for ' + barcodeEvent.value);
-                break;
-            case 1:
-                dispatch(changeCartQuantity(1, matchingProducts[0]));
-                break;
-            default:
-                console.log('Found multiple found for ' + barcodeEvent.value);
-                break;
-        }
-    }
-
-    function getProductSlug(url: String) {
-        const regex = /.*\/produkt\/(.*)/;
-        const match = url.match(regex);
-        if (match) {
-            return match[1].replace(/\//g, '');
-        }
-        return undefined;
-    }
-
-    function getProductId(url: String) {
-        const regex = /.*\/?p=(\d*)/;
-        const match = url.match(regex);
-        if (match) {
-            return Number.parseInt(match[1]);
-        }
-        return undefined;
     }
 
     return null;

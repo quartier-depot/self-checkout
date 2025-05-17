@@ -1,5 +1,4 @@
-import { useProducts } from '../../api/products/useProducts';
-import { useCustomers } from '../../api/customers/useCustomers';
+import { useGetProductsQuery, useGetCustomersQuery } from '../../store/api/woocommerceApi';
 import { Products } from './products/Products';
 import { Cart } from './cart/Cart';
 import { Payment } from './payment/Payment';
@@ -8,10 +7,10 @@ import { Customer } from './customer/Customer';
 import { Barcode } from './barcode/Barcode';
 
 export function Main() {
-    const productsQuery = useProducts();
-    const customersQuery = useCustomers();
+    const { isSuccess: isProductsSuccess } = useGetProductsQuery();
+    const { isSuccess: isCustomersSuccess } = useGetCustomersQuery();
 
-    const loadingData = !productsQuery.isSuccess || !customersQuery.isSuccess;
+    const loadingData = !isProductsSuccess || !isCustomersSuccess;
 
     return (
             <>

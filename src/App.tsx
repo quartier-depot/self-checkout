@@ -1,34 +1,23 @@
 import './App.css';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AppInsightsContext, AppInsightsErrorBoundary, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { Main } from './screens/main/Main';
 import { useEffect, useState } from 'react';
-import { ConfigurationActionTypes } from './state/configuration/configurationAction';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import { useAppContext } from './context/useAppContext';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
 import { Statistics } from './screens/statistics/Statistics';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
+import { useAppDispatch, useAppSelector } from './store/store';
+import { setConfiguration } from './store/slices/configurationSlice';
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            throwOnError: true
-        },
-        mutations: {
-            throwOnError: true
-        }
-    }
-});
-
-function App() {
-    const { dispatch, state } = useAppContext();
+function AppContent() {
+    const dispatch = useAppDispatch();
+    const configuration = useAppSelector(state => state.configuration.configuration);
     const [reactPlugin, setReactPlugin] = useState<ReactPlugin | undefined>(undefined);
 
     useEffect(() => {
         async function bootstrap() {
-
             let configuration = undefined;
             if (import.meta.env.VITE_WOOCOMMERCE_URL) {
                 configuration = {
@@ -51,7 +40,7 @@ function App() {
                 }
             }
 
-            dispatch({ type: ConfigurationActionTypes.SET_CONFIGURATION, payload: configuration });
+            dispatch(setConfiguration(configuration));
 
             const reactPlugin = new ReactPlugin();
             const appInsights = new ApplicationInsights({
@@ -68,26 +57,29 @@ function App() {
         bootstrap();
     }, []);
 
-    if (!reactPlugin || !state.configuration) {
+    if (!reactPlugin || !configuration) {
         return <h1>Loading configuration...</h1>;
     }
 
     return (
         <AppInsightsContext.Provider value={reactPlugin}>
             <AppInsightsErrorBoundary onError={() => <h1>Something went wrong</h1>} appInsights={reactPlugin}>
-                <QueryClientProvider client={queryClient}>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="/" element={<Main />} />
-                            <Route path="styleguide" element={<Styleguide />} />
-                            <Route path="statistics" element={<Statistics />} />
-                        </Routes>
-                    </BrowserRouter>
-                    <ReactQueryDevtools initialIsOpen={false} />
-                </QueryClientProvider>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<Main />} />
+                        <Route path="styleguide" element={<Styleguide />} />
+                        <Route path="statistics" element={<Statistics />} />
+                    </Routes>
+                </BrowserRouter>
             </AppInsightsErrorBoundary>
         </AppInsightsContext.Provider>
     );
 }
 
-export default App;
+export default function App() {
+    return (
+        <Provider store={store}>
+            <AppContent />
+        </Provider>
+    );
+}

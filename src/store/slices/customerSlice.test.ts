@@ -1,14 +1,16 @@
 import { describe, expect, test } from 'vitest';
-import { initialState as withoutCustomer, reducer } from '../reducer';
-import { setCustomer } from './setCustomer';
+import customerReducer, { setCustomer } from './customerSlice';
 import { Customer } from '../../api/customers/Customer';
 
-
-describe('customerReducer', () => {
+describe('customerSlice', () => {
   describe('when no customer is set', () => {
     test('on set customer sets customer', () => {
-      const actual = reducer(
-        withoutCustomer,
+      const initialState = {
+        customer: undefined,
+      };
+
+      const actual = customerReducer(
+        initialState,
         setCustomer(customer),
       );
 
@@ -16,7 +18,6 @@ describe('customerReducer', () => {
     });
   });
 });
-
 
 const customer: Customer = {
   id: 42,
@@ -35,4 +36,4 @@ const customer: Customer = {
     postcode: '8000',
     country: 'country',
   },
-};
+}; 

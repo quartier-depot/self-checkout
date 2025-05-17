@@ -1,11 +1,10 @@
 import classNames from "classnames";
-import { useFavourites } from "../../../../../api/products/useFavourites";
-import { useProducts } from "../../../../../api/products/useProducts";
+import { useGetProductsQuery, useGetFavouritesQuery } from "../../../../../store/api/woocommerceApi";
 import { Button } from "../../../../../components/button/Button";
-import { useAppContext } from "../../../../../context/useAppContext";
-import { ActionTypes } from "../../../../../state/action";
 import { useState } from "react";
 import { MemberDialog } from "../../../../../components/modal/dialog/memberdialog/MemberDialog";
+import { useAppDispatch, useAppSelector } from "../../../../../store/store";
+import { setProducts } from "../../../../../store/slices/browseSlice";
 
 type FavouritesProps = {
     active: boolean;
@@ -13,12 +12,16 @@ type FavouritesProps = {
 }
 
 export function Favourites({ active, onClick }: FavouritesProps) {
-    const { dispatch, state } = useAppContext();
-    const productsQuery = useProducts();
-    const favouritesQuery = useFavourites(state.customer?.id, productsQuery.data || []);
+    const dispatch = useAppDispatch();
+    const customer = useAppSelector(state => state.customer.customer);
+    const { data: products = [] } = useGetProductsQuery();
+    const { data: favourites = [], isSuccess: isFavouritesSuccess } = useGetFavouritesQuery(
+        { customerId: customer?.id?.toString() || '', products },
+        { skip: !customer?.id }
+    );
     const [showDialog, setShowDialog] = useState(false);
 
-    const disabled = !state.customer || !favouritesQuery.isSuccess;
+    const disabled = !customer || !isFavouritesSuccess;
 
     const handleClick = () => {
         if (disabled) {
@@ -26,17 +29,12 @@ export function Favourites({ active, onClick }: FavouritesProps) {
             return;
         }
         onClick();
-        dispatch({
-            type: ActionTypes.BROWSE,
-            payload: {
-                products: favouritesQuery.data || []
-            }
-        });
+        dispatch(setProducts(favourites));
     }
 
     return (
         <>
-            <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={active} className={classNames({ 'animate-pulse': favouritesQuery.isLoading })}>
+            <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={active} className={classNames({ 'animate-pulse': isFavouritesSuccess })}>
                 Verlauf
             </Button>
             

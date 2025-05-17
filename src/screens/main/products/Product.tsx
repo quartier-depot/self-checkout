@@ -1,15 +1,15 @@
 import { Product as ProductClass } from '../../../api/products/Product';
-import { useAppContext } from '../../../context/useAppContext';
 import { formatPrice } from '../../../format/formatPrice';
-import { browse } from '../../../state/browse';
-import { changeCartQuantity } from '../../../state/cart/changeCartQuantity';
+import { useAppDispatch } from '../../../store/store';
+import { setProducts } from '../../../store/slices/browseSlice';
+import { changeCartQuantity } from '../../../store/slices/cartSlice';
 
 interface ProductProps {
     product: ProductClass | { gestell: string; products: ProductClass[] };
 }
 
 export function Product({ product }: ProductProps) {
-    const { dispatch } = useAppContext();
+    const dispatch = useAppDispatch();
 
     const isGestell = product.hasOwnProperty('products');
 
@@ -24,7 +24,7 @@ export function Product({ product }: ProductProps) {
                 className={
                     'select-none cursor-pointer overflow-hidden rounded-lg bg-slate-50 p-2 text-center'
                 }
-                onClick={() => dispatch(browse(item.products))}
+                onClick={() => dispatch(setProducts(item.products))}
             >
                 <h2 className={'text-2xl font-bold'}>{identifier}</h2>
                 <p className={'grow truncate mr-1'}>{title}</p>
@@ -39,7 +39,7 @@ export function Product({ product }: ProductProps) {
                 className={
                     'select-none cursor-pointer overflow-hidden rounded-lg bg-slate-50 p-2 text-center'
                 }
-                onClick={() => dispatch(changeCartQuantity(1, item))}
+                onClick={() => dispatch(changeCartQuantity({ product: item, quantity: 1 }))}
             >
                 <h2 className={'text-2xl font-bold'}>{item.artikel_id}</h2>
                 <p className={'grow truncate mr-1'}>{item.name}</p>
