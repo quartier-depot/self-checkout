@@ -14,6 +14,14 @@ interface PayWithWalletResponse {
   transactionId: number;
 }
 
+interface OrderLineItem {
+  product_id: number;
+}
+
+interface Order {
+  line_items: OrderLineItem[];
+}
+
 export const woocommerceApi = createApi({
   reducerPath: 'woocommerceApi',
   baseQuery: fetchBaseQuery({ 
@@ -28,7 +36,7 @@ export const woocommerceApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Products', 'Customers', 'Wallet', 'Favourites'],
+  tagTypes: ['Products', 'Customers', 'Wallet', 'Orders'],
   endpoints: (builder) => ({
     // Products
     getProducts: builder.query<Product[], void>({
@@ -168,10 +176,10 @@ export const woocommerceApi = createApi({
     }),
 
     // Wallet
-    getWalletBalance: builder.query<number, string>({
+    getWalletBalance: builder.query<{ balance: number , currency: string }, string>({
       query: (customerEmail) => ({
-        url: 'wallet',
-        params: { customer_email: customerEmail },
+        url: 'wallet/balance',
+        params: { email: customerEmail },
       }),
       providesTags: ['Wallet'],
     }),
@@ -202,33 +210,15 @@ export const woocommerceApi = createApi({
       }),
     }),
 
-    // Favourites
-    getFavourites: builder.query<Product[], { customerId: string; products: Product[] }>({
-      query: ({ customerId }) => ({
+    getCustomerOrders: builder.query<Order[], number>({
+      query: (customerId) => ({
         url: 'orders',
         params: { customer: customerId, status: 'completed' },
       }),
-      transformResponse: (response: any[], _, { products }) => {
-        // Transform the response to get favourite products
-        const productFrequency = new Map<number, number>();
-        
-        response.forEach(order => {
-          order.line_items.forEach((item: any) => {
-            const count = productFrequency.get(item.product_id) || 0;
-            productFrequency.set(item.product_id, count + 1);
-          });
-        });
-
-        return products
-          .filter(product => productFrequency.has(product.id))
-          .sort((a, b) => {
-            const freqA = productFrequency.get(a.id) || 0;
-            const freqB = productFrequency.get(b.id) || 0;
-            return freqB - freqA;
-          })
-          .slice(0, 14);
+      transformResponse: (response: unknown): Order[] => {
+        return response as Order[];
       },
-      providesTags: ['Favourites'],
+      providesTags: ['Orders'],
     }),
   }),
 });
@@ -240,5 +230,5 @@ export const {
   usePayWithWalletMutation,
   useCreateOrderMutation,
   useUpdateOrderMutation,
-  useGetFavouritesQuery,
+  useGetCustomerOrdersQuery,
 } = woocommerceApi; 

@@ -3,7 +3,7 @@ import { NoProducts } from './NoProducts';
 import { Product } from './Product';
 import { Menu } from './menu/Menu';
 import { useAppSelector } from '../../../store/store';
-import { selectFilteredProducts, selectViewMode } from "../../../store/slices/productsSlice";
+import { selectFilteredProducts } from "../../../store/slices/productsSlice";
 import { Product as ProductType } from "../../../api/products/Product";
 
 type ProductProps = {

@@ -46,6 +46,7 @@ const productsSlice = createSlice({
 export const selectViewMode = (state: RootState) => state.products.viewMode;
 export const selectSearchTerm = (state: RootState) => state.products.searchTerm;
 export const selectGestell = (state: RootState) => state.products.gestell;
+
 export const selectFilteredProducts = (state: RootState) => {
     const { viewMode, searchTerm } = state.products;
     const products = woocommerceApi.endpoints.getProducts.select()(state).data;
@@ -80,8 +81,30 @@ export const selectFilteredProducts = (state: RootState) => {
             };
 
         case 'favourites':
-            // This will be handled by the favourites query
-            return products;
+            const customerId = state.customer.customer?.id;
+            if (!customerId) return [];
+            
+            const orders = woocommerceApi.endpoints.getCustomerOrders.select(customerId)(state).data;
+            if (!orders) return [];
+
+            // Calculate product frequency
+            const productFrequency = new Map<string, number>();
+            orders.forEach(order => {
+                order.line_items.forEach(item => {
+                    const key = item.product_id.toString();
+                    const count = productFrequency.get(key) || 0;
+                    productFrequency.set(key, count + 1);
+                });
+            });
+
+            return products
+                .filter(product => productFrequency.has(product.id.toString()))
+                .sort((a, b) => {
+                    const freqA = productFrequency.get(a.id.toString()) || 0;
+                    const freqB = productFrequency.get(b.id.toString()) || 0;
+                    return freqB - freqA;
+                })
+                .slice(0, 14);
 
         default:
             return undefined;

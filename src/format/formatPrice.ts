@@ -9,5 +9,9 @@ export function formatPrice(amount: unknown): string {
 }
 
 export function isFormattableNumber(amount: unknown): amount is number {
-  return typeof amount === 'number' && Number.isFinite(amount);
+  if (typeof amount === 'number') {
+    return Number.isFinite(amount);
+  } else {
+    return Number.isFinite(Number(amount));
+  }
 }

@@ -39,7 +39,7 @@ export function Customer({ className }: CustomerProps) {
                 <div className="text-right grow">
                     {!loggedIn && <img src={info} alt="info" className="h-6 inline-block" />}
                     {loggedIn && isLoading && <span className='animate-pulse'>Guthaben laden</span>}
-                    {loggedIn && isSuccess && formatPrice(walletBalance)}
+                    {loggedIn && isSuccess && formatPrice(walletBalance.balance)}
                 </div>
             </div>
 

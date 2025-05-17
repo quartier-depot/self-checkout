@@ -24,7 +24,7 @@ export function Payment() {
     const [transactionId, setTransactionId] = useState(0);
     const [orderId, setOrderId] = useState('');
 
-    const paymentEnabled = isWalletSuccess && walletBalance && walletBalance >= cart.price;
+    const paymentEnabled = isWalletSuccess && walletBalance && walletBalance.balance >= cart.price;
 
     const [payWithWallet] = usePayWithWalletMutation();
     const [createOrder] = useCreateOrderMutation();
@@ -60,7 +60,7 @@ export function Payment() {
 
             const { data: newBalance } = await refetchWalletBalance();
             dispatch(startNewOrder());
-            setNewBalance(newBalance!);
+            setNewBalance(newBalance!.balance);
             setTotal(orderTotal);
             setTransactionId(walletTransactionId);
             setOrderId(orderId);
