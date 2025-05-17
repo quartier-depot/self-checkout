@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const appSlice = createSlice({
-  name: ' ',
+const sessionSlice = createSlice({
+  name: 'session',
   initialState: {},
   reducers: {
-    startNewOrder: () => {
+    startNewSession: () => {
       // This action will be handled by extraReducers in cart, customer and products slices
     },
   },
 });
 
-export const { startNewOrder } = appSlice.actions;
-export default appSlice.reducer; 
+export const { startNewSession } = sessionSlice.actions;
+export default sessionSlice.reducer; 

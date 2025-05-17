@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Cart, Item } from '../../api/orders/Cart';
 import { Product } from '../../api/products/Product';
-import { startNewOrder } from './appSlice';
+import { startNewSession } from './appSlice';
 
 interface CartState {
   cart: Cart;
@@ -91,17 +91,13 @@ const cartSlice = createSlice({
 
       state.cart = { price, quantity, items };
     },
-    emptyCart: (state) => {
-      state.cart = initialState.cart;
-    },
   },
   extraReducers: (builder) => {
-    builder.addCase(startNewOrder, (state) => {
-      console.log('startNewOrder.cart');
+    builder.addCase(startNewSession, (state) => {
       state.cart = initialState.cart;
     });
   },
 });
 
-export const { changeCartQuantity, setCartQuantity, emptyCart } = cartSlice.actions;
+export const { changeCartQuantity, setCartQuantity } = cartSlice.actions;
 export default cartSlice.reducer; 

@@ -7,8 +7,8 @@ import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { Button } from '../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { setCartQuantity, emptyCart } from '../../../store/slices/cartSlice';
-import { startNewOrder } from '../../../store/slices/appSlice';
+import { setCartQuantity } from '../../../store/slices/cartSlice';
+import { startNewSession } from '../../../store/slices/appSlice';
 
 export function Cart() {
     const dispatch = useAppDispatch();
@@ -32,7 +32,7 @@ export function Cart() {
     }
 
     function restartCart() {
-        dispatch(startNewOrder());
+        dispatch(startNewSession());
         setShowCartDialog(false);
     }
 

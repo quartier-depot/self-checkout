@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product } from '../../api/products/Product';
-import { startNewOrder } from './appSlice';
+import { startNewSession } from './appSlice';
 import { RootState } from '../store';
 import { woocommerceApi } from '../api/woocommerceApi';
 
@@ -33,7 +33,7 @@ const productsSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(startNewOrder, (state) => {
+        builder.addCase(startNewSession, (state) => {
             console.log('startNewOrder.products');
             state.viewMode = initialState.viewMode;
             state.searchTerm = initialState.searchTerm;

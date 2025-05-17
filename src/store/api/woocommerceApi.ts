@@ -186,10 +186,15 @@ export const woocommerceApi = createApi({
 
     payWithWallet: builder.mutation<PayWithWalletResponse, { customer: Customer; amount: number; note: string }>({
       query: ({ customer, amount, note }) => ({
-        url: 'wallet/pay',
+        url: 'wallet',
         method: 'POST',
-        body: { customer_id: customer.id, amount, note },
+        body: { email: customer.email, type: 'debit', amount, note },
       }),
+      transformResponse: (response: { response: string; id: number }): PayWithWalletResponse => {
+        return {
+          transactionId: response.id
+        };
+      },
       invalidatesTags: ['Wallet'],
     }),
 
@@ -198,8 +203,29 @@ export const woocommerceApi = createApi({
       query: ({ customer, cart }) => ({
         url: 'orders',
         method: 'POST',
-        body: { customer_id: customer.id, ...cart },
+        body: {
+          status: 'pending',
+          customer_id: customer.id,
+          billing: {
+            first_name: customer.first_name,
+            last_name: customer.last_name || 'Kunde',
+            email: customer.email,
+          },
+          payment_method: 'wallet',
+          payment_method_title: 'Virtuelles Konto',
+          line_items: cart.items.map(item => ({
+            name: item.product.name,
+            product_id: item.product.id,
+            quantity: item.quantity,
+          })),
+        }
       }),
+      transformResponse: (response: any): CreateOrderResponse => {
+        return {
+          orderId: response.id,
+          orderTotal: parseFloat(response.total)
+        };
+      }
     }),
 
     updateOrder: builder.mutation<void, OrderUpdate>({
@@ -208,6 +234,7 @@ export const woocommerceApi = createApi({
         method: 'PUT',
         body: update,
       }),
+      invalidatesTags: ['Orders'],
     }),
 
     getCustomerOrders: builder.query<Order[], number>({
