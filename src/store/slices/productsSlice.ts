@@ -56,8 +56,7 @@ export const selectFilteredProducts = (state: RootState) => {
         case 'search':
             if (!searchTerm) return [];
             return products.filter(product =>
-                product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                product.artikel_id?.toLowerCase().includes(searchTerm.toLowerCase())
+                product.artikel_id?.endsWith(searchTerm)
             );
 
         case 'browse':

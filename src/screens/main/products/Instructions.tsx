@@ -7,7 +7,7 @@ import payIcon from '../../../assets/instructions/pay.png';
 
 export function Instructions() {
     return (
-        <div className="bg-slate-400 flex flex-col justify-center items-center h-full opacity-90 font-handwritten">
+        <div className="bg-slate-200 flex flex-col justify-center items-center h-full opacity-60">
             <div className="w-full max-w-md py-2 grid gap-16">
                 {/* 1. Scan */}
                 <div className="grid grid-cols-[1fr_3fr_1fr] items-center">
