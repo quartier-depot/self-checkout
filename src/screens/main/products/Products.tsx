@@ -1,5 +1,5 @@
 import { EmptySearch } from './EmptySearch';
-import { NoProducts } from './NoProducts';
+import { Instructions } from './Instructions';
 import { Product } from './Product';
 import { Menu } from './menu/Menu';
 import { useAppSelector } from '../../../store/store';
@@ -25,7 +25,7 @@ export function Products({ className }: ProductProps) {
     return (
         <>
             <Menu />
-            {products === undefined && <NoProducts />}
+            {products === undefined && <Instructions />}
             {products && products.length === 0 && <EmptySearch />}
             {products && products.length > 0 && (
                 <div className={`${className} overflow-scroll`}>
