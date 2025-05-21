@@ -78,7 +78,7 @@ export function Barcode() {
 
         const product = products.find((product) => product.hasMatchingBarcode(e.value));
         if (product) {
-            dispatch(changeCartQuantity({ product, quantity: 1 }));
+            dispatch(changeCartQuantity({ product, quantity: 1, source: 'scan' }));
         } else {
             console.log('No product found with barcode ' + e.value);
             alertSound.play();

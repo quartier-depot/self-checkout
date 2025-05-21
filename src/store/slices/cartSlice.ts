@@ -15,11 +15,24 @@ const initialState: CartState = {
   },
 };
 
+export type CartActionSource = 'scan' | 'favourites' | 'search' | 'browse' | 'cart' | '';
+
+interface ChangeCartQuantityPayload {
+  product: Product;
+  quantity: number;
+  source: CartActionSource;
+}
+
+interface SetCartQuantityPayload {
+  product: Product;
+  quantity: number;
+}
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    changeCartQuantity: (state, action: PayloadAction<{ product: Product; quantity: number }>) => {
+    changeCartQuantity: (state, action: PayloadAction<ChangeCartQuantityPayload>) => {
       const { product, quantity: delta } = action.payload;
       const cart = state.cart;
       const alreadyInCart = cart.items.find((item) => item.product.id === product.id);
@@ -55,7 +68,7 @@ const cartSlice = createSlice({
 
       state.cart = { price, quantity, items };
     },
-    setCartQuantity: (state, action: PayloadAction<{ product: Product; quantity: number }>) => {
+    setCartQuantity: (state, action: PayloadAction<SetCartQuantityPayload>) => {
       const { product, quantity: delta } = action.payload;
       const cart = state.cart;
       const alreadyInCart = cart.items.find((item) => item.product.id === product.id);

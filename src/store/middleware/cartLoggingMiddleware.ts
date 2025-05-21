@@ -1,26 +1,22 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { changeCartQuantity } from '../slices/cartSlice';
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
-// Create a singleton instance of the middleware
-let appInsights: ApplicationInsights | null = null;
+let appInsights: any = null;
 
-// Initialize the middleware with the Application Insights context
-export const initializeCartLoggingMiddleware = (insights: ApplicationInsights) => {
+export const initializeCartLoggingMiddleware = (insights: any) => {
   appInsights = insights;
 };
 
 export const cartLoggingMiddleware: Middleware = () => (next) => (action) => {
   if (appInsights && changeCartQuantity.match(action)) {
-    const { product, quantity } = action.payload;
+    const { product, quantity, source } = action.payload;
     
-    appInsights.trackEvent(
-      { name: 'cart-action' },
+    appInsights.getAppInsights().trackEvent(
+      { name: 'change-cart-quantity' },
       {
-        action: quantity > 0 ? 'add' : 'remove',
         productId: product.artikel_id,
-        productName: product.name,
         quantity: Math.abs(quantity),
+        source: source,
         timestamp: new Date().toISOString()
       }
     );

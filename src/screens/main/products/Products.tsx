@@ -4,7 +4,7 @@ import { Product } from './Product';
 import { Menu } from './menu/Menu';
 import { useAppSelector } from '../../../store/store';
 import { selectFilteredProducts } from "../../../store/slices/productsSlice";
-import { Product as ProductType } from "../../../api/products/Product";
+import { Product as ProductType } from "../../../store/api/products/Product";
 
 type ProductProps = {
     className?: string
