@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import productsReducer, { setViewMode, setSearchTerm, setGestell, selectFilteredProducts } from './productsSlice';
 import { startNewSession } from './appSlice';
-import { Product } from '../../api/products/Product';
+import { Product } from '../../store/api/products/Product';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';
 

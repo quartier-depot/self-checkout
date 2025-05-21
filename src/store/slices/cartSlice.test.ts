@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import cartReducer, { changeCartQuantity, setCartQuantity } from './cartSlice';
-import { Product } from '../../api/products/Product';
+import { Product } from '../../store/api/products/Product';
 
 describe('cartSlice', () => {
   test('when cart is empty, on change cart quantity by +1 sets product once', () => {
@@ -14,7 +14,7 @@ describe('cartSlice', () => {
 
     const actual = cartReducer(
       initialState,
-      changeCartQuantity({ product, quantity: 1 }),
+      changeCartQuantity({ product, quantity: 1, source: '' }),
     );
 
     expectProductOnce(actual);
@@ -48,7 +48,7 @@ describe('cartSlice', () => {
 
     const actual = cartReducer(
       initialState,
-      changeCartQuantity({ product, quantity: 1 }),
+      changeCartQuantity({ product, quantity: 1, source: '' }),
     );
 
     expectProductTwice(actual);
@@ -65,7 +65,7 @@ describe('cartSlice', () => {
 
     const actual = cartReducer(
       initialState,
-      changeCartQuantity({ product, quantity: -1 }),
+      changeCartQuantity({ product, quantity: -1, source: '' }),
     );
 
     expectEmptyCart(actual);
@@ -116,7 +116,7 @@ describe('cartSlice', () => {
 
     const actual = cartReducer(
       initialState,
-      changeCartQuantity({ product, quantity: -1 }),
+      changeCartQuantity({ product, quantity: -1, source: '' }),
     );
 
     expectProductTwice(actual);

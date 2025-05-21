@@ -1,4 +1,4 @@
-import { Item as ItemType } from '../../../api/orders/Cart';
+import { Item as ItemType } from '../../../store/api/cart/Cart';
 import { formatPrice } from '../../../format/formatPrice';
 
 interface ItemProps {

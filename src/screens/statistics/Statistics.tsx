@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGetProductsQuery } from '../../store/api/api';
-import { Product } from '../../api/products/Product';
+import { Product } from '../../store/api/products/Product';
 
 const NO_BARCODE_VALUE = 'KEIN BARCODE';
 
