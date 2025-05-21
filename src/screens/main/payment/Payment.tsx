@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { Loading } from '../../../components/modal/loading/Loading';
 import { Confirmation } from './confirmation/Confirmation';
 import { Button } from '../../../components/button/Button';
-import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { startNewSession as startNewSession } from '../../../store/slices/appSlice';
 import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/api';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
+import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
 
 export function Payment() {
     const dispatch = useAppDispatch();
