@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import  store from './store/store';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { setConfiguration } from './store/slices/configurationSlice';
+import { initializeCartLoggingMiddleware } from './store/middleware/cartLoggingMiddleware';
 
 function AppContent() {
     const dispatch = useAppDispatch();
@@ -51,6 +52,9 @@ function AppContent() {
                 }
             });
             appInsights.loadAppInsights();
+            appInsights.trackPageView();
+
+            initializeCartLoggingMiddleware(appInsights);
             setReactPlugin(reactPlugin);
         }
 
