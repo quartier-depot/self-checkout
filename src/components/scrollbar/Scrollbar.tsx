@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '../button/Button';
+import arrowIcon from '../../assets/arrow-up.svg';
 
 interface ScrollbarProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
@@ -134,20 +135,20 @@ const Scrollbar: React.FC<ScrollbarProps> = ({ children, className, ...props }) 
         )}
       </div>
       {hasOverflow && (
-        <div className="flex gap-2">
+        <div className="flex gap-2" >
           <Button 
-            type="secondary"
+            type="tertiary"
             onClick={() => handleScrollButtonClick('up')}
-            className="w-1/2 ml-0"
+            className="w-1/2"
           >
-            ⇑
+            <img src={arrowIcon} alt="Scroll up" className="rotate-180 w-4 h-4" />
           </Button>
           <Button 
-            type="secondary"
+            type="tertiary"
             onClick={() => handleScrollButtonClick('down')}
             className="w-1/2"
           >
-            ⇓
+            <img src={arrowIcon} alt="Scroll down" className="w-4 h-4" />
           </Button>
         </div>
       )}

@@ -14,7 +14,7 @@ export function Button({ disabled, onClick, type, toggled, className, children }
         <button
             onClick={onClick}
             className={classNames(
-                'rounded-lg w-full mt-2 p-2 border-2 uppercase',
+                'rounded-lg w-full mt-2 p-2 border-2 uppercase select-none flex items-center justify-center',
 
                 { 'text-white': type === 'primary' },
                 { 'bg-emerald-700 border-emerald-700 active:border-emerald-600 active:bg-emerald-600': type === 'primary' && !disabled },

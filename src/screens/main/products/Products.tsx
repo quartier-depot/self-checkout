@@ -5,6 +5,7 @@ import { Menu } from './menu/Menu';
 import { useAppSelector } from '../../../store/store';
 import { selectFilteredProducts } from "../../../store/slices/productsSlice";
 import { Product as ProductType } from "../../../store/api/products/Product";
+import Scrollbar from '../../../components/scrollbar/Scrollbar';
 
 type ProductProps = {
     className?: string
@@ -28,16 +29,16 @@ export function Products({ className }: ProductProps) {
             {products === undefined && <Instructions />}
             {products && products.length === 0 && <EmptySearch />}
             {products && products.length > 0 && (
-                <div className={`${className} overflow-scroll`}>
-                    <div className={'grid grid-cols-2 gap-2P'}>
-                        {products.map((product: ProductOrGroup) => (
-                            <Product 
-                                key={getProductKey(product)} 
-                                product={product} 
-                            />
-                        ))}
-                    </div>
+            <Scrollbar>
+                <div className={'grid grid-cols-2 gap-2P'}>
+                    {products.map((product: ProductOrGroup) => (
+                        <Product 
+                            key={getProductKey(product)} 
+                            product={product} 
+                        />
+                    ))}
                 </div>
+            </Scrollbar>
             )}
         </>
     );
