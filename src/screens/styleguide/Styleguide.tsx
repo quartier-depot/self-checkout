@@ -1,6 +1,10 @@
 import { Button } from "../../components/button/Button";
-
+const add = new Audio('/assets/sounds/add.mp3');
+const remove = new Audio('/assets/sounds/remove.mp3');
+const alert = new Audio('/assets/sounds/alert.mp3');
+const confirm = new Audio('/assets/sounds/confirm.mp3');
 export function Styleguide() {
+
     return (
             <div className={'grid grid-cols-2 p-5 gap-2 bg-slate-950'}>
 
@@ -59,6 +63,16 @@ export function Styleguide() {
                     <p className={'text-slate-950 text-xl'}>Title text-xl</p>
                     <p className={'text-slate-950'}>Info text-l</p>
                 </div>
+
+
+                <div className={'bg-slate-50 p-2'}>
+                    <h1>Sound</h1>
+                    <a className={'text-blue-950 underline'} onClick={() => add.play()}>Add</a> | 
+                    <a className={'text-blue-950 underline'} onClick={() => remove.play()}> Remove</a> | 
+                    <a className={'text-blue-950 underline'} onClick={() => alert.play()}> Alert</a> | 
+                    <a className={'text-blue-950 underline'} onClick={() => confirm.play()}> Confirm</a> 
+                </div>
+
             </div>
     );
 }
