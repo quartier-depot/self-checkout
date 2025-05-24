@@ -29,6 +29,6 @@ export class Product {
   }
 
   hasBarcodes(): boolean {
-    return !this.barcodes.includes(NO_BARCODE_VALUE) && this.barcodes.length > 0
+    return this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE)
   }
 }

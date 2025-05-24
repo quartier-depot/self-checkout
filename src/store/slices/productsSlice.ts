@@ -61,17 +61,21 @@ export const selectFilteredProducts = (state: RootState) => {
 
         case 'browse':
             if (state.products.gestell) {
-                return products.filter(product => product.gestell === state.products.gestell);
+                return products
+                    .filter(product => product.gestell === state.products.gestell)
+                    .filter(product =>!product.hasBarcodes());
             } else {
                 // Group products by gestell
                 const gestelleMap = new Map<string, Product[]>();
-                products.forEach(product => {
-                    if (product.gestell) {
-                        const products = gestelleMap.get(product.gestell) || [];
-                        products.push(product);
-                        gestelleMap.set(product.gestell, products);
-                    }
-                });
+                products
+                    .filter(product => !product.hasBarcodes())
+                    .forEach(product => {
+                        if (product.gestell) {
+                            const products = gestelleMap.get(product.gestell) || [];
+                            products.push(product);
+                            gestelleMap.set(product.gestell, products);
+                        }
+                    });
                 return Array.from(gestelleMap.entries()).map(([gestell, products]) => ({
                     gestell,
                     products
