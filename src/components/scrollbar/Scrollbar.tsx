@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import './Scrollbar.css';
 import { Button } from '../button/Button';
 
 interface ScrollbarProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
 }
 
+// Source: https://www.thisdot.co/blog/creating-custom-scrollbars-with-react
 const Scrollbar: React.FC<ScrollbarProps> = ({ children, className, ...props }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const scrollTrackRef = useRef<HTMLDivElement>(null);
@@ -14,7 +14,6 @@ const Scrollbar: React.FC<ScrollbarProps> = ({ children, className, ...props }) 
   const mutationObserver = useRef<MutationObserver | null>(null);
   const [thumbHeight, setThumbHeight] = useState(20);
   const [thumbTop, setThumbTop] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
   const [hasOverflow, setHasOverflow] = useState(false);
 
   const checkOverflow = useCallback(() => {
@@ -46,42 +45,6 @@ const Scrollbar: React.FC<ScrollbarProps> = ({ children, className, ...props }) 
       trackHeight - thumbHeight
     );
     setThumbTop(thumbTop);
-  }, []);
-
-  const handleThumbMousedown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
-
-  const handleThumbMouseup = useCallback((e: MouseEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
-
-  const handleThumbMousemove = useCallback((e: MouseEvent) => {
-    if (!isDragging || !contentRef.current || !scrollTrackRef.current || !scrollThumbRef.current) {
-      return;
-    }
-    const { clientHeight, scrollHeight } = contentRef.current;
-    const trackHeight = scrollTrackRef.current.clientHeight;
-    const thumbHeight = scrollThumbRef.current.clientHeight;
-    const clickPosition = e.clientY - scrollTrackRef.current.getBoundingClientRect().top;
-    const scrollPercentage = clickPosition / (trackHeight - thumbHeight);
-    const scrollPosition = scrollPercentage * (scrollHeight - clientHeight);
-    contentRef.current.scrollTop = scrollPosition;
-  }, [isDragging]);
-
-  const handleTrackClick = useCallback((e: React.MouseEvent) => {
-    if (!contentRef.current || !scrollTrackRef.current || !scrollThumbRef.current) {
-      return;
-    }
-    const { clientHeight, scrollHeight } = contentRef.current;
-    const trackHeight = scrollTrackRef.current.clientHeight;
-    const thumbHeight = scrollThumbRef.current.clientHeight;
-    const clickPosition = e.clientY - scrollTrackRef.current.getBoundingClientRect().top;
-    const scrollPercentage = clickPosition / (trackHeight - thumbHeight);
-    const scrollPosition = scrollPercentage * (scrollHeight - clientHeight);
-    contentRef.current.scrollTop = scrollPosition;
   }, []);
 
   const handleScrollButtonClick = useCallback((direction: 'up' | 'down') => {
@@ -141,40 +104,37 @@ const Scrollbar: React.FC<ScrollbarProps> = ({ children, className, ...props }) 
     }
   }, [handleThumbPosition]);
 
-  useEffect(() => {
-    document.addEventListener('mouseup', handleThumbMouseup);
-    document.addEventListener('mousemove', handleThumbMousemove);
-    return () => {
-      document.removeEventListener('mouseup', handleThumbMouseup);
-      document.removeEventListener('mousemove', handleThumbMousemove);
-    };
-  }, [handleThumbMouseup, handleThumbMousemove]);
-
   return (
-    <div className={`custom-scrollbars__container ${className || ''}`}>
-      <div className="custom-scrollbars__main">
-        <div className="custom-scrollbars__content" ref={contentRef} {...props}>
+    <div className={`relative flex flex-col w-full h-full min-h-0 ${className || ''}`}>
+      <div className="flex flex-1 min-h-0">
+        <div 
+          className="flex-1 overflow-auto scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0" 
+          ref={contentRef} 
+          {...props}
+        >
           {children}
         </div>
         {hasOverflow && (
-          <div className="custom-scrollbars__scrollbar">
-            <div className="custom-scrollbars__track-and-thumb" ref={scrollTrackRef} onClick={handleTrackClick}>
-              <div className="custom-scrollbars__track"></div>
+          <div className="flex flex-col w-4 bg-slate-100 flex-shrink-0">
+            <div 
+              className="relative flex-1 w-full min-h-0" 
+              ref={scrollTrackRef}
+            >
+              <div className="absolute w-full h-full"></div>
               <div
-                className="custom-scrollbars__thumb"
+                className="absolute w-full bg-slate-400 rounded"
                 ref={scrollThumbRef}
                 style={{
                   height: `${thumbHeight}px`,
                   top: `${thumbTop}px`,
                 }}
-                onMouseDown={handleThumbMousedown}
               ></div>
             </div>
           </div>
         )}
       </div>
       {hasOverflow && (
-        <div className="custom-scrollbars__buttons">
+        <div className="flex gap-2">
           <Button 
             type="secondary"
             onClick={() => handleScrollButtonClick('up')}
