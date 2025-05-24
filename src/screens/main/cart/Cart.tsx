@@ -58,7 +58,7 @@ export function Cart() {
             </div>
 
             <Scrollbar className="flex-1 font-mono">
-                <table className={'table-fixed w-full'}>
+                <table className={'table-fixed w-full select-none'}>
                     <colgroup>
                         <col className="w-[45px]" />
                         <col className="truncate" />
