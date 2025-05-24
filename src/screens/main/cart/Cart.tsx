@@ -9,6 +9,7 @@ import { Button } from '../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setCartQuantity } from '../../../store/slices/cartSlice';
 import { startNewSession } from '../../../store/slices/appSlice';
+import Scrollbar from '../../../components/scrollbar/Scrollbar';
 
 export function Cart() {
     const dispatch = useAppDispatch();
@@ -56,7 +57,7 @@ export function Cart() {
                 </div>
             </div>
 
-            <div className={'overflow-y-auto overflow-x-hidden flex-1 font-mono'}>
+            <Scrollbar className="flex-1 font-mono">
                 <table className={'table-fixed w-full'}>
                     <colgroup>
                         <col className="w-[45px]" />
@@ -69,7 +70,7 @@ export function Cart() {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </Scrollbar>
 
             {dialogItem && <Dialog><NumPad
                 text={dialogItem.product.name}
