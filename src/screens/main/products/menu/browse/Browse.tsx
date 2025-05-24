@@ -15,7 +15,7 @@ export function Browse() {
 
     return (
         <Button type="secondary" onClick={handleClick} toggled={isActive}>
-            Gestell
+            kein Barcode
         </Button>
     );
 }
