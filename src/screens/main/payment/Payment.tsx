@@ -1,5 +1,5 @@
 import { formatPrice } from '../../../format/formatPrice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Loading } from '../../../components/modal/loading/Loading';
 import { Confirmation } from './confirmation/Confirmation';
 import { Button } from '../../../components/button/Button';
@@ -27,12 +27,19 @@ export function Payment() {
     const [newBalance, setNewBalance] = useState(0);
     const [transactionId, setTransactionId] = useState(0);
     const [orderId, setOrderId] = useState('');
+    const loggedIn = Boolean(customer);
 
     const paymentEnabled = isWalletSuccess && walletBalance && walletBalance.balance >= cart.price;
 
     const [payWithWallet] = usePayWithWalletMutation();
     const [createOrder] = useCreateOrderMutation();
     const [updateOrder] = useUpdateOrderMutation();
+
+    useEffect(() => {
+        if (loggedIn) {
+            setShowMemberDialog(false);
+        }
+    }, [loggedIn]);
 
     async function handlePayment() {
         if (!customer) {

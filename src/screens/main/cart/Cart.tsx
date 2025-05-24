@@ -83,8 +83,8 @@ export function Cart() {
                 <Dialog title="Was möchtest du tun?" onBackdropClick={() => setShowCartDialog(false)}>
                     <div className="p-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <Button type="secondary" onClick={restartCart} className="aspect-square"><b>Einkauf</b><br />neu starten</Button>
-                            <Button type="secondary" onClick={restartApplication} className="aspect-square"><b>Kasse</b><br />neu starten</Button>
+                            <Button type="secondary" onClick={restartCart} className="aspect-square"><b>Einkauf</b> neu starten</Button>
+                            <Button type="secondary" onClick={restartApplication} className="aspect-square"><b>Kasse</b> neu starten</Button>
                         </div>
                         <Button type="primary" onClick={() => setShowCartDialog(false)} className="mt-4">Abbrechen</Button>
                     </div>
