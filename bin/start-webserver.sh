@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-URL=$(snapctl get url)
-API_KEY=$(snapctl get api-key)
-
 export WOOCOMMERCE_URL=$(snapctl get woocommerce-url)
 export WOOCOMMERCE_CONSUMER_KEY=$(snapctl get woocommerce-consumer-key)
 export WOOCOMMERCE_CONSUMER_SECRET=$(snapctl get woocommerce-consumer-secret)
