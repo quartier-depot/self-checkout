@@ -55,15 +55,9 @@ app.use('/wp-json', createProxyMiddleware({
   secure: false,
   on: {
     proxyReq: (proxyReq, req, res) => {
+      // the auth property from the createProxyMiddleware did not work on Ubuntu, so we set it manually
       const auth = Buffer.from(`${config.woocommerce.consumerKey}:${config.woocommerce.consumerSecret}`).toString('base64');
       proxyReq.setHeader('Authorization', `Basic ${auth}`);
-      console.log('Auth Header:', proxyReq.getHeader('Authorization'));
-    },
-    proxyRes: (proxyRes, req, res) => {
-      console.log('Proxy Response Status:', proxyRes.statusCode);
-    },
-    error: (err, req, res) => {
-      console.error('Proxy Error:', err);
     }
   }
 }));
