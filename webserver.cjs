@@ -53,7 +53,19 @@ app.use('/wp-json', createProxyMiddleware({
   target: `${config.woocommerce.url}/wp-json`,
   changeOrigin: true,
   secure: false,
-  auth: `${config.woocommerce.consumerKey}:${config.woocommerce.consumerSecret}`
+  auth: `${config.woocommerce.consumerKey}:${config.woocommerce.consumerSecret}`,
+  on: {
+    proxyReq: (proxyReq, req, res) => {
+      console.log('Proxy Request Headers:', proxyReq.getHeaders());
+      console.log('Original Request Headers:', req.headers);
+    },
+    proxyRes: (proxyRes, req, res) => {
+      console.log('Proxy Response Status:', proxyRes.statusCode);
+    },
+    error: (err, req, res) => {
+      console.error('Proxy Error:', err);
+    }
+  }
 }));
 
 // Configuration
