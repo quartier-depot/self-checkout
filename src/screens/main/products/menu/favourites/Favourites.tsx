@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
 import { setViewMode, selectViewMode } from "../../../../../store/slices/productsSlice";
 import { useGetCustomerOrdersQuery } from "../../../../../store/api/api";
-import { MemberDialog } from "../../../../../components/modal/dialog/memberDialog/MemberDialog";
+import { MemberDialog } from "../../../../../components/modal/dialog/memberdialog/MemberDialog";
 
 
 export function Favourites() {

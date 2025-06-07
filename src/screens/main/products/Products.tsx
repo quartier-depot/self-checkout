@@ -7,13 +7,9 @@ import { selectFilteredProducts } from "../../../store/slices/productsSlice";
 import { Product as ProductType } from "../../../store/api/products/Product";
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
 
-type ProductProps = {
-    className?: string
-}
-
 type ProductOrGroup = ProductType | { gestell: string; products: ProductType[] };
 
-export function Products({ className }: ProductProps) {
+export function Products() {
     const products = useAppSelector(selectFilteredProducts);
 
     const getProductKey = (product: ProductOrGroup): string => {
