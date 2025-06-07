@@ -27,18 +27,18 @@
 6. Install Git
 7. Install Local https://community.localwp.com/t/installation-guide-on-ubuntu-24-04-1-lts-in-2025/46022
 8. Import dump from productive WooCommerce WebShop
-9. WooCommerce shop runs at https://quartierdepot-april2024.local
+9. WooCommerce shop runs at https://quartier-depot-test.local
 10. Adjust backend prerequisites as described in [README.md](../README.md)
 
 
 ## Install Kasse
 
 1. Install Ubuntu Desktop 24, system name "kasse"
-2. Setup fixed IP 192.168.178.144 in DEV network
+2. Setup fixed IP 192.168.178.144 in DEV network on router
 3. Setup user "admin"
 4. Setup SSH for user "admin" with certificates
 5. Disable Password authentication in `/etc/ssh/sshd_config`
-6. Edit `/etc/hosts` and add `192.168.178.65 quartierdepot-april2025.local`
+6. Edit `/etc/hosts` and add `192.168.178.65 https://quartier-depot-test.local`
 7. `sudo apt install 7zip-full`
 8. `wget https://www.eeti.com/touch_driver/Linux/20240510/eGTouch_v2.5.13219.L-x.7z`
 9. `7z x eGTouch_v2.5.13219.L-x.7z`
@@ -52,8 +52,10 @@
 17. As "kasse":
 18. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644 (see below)
 19. Disable "automatic screen lock" in settings
+20. Set keyboard layout to English (for the scanner to read barcodes correctly)
+21. 
 
-## firefox-kiosk.desktop
+### firefox-kiosk.desktop
 
 ```
 [Desktop Entry]
@@ -66,13 +68,9 @@ Name=Firefox Kiosk Mode
 Comment=Start Firefox in kiosk mode on login
 ```
 
-todo:
+Possible TODOs:
+
 * Remove the logout option from the system menu: `gsettings set org.gnome.desktop.lockdown disable-log-out true` (see also https://help.gnome.org/admin/system-admin-guide/stable/dconf-lockdown.html.en)
 * parental controls, allow only webbrowser
 * dash remove
-* backgorund image
-
-
-## Notes
-
-- For the scanner to read barcodes correctly, set the keyboard layout to English.
+* background image
