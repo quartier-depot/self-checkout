@@ -60,7 +60,7 @@ Create `.env` file first with `.env.template`.
 
 ```bash
 $ snapcraft login
-$ snapcraft push quartier-depot-self-checkout_0.0.1_amd64.snap -release=candidate
+$ snapcraft push quartier-depot-self-checkout_0.0.1_amd64.snap --release=candidate
 $ snapcraft list-revisions quartier-depot-self-checkout
 $ sudo snap refresh quartier-depot-self-checkout --channel=candidate # install on device and test
 $ snapcraft release quartier-depot-self-checkout 1 stable
