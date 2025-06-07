@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import info from '../../../assets/info.svg';
 
 import { useAppSelector } from '../../../store/store';
-import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
+import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 
 type CustomerProps = {
     className?: string

@@ -8,7 +8,7 @@ import { startNewSession as startNewSession } from '../../../store/slices/appSli
 import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/api';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
-import { MemberDialog } from '../../../components/modal/dialog/memberdialog/MemberDialog';
+import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 
 export function Payment() {
     const dispatch = useAppDispatch();
