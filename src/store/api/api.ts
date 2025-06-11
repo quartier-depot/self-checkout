@@ -124,6 +124,7 @@ export const api = createApi({
         const initial = await fetchWithBaseQuery({
           url: 'customers',
           params: {
+            role: 'all',
             per_page: maximumItemsPerPage,
             page: 1
           }
@@ -148,6 +149,7 @@ export const api = createApi({
               fetchWithBaseQuery({
                 url: 'customers',
                 params: {
+                  role: 'all',
                   per_page: maximumItemsPerPage,
                   page: i + 1
                 }

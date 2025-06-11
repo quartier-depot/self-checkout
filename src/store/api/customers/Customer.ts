@@ -1,5 +1,3 @@
-import { getMetaData } from "../helper/getMetaData";
-
 export class Customer {
   id: number;
   email: string;
@@ -15,7 +13,7 @@ export class Customer {
     this.first_name = dto.first_name;
     this.last_name = dto.last_name;
     this.username = dto.username;
-    this.member_id = getMetaData('member_id', dto);
+    this.member_id = dto.acf?.member_id;
     this.shipping = new Shipping(dto.shipping);
   }
 }

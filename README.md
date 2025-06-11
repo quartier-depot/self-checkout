@@ -11,6 +11,8 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 * ACF
   * Products with field `barcode` and `artikel-id`
   * Customers with field `member_id`
+* Plugin [quartierdepot-memberid](https://github.com/quartier-depot/quartierdepot-memberid)
+  * Exposes `acf/member_id` field in customer DTO of Woocommerce REST API
 
 ## Techstack
 
