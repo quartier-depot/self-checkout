@@ -51,13 +51,27 @@
 16. `sudo gpasswd --add kasse nopasswdlogin`
 17. `snap login`
 18. `snap install quartier-depot-self-checkout`
-19. `snap `
-19. As "kasse":
-20. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644 (see below)
-21. Disable "automatic screen lock" in settings
-22. Set keyboard layout to English (for the scanner to read barcodes correctly) 
+19. `snap set quartier-depot-self-checkout ...` (see README.md)
+20. Install `sudo apt install unattended-upgrades`
+21. `systemctl status unattended-upgrades` should be active + running
+22. `sudo vi /etc/apt/apt/apt.conf.d/20auto-upgrades` > both lines should be enabled
+23. `sudo vi /etc/apt/apt/apt.conf.d/50unattended-upgrades`
+   * uncomment "${distro_id}:${distro_codename}-updates"; 
+   * uncomment "${distro_id}:${distro_codename}-proposed";
+   * uncomment "${distro_id}:${distro_codename}-backports";
+   * set "Unattended-Upgrade::InstallOnShutdown "true";
+24. Create `/etc/systemd/system/snap-update-shutdown.service`  and `/etc/systemd/system/snap-update-shutdown.timer` (see below)
+25. `sudo systemctl daemon-reload`
+26. `sudo systemctl enable snap-update-shutdown.timer`
+27. `sudo systemctl start snap-update-shutdown.timer`
+28. `sudo systemctl status snap-update-shutdown.timer` or `sudo systemctl status snap-update-shutdown.service` to verify
+29. As "kasse":
+30. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644 (see below)
+31. Disable "automatic screen lock" in settings
+32. Set keyboard layout to English (for the scanner to read barcodes correctly) 
 
-### firefox-kiosk.desktop
+
+### ~/.config/autostart/firefox-kiosk.desktop
 
 ```
 [Desktop Entry]
@@ -69,6 +83,36 @@ X-GNOME-Autostart-enabled=true
 Name=Firefox Kiosk Mode
 Comment=Start Firefox in kiosk mode on login
 ```
+
+### /etc/systemd/system/snap-update-shutdown.service
+
+[Unit]
+Description=Update snaps and shutdown system
+After=network.target
+
+[Service]
+Type=oneshot
+# First stop all running snap services
+ExecStartPre=/bin/sh -c 'snap list | grep -v "^Name" | awk "{print \$1}" | xargs -r snap stop'
+# Then refresh all snaps
+ExecStart=/bin/sh -c 'snap refresh && shutdown -h now'
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
+### /etc/systemd/system/snap-update-shutdown.timer
+
+[Unit]
+Description=Run snap updates and shutdown at 2am
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
 
 Possible TODOs:
 
