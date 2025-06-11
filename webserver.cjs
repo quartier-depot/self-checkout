@@ -9,7 +9,8 @@ const path = require('path');
 let root = "";
 let config = {
   woocommerce: {},
-  applicationInsights: {}
+  applicationInsights: {},
+  snap: {}
 };
 
 const snap = process.env.SNAP;
@@ -23,6 +24,7 @@ config.woocommerce.url = process.env.WOOCOMMERCE_URL || process.env.VITE_WOOCOMM
 config.woocommerce.consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY || process.env.VITE_WOOCOMMERCE_CONSUMER_KEY;
 config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET || process.env.VITE_WOOCOMMERCE_CONSUMER_SECRET;
 config.applicationInsights.connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING;
+config.snap.version = process.env.SNAP_VERSION || process.env.VITE_SNAP_VERSION; 
 
 // tracking
 const options = {
@@ -64,7 +66,7 @@ app.use('/wp-json', createProxyMiddleware({
 
 // Configuration
 app.get('/api/configuration', (_, res) => {
-  res.json({ applicationInsights: config.applicationInsights});
+  res.json({ applicationInsights: config.applicationInsights, snap: config.snap});
 });
 
 // Fallback to index.html for SPA
