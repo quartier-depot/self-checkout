@@ -224,7 +224,6 @@ export const api = createApi({
           payment_method: 'wallet',
           payment_method_title: 'Virtuelles Konto',
           line_items: cart.items.map(item => ({
-            name: item.product.name,
             product_id: item.product.id,
             quantity: item.quantity,
           })),
