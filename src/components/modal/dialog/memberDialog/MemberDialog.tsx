@@ -11,11 +11,11 @@ export function MemberDialog({ onClose }: MemberDialogProps) {
         <Dialog title="Mitgliedsausweis zeigen" onBackdropClick={onClose}>
             <div className={'p-4 flex-grow'} onClick={onClose}>
                 <div className={'flex justify-center items-center'}>
-                    <QRCodeSVG value="https://peloso.ch/quartier-depot" className='h-72 w-72' />
+                    <QRCodeSVG value="https://webshop.quartier-depot.ch/mein-konto/memberid" className='h-72 w-72' />
                 </div>
                 <ul className={'py-8 p-4 list-decimal'}>
                     <li>Scanne zuerst den QR-Code oben mit deinem Smartphone.</li>
-                    <li>Scanne dann den QR-Code auf deinem Smartphone mit dem Scanner an der Kasse.</li>
+                    <li>Scanne dann den Barcode auf deinem Smartphone mit dem Scanner an der Kasse.</li>
                 </ul>
             </div>
             <div className={'p-4'}>
