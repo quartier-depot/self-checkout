@@ -54,7 +54,7 @@ Create `.env` file first with `.env.template`.
 ### Build
 
 1. `npm run build` creates the application in `/dist`
-2. Set the version number in [snapcraft.yaml](./snap/snapcraft.yaml)
+2. Set the version number in [snapcraft.yaml](./snap/snapscraft.yaml)
 3. `snapcraft` creates the `*.snap`
 
 
