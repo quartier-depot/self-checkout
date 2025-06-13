@@ -7,6 +7,7 @@ import productsReducer from './slices/productsSlice';
 import orderReducer from './slices/appSlice';
 import { api } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
+import { cartLoggingMiddleware } from './middleware/cartLoggingMiddleware';
 
 // We'll add our reducers here once we create them
 const store = configureStore({
@@ -23,7 +24,8 @@ const store = configureStore({
       serializableCheck: false, // This might be needed for App Insights
     })
     .concat(api.middleware)
-    .concat(soundMiddleware),
+    .concat(soundMiddleware)
+    .concat(cartLoggingMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 
