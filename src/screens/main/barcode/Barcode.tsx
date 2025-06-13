@@ -8,6 +8,7 @@ import { Customer } from '../../../store/api/customers/Customer';
 import { useGetProductsQuery, useGetCustomersQuery } from '../../../store/api/api';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { Button } from '../../../components/button/Button';
+import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 
 interface BarcodeEvent {
     value: string;
@@ -18,6 +19,7 @@ const alertSound = new Audio('/assets/sounds/alert.mp3');
 
 export function Barcode() {
     const dispatch = useAppDispatch();
+    const appInsights = useAppInsightsContext();
     const { data: products, isSuccess: isProductsSuccess } = useGetProductsQuery();
     const { data: customers, isSuccess: isCustomersSuccess } = useGetCustomersQuery();
     const [showNoProductFound, setShowNoProductFound] = useState(false);
@@ -67,6 +69,7 @@ export function Barcode() {
             dispatch(setCustomer(customer));
         } else {
             console.log('No customer found with memberId ' + barcode);
+            appInsights.getAppInsights().trackEvent({ name: 'customer-not-found' }, { barcode: barcode });
         }
     }
 
@@ -88,6 +91,7 @@ export function Barcode() {
         } else {
             console.log('No product found with barcode ' + e.value);
             alertSound.play();
+            appInsights.getAppInsights().trackEvent({ name: 'product-not-found' }, { barcode: e.value });
             setBarcode(e.value);
             setShowNoProductFound(true);
         }
@@ -103,7 +107,7 @@ export function Barcode() {
             <Dialog title="Kein Produkt gefunden" onBackdropClick={closeNoProductFoundDialog}>
                     <div className={'p-4 flex-grow'}>
                         Es konnte kein Produkt gefunden werden mit diesem Barcode.
-                        Bitte suche den Artikel nach Nummer oder Gestell.
+                        Bitte suche den Artikel unter "NUMMER" oder "FAVORITEN".
                         <br />
                         <br />
                        <pre>Barcode: {barcode}</pre>
