@@ -10,9 +10,11 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setCartQuantity } from '../../../store/slices/cartSlice';
 import { startNewSession } from '../../../store/slices/appSlice';
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
+import { selectSnapVersion } from '../../../store/slices/configurationSlice';
 
 export function Cart() {
     const dispatch = useAppDispatch();
+    const snapVersion = useAppSelector(selectSnapVersion);
     const cart = useAppSelector(state => state.cart.cart);
     const applicationInsights = useAppInsightsContext();
 
@@ -83,9 +85,25 @@ export function Cart() {
                 <Dialog title="Was möchtest du tun?" onBackdropClick={() => setShowCartDialog(false)}>
                     <div className="p-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <Button type="secondary" onClick={restartCart} className="aspect-square"><b>Einkauf</b> neu starten</Button>
-                            <Button type="secondary" onClick={restartApplication} className="aspect-square"><b>Kasse</b> neu starten</Button>
+                            <Button type="secondary" onClick={restartCart} className="aspect-square">
+                                <div className='normal-case'>
+                                    <b>EINKAUF</b><br />
+                                    neu starten<br />
+                                    <br />
+                                    {cart.quantity > 0 && <div className="text-sm text-center mt-4">{cart.quantity} Artikel löschen</div>}
+                                    {cart.quantity === 0 && <div className="text-sm text-center mt-4"></div>}
+                                </div>
+                            </Button>
+                            <Button type="secondary" onClick={restartApplication} className="aspect-square">
+                                <div className='normal-case'>
+                                    <b>KASSE</b><br />
+                                    neu starten<br />
+                                    <br />
+                                    {snapVersion && <div className="text-sm text-center mt-4">Version: {snapVersion}</div>}
+                                </div>
+                            </Button>
                         </div>
+
                         <Button type="primary" onClick={() => setShowCartDialog(false)} className="mt-4">Abbrechen</Button>
                     </div>
                 </Dialog>

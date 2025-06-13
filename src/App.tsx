@@ -29,6 +29,9 @@ function AppContent() {
                     },
                     applicationInsights: {
                         connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING
+                    },
+                    snap: {
+                        version: import.meta.env.VITE_SNAP_VERSION
                     }
                 }
             } else {
