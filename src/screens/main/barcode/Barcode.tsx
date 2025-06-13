@@ -76,7 +76,13 @@ export function Barcode() {
             return;
         }
 
-        const product = products.find((product) => product.hasMatchingBarcode(e.value));
+        let product: Product | undefined;
+        if (e.value.startsWith('https://')) {
+            product = products.find((product) => e.value.endsWith(product.id.toString()));
+        } else {
+            product = products.find((product) => product.hasMatchingBarcode(e.value));
+        }
+
         if (product) {
             dispatch(changeCartQuantity({ product, quantity: 1, source: 'scan' }));
         } else {
