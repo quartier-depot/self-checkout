@@ -7,10 +7,10 @@ import { Customer } from './customer/Customer';
 import { Barcode } from './barcode/Barcode';
 
 export function Main() {
-    const { isSuccess: isProductsSuccess } = useGetProductsQuery();
-    const { isSuccess: isCustomersSuccess } = useGetCustomersQuery();
+    const { isSuccess: isProductsSuccess, isFetching: isProductsFetching } = useGetProductsQuery();
+    const { isSuccess: isCustomersSuccess, isFetching: isCustomersFetching } = useGetCustomersQuery();
 
-    const loadingData = !isProductsSuccess || !isCustomersSuccess;
+    const loadingData = isProductsFetching || isCustomersFetching || !isProductsSuccess || !isCustomersSuccess;
 
     return (
             <>

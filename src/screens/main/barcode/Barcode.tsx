@@ -21,8 +21,9 @@ export function Barcode() {
     const dispatch = useAppDispatch();
     const appInsights = useAppInsightsContext();
     const { data: products, isSuccess: isProductsSuccess } = useGetProductsQuery();
-    const { data: customers, isSuccess: isCustomersSuccess } = useGetCustomersQuery();
+    const { data: customers, isSuccess: isCustomersSuccess, refetch: refetchCustomers } = useGetCustomersQuery();
     const [showNoProductFound, setShowNoProductFound] = useState(false);
+    const [showNoCustomerFound, setShowNoCustomerFound] = useState(false);
     const [barcode, setBarcode] = useState('');
     useEffect(() => {
         if (isProductsSuccess && isCustomersSuccess) {
@@ -69,7 +70,10 @@ export function Barcode() {
             dispatch(setCustomer(customer));
         } else {
             console.log('No customer found with memberId ' + barcode);
+            alertSound.play();
             appInsights.getAppInsights().trackEvent({ name: 'customer-not-found' }, { barcode: barcode });
+            setBarcode(barcode);
+            setShowNoCustomerFound(true);
         }
     }
 
@@ -97,23 +101,44 @@ export function Barcode() {
         }
     }
 
-    function closeNoProductFoundDialog() {
+    function closeDialog() {
         setShowNoProductFound(false);
+        setShowNoCustomerFound(false);
         setBarcode('');
+    }
+    
+    function refetchCustomersAndCloseDialog() {
+        refetchCustomers();
+        closeDialog();
     }
 
     if (showNoProductFound) {
         return (
-            <Dialog title="Kein Produkt gefunden" onBackdropClick={closeNoProductFoundDialog}>
+            <Dialog title="Kein Produkt gefunden" onBackdropClick={closeDialog}>
                     <div className={'p-4 flex-grow'}>
-                        Es konnte kein Produkt gefunden werden mit diesem Barcode.
+                        Es konnte kein Produkt mit dem Barcode <span className="font-mono">{barcode}</span> gefunden werden.
+                        <p className="mt-4">
                         Bitte suche den Artikel unter "NUMMER" oder "FAVORITEN".
-                        <br />
-                        <br />
-                       <pre>Barcode: {barcode}</pre>
+                        </p>
                     </div>
                     <div className={'p-4'}>
-                        <Button type="primary" onClick={closeNoProductFoundDialog}>OK</Button>
+                        <Button type="primary" onClick={closeDialog}>OK</Button>
+                    </div>
+            </Dialog>
+        )
+    }
+
+    if (showNoCustomerFound) {
+        return (
+            <Dialog title="Kunde nicht gefunden" onBackdropClick={closeDialog}>
+                    <div className={'p-4 flex-grow'}>
+                        Es konnte kein Kunde mit dem Barcode <span className="font-mono">{barcode}</span> gefunden werden.
+                        <p className="mt-4">
+                        Bitte klicke auf OK und zeige deinen Barcode erneut.        
+                        </p>              
+                    </div>
+                    <div className={'p-4'}>
+                        <Button type="primary" onClick={refetchCustomersAndCloseDialog}>OK</Button>
                     </div>
             </Dialog>
         )
