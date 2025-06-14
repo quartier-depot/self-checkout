@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
 import { Statistics } from './screens/statistics/Statistics';
 import { Provider } from 'react-redux';
-import  store from './store/store';
+import store from './store/store';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { setConfiguration } from './store/slices/configurationSlice';
 import { initializeCartLoggingMiddleware } from './store/middleware/cartLoggingMiddleware';
@@ -72,14 +72,12 @@ function AppContent() {
     return (
         <AppInsightsContext.Provider value={reactPlugin}>
             <AppInsightsErrorBoundary onError={() => <ErrorScreen />} appInsights={reactPlugin}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Main />} />
-                        <Route path="styleguide" element={<Styleguide />} />
-                        <Route path="statistics" element={<Statistics />} />
-                        <Route path="error" element={<ErrorScreen />} />
-                    </Routes>
-                </BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Main />} />
+                    <Route path="styleguide" element={<Styleguide />} />
+                    <Route path="statistics" element={<Statistics />} />
+                    <Route path="error" element={<ErrorScreen />} />
+                </Routes>
             </AppInsightsErrorBoundary>
         </AppInsightsContext.Provider>
     );
@@ -88,7 +86,9 @@ function AppContent() {
 export default function App() {
     return (
         <Provider store={store}>
-            <AppContent />
+            <BrowserRouter>
+                <AppContent />
+            </BrowserRouter>
         </Provider>
     );
 }
