@@ -11,6 +11,7 @@ import  store from './store/store';
 import { useAppDispatch, useAppSelector } from './store/store';
 import { setConfiguration } from './store/slices/configurationSlice';
 import { initializeCartLoggingMiddleware } from './store/middleware/cartLoggingMiddleware';
+import { Error as ErrorScreen } from './screens/main/error/Error';
 
 function AppContent() {
     const dispatch = useAppDispatch();
@@ -70,12 +71,13 @@ function AppContent() {
 
     return (
         <AppInsightsContext.Provider value={reactPlugin}>
-            <AppInsightsErrorBoundary onError={() => <h1>Something went wrong</h1>} appInsights={reactPlugin}>
+            <AppInsightsErrorBoundary onError={() => <ErrorScreen />} appInsights={reactPlugin}>
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<Main />} />
                         <Route path="styleguide" element={<Styleguide />} />
                         <Route path="statistics" element={<Statistics />} />
+                        <Route path="error" element={<ErrorScreen />} />
                     </Routes>
                 </BrowserRouter>
             </AppInsightsErrorBoundary>
