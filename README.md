@@ -66,6 +66,8 @@ $ snapcraft push quartier-depot-self-checkout_0.0.1_amd64.snap --release=stable
 $ snapcraft list-revisions quartier-depot-self-checkout
 ```
 
+Note: Use the `release.sh` script to build and publish.
+
 ### Install
 
 ```bash
