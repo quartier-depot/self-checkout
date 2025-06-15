@@ -34,7 +34,7 @@ if ! npm run build; then
 fi
 
 echo "4 - Testing React -----------------------------------------------------"
-if ! npm run test; then
+if ! npx vitest run; then
     echo "Error: React tests failed"
     exit 1
 fi
