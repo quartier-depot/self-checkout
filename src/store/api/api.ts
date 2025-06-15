@@ -214,13 +214,11 @@ export const api = createApi({
         url: 'orders',
         method: 'POST',
         body: {
-          status: 'pending',
+          // Note: use processing instead of pending to trigger the same email notification as in the webshop
+          status: 'processing',
           customer_id: customer.id,
-          billing: {
-            first_name: customer.first_name,
-            last_name: customer.last_name || 'Kunde',
-            email: customer.email,
-          },
+          billing: customer.billing,
+          shipping: customer.shipping,
           payment_method: 'wallet',
           payment_method_title: 'Virtuelles Konto',
           line_items: cart.items.map(item => ({
