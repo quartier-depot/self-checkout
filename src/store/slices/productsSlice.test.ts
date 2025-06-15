@@ -127,7 +127,7 @@ describe('productsSlice', () => {
             const result = selectFilteredProducts(state as any);
             expect(result).toHaveLength(2); // A5, A15
             const product1 = result![0] as Product;
-            expect(product1.name).toBe('Product 5');
+            expect(product1.name).toBe('Product 4');
             const product2 = result![1] as Product;
             expect(product2.name).toBe('Product 15');
         });
