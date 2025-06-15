@@ -12,6 +12,12 @@ if [ "$(git rev-parse --abbrev-ref HEAD)" != "main" ]; then
     exit 1
 fi
 
+# Check if the current branch is clean
+if ! git diff-index --quiet HEAD --; then
+    echo "Error: The current branch is not clean. Please commit or stash your changes first."
+    exit 1
+fi
+
 git pull
 
 VERSION=$(cat ./snap/snapcraft.yaml | grep "^version:" | awk '{print $2}' | tr -d '"')
