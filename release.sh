@@ -35,13 +35,22 @@ git push origin "$VERSION"
 
 echo "4 - Building React ----------------------------------------------------"
 npm clean-install
-npm run build
+if ! npm run build; then
+    echo "Error: React build failed"
+    exit 1
+fi
 
 echo "5 - Testing React -----------------------------------------------------"
-npm run test
+if ! npm run test; then
+    echo "Error: React tests failed"
+    exit 1
+fi
 
 echo "6 - Building snap -----------------------------------------------------"
-snapcraft
+if ! snapcraft; then
+    echo "Error: Snapcraft build failed"
+    exit 1
+fi
 
 echo "7 - Pushing to snapcraft ---------------------------------------------"
 snapcraft push quartier-depot-self-checkout_${VERSION}_amd64.snap --release=stable
