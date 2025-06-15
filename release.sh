@@ -18,23 +18,28 @@ if ! git diff-index --quiet HEAD --; then
     exit 1
 fi
 
+echo "1 - Pulling latest changes --------------------------------------------"
 git pull
 
+echo "2 - Determining version -----------------------------------------------"
 VERSION=$(cat ./snap/snapcraft.yaml | grep "^version:" | awk '{print $2}' | tr -d '"')
 echo "Using version $VERSION from snapcraft.yaml"
 
-# Check if tag already exists
+echo "3 - Creating tag ------------------------------------------------------"
 if git rev-parse "v$VERSION" >/dev/null 2>&1; then
     echo "Error: Tag v$VERSION already exists"
     exit 1
 fi
-
 git tag -a "v$VERSION" -m "$VERSION"
 git push origin "$VERSION"
 
+echo "4 - Building React ----------------------------------------------------"
 npm clean-install
 npm run build
 
+echo "5 - Building snap -----------------------------------------------------"
 snapcraft
+
+echo "6 - Pushing to snapcraft ---------------------------------------------"
 snapcraft push quartier-depot-self-checkout_${VERSION}_amd64.snap --release=stable
 snapcraft list-revisions quartier-depot-self-checkout
