@@ -25,33 +25,34 @@ echo "2 - Determining version -----------------------------------------------"
 VERSION=$(cat ./snap/snapcraft.yaml | grep "^version:" | awk '{print $2}' | tr -d '"')
 echo "Using version $VERSION from snapcraft.yaml"
 
-echo "3 - Creating tag ------------------------------------------------------"
-if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-    echo "Error: Tag v$VERSION already exists"
-    exit 1
-fi
-git tag -a "v$VERSION" -m "$VERSION"
-git push origin "$VERSION"
 
-echo "4 - Building React ----------------------------------------------------"
+echo "3 - Building React ----------------------------------------------------"
 npm clean-install
 if ! npm run build; then
     echo "Error: React build failed"
     exit 1
 fi
 
-echo "5 - Testing React -----------------------------------------------------"
+echo "4 - Testing React -----------------------------------------------------"
 if ! npm run test; then
     echo "Error: React tests failed"
     exit 1
 fi
 
-echo "6 - Building snap -----------------------------------------------------"
+echo "5 - Building snap -----------------------------------------------------"
 if ! snapcraft; then
     echo "Error: Snapcraft build failed"
     exit 1
 fi
 
-echo "7 - Pushing to snapcraft ---------------------------------------------"
+echo "6 - Pushing to snapcraft ---------------------------------------------"
 snapcraft push quartier-depot-self-checkout_${VERSION}_amd64.snap --release=stable
 snapcraft list-revisions quartier-depot-self-checkout
+
+echo "7 - Creating and pushing tag -----------------------------------------"
+if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+    echo "Error: Tag v$VERSION already exists"
+    exit 1
+fi
+git tag -a "v$VERSION" -m "$VERSION"
+git push origin "$VERSION"
