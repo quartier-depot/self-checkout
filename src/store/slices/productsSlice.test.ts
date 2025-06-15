@@ -110,7 +110,7 @@ describe('productsSlice', () => {
             const state = {
                 products: {
                     viewMode: 'search',
-                    searchTerm: 'Product 10',
+                    searchTerm: '5',
                     gestell: '',
                 },
                 api: {
@@ -125,9 +125,11 @@ describe('productsSlice', () => {
                 },
             };
             const result = selectFilteredProducts(state as any);
-            expect(result).toHaveLength(1);
-            const product = result![0] as Product;
-            expect(product.name).toBe('Product 10');
+            expect(result).toHaveLength(2); // A5, A15
+            const product1 = result![0] as Product;
+            expect(product1.name).toBe('Product 5');
+            const product2 = result![1] as Product;
+            expect(product2.name).toBe('Product 15');
         });
 
         it('should filter products by shell', () => {
