@@ -37,9 +37,12 @@ echo "4 - Building React ----------------------------------------------------"
 npm clean-install
 npm run build
 
-echo "5 - Building snap -----------------------------------------------------"
+echo "5 - Testing React -----------------------------------------------------"
+npm run test
+
+echo "6 - Building snap -----------------------------------------------------"
 snapcraft
 
-echo "6 - Pushing to snapcraft ---------------------------------------------"
+echo "7 - Pushing to snapcraft ---------------------------------------------"
 snapcraft push quartier-depot-self-checkout_${VERSION}_amd64.snap --release=stable
 snapcraft list-revisions quartier-depot-self-checkout
