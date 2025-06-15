@@ -26,6 +26,18 @@ const customer: Customer = {
   last_name: 'last',
   username: 'username',
   member_id: 'member_id',
+  billing: {
+    first_name: 'first',
+    last_name: 'last',
+    company: 'company',
+    address_1: 'address_1',
+    address_2: 'address_2',
+    city: 'city',
+    postcode: '8000',
+    country: 'country',
+    email: 'email',
+    phone: 'phone'
+  },
   shipping: {
     first_name: 'first',
     last_name: 'last',
