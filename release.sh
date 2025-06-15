@@ -50,9 +50,9 @@ snapcraft push quartier-depot-self-checkout_${VERSION}_amd64.snap --release=stab
 snapcraft list-revisions quartier-depot-self-checkout
 
 echo "7 - Creating and pushing tag -----------------------------------------"
-if git rev-parse "v$VERSION" >/dev/null 2>&1; then
-    echo "Error: Tag v$VERSION already exists"
+if git rev-parse "$VERSION" >/dev/null 2>&1; then
+    echo "Error: Tag $VERSION already exists"
     exit 1
 fi
-git tag -a "v$VERSION" -m "$VERSION"
+git tag -a "$VERSION" -m "$VERSION"
 git push origin "$VERSION"
