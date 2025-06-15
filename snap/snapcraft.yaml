@@ -1,6 +1,6 @@
 name: quartier-depot-self-checkout
 base: core22
-version: "0.0.6"
+version: "0.0.7"
 summary: Self Checkout for Quartier-Depot
 description: Self-checkout cash register for a self-service store using a WooCommerce backend.
 
