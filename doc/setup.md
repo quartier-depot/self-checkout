@@ -56,10 +56,10 @@
 21. `systemctl status unattended-upgrades` should be active + running
 22. `sudo vi /etc/apt/apt/apt.conf.d/20auto-upgrades` > both lines should be enabled
 23. `sudo vi /etc/apt/apt/apt.conf.d/50unattended-upgrades`
-   * uncomment "${distro_id}:${distro_codename}-updates"; 
-   * uncomment "${distro_id}:${distro_codename}-proposed";
-   * uncomment "${distro_id}:${distro_codename}-backports";
-   * set "Unattended-Upgrade::InstallOnShutdown "true";
+    * uncomment "${distro_id}:${distro_codename}-updates"; 
+    * uncomment "${distro_id}:${distro_codename}-proposed";
+    * uncomment "${distro_id}:${distro_codename}-backports";
+    * set "Unattended-Upgrade::InstallOnShutdown "true";
 24. Create `/etc/systemd/system/snap-update-shutdown.service`  and `/etc/systemd/system/snap-update-shutdown.timer` (see below)
 25. `sudo systemctl daemon-reload`
 26. `sudo systemctl enable snap-update-shutdown.timer`
