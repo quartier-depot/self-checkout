@@ -24,7 +24,7 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 - Snapcraft
 - Express
 
-## Project Setup
+## Development
 
 ### Install
 
@@ -51,14 +51,20 @@ $ npx dotenvx run -- node webserver.cjs
 Create `.env` file first with `.env.template`.
 
 
+## Release
+
+Note: Use the `release.sh` script to build and publish.
+
+## Version
+
+1. Set the version number in [snapcraft.yaml](./snap/snapscraft.yaml)
+
 ### Build
 
 1. `npm run build` creates the application in `/dist`
-2. Set the version number in [snapcraft.yaml](./snap/snapscraft.yaml)
-3. `snapcraft` creates the `*.snap`
+2. `snapcraft` creates the `*.snap`
 
-
-### Publish
+## Publish
 
 ```bash
 $ snapcraft login
@@ -66,11 +72,10 @@ $ snapcraft push quartier-depot-self-checkout_0.0.1_amd64.snap --release=stable
 $ snapcraft list-revisions quartier-depot-self-checkout
 ```
 
-Note: Use the `release.sh` script to build and publish.
-
-### Install
+## Install
 
 ```bash
+$ sudo snap login
 $ sudo snap install quartier-depot-self-checkout
 $ sudo snap set quartier-depot-self-checkout woocommerce-url=https://webshop.quartier-depot.ch woocommerce-consumer-key=ck_b... woocommerce-consumer-secret=cs_5... applicationinsights-connection-string="InstrumentationKey=6..."
 ```
@@ -83,7 +88,6 @@ $ sudo snap refresh quartier-depot-self-checkout
 ```
 
 The system automatically refreshes all snaps on shutdown (see setup.md).
-
 
 ### Recommended IDE Setup
 
