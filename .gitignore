@@ -4,7 +4,6 @@ quartier-depot-self-checkout*
 # env
 .env
 .env*
-nodes.md
 notes.md
 
 # Logs

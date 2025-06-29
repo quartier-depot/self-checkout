@@ -2,53 +2,34 @@
 
 ## Devices
 
-### Kasse
-
-* Spectra PowerTwin-115RL-R10
-* Intel(R) Atom(TM) CPU  E3845  @ 1.91GHz
-* 4GB RAM
-* 2 Ethernet interfaces, no WLAN
-* eGalax Inc. USB TouchController Touchscreen
-
-### Dev
+### Laptop
 
 * Hewlett-Packard HP ProBook 650 G1 
 * Intel® Core™ i5-4300M × 4
 * 8GB RAM
 * 128GB SSD
 
-## Install Dev
+### Screen
 
-1. Ubuntu Desktop 24, system name "hp-ubuntu"
-2. Setup fixed IP 192.168.178.65 in DEV network
-3. User "abeggchr"
-4. Install VS Code
-5. Install Node, NPM
-6. Install Git
-7. Install Local https://community.localwp.com/t/installation-guide-on-ubuntu-24-04-1-lts-in-2025/46022
-8. Import dump from productive WooCommerce WebShop
-9. WooCommerce shop runs at https://quartier-depot-test.local
-10. Adjust backend prerequisites as described in [README.md](../README.md)
+* ELO 1509L Touchscreen Monitor
+
+## Install
+
+1. Install Ubuntu Desktop 24, system name "quartier-depot-kasse"
+2. Setup fixed IP 192.168.178.65 in DEV network on router
+3. Add user "admin"
+4. Switch to user "admin"
+5. Setup SSH with certificates ([see link](https://linuxconfig.org/quick-guide-to-enabling-ssh-on-ubuntu-24-04))
+6. System > Users > Other Users > kasse > automatic login
+7. System > Users > Other Users > kasse > not an admin
+8. `sudo groupadd nopasswdlogin` (add passwordless login group, [see link](https://ubuntuhandbook.org/index.php/2019/02/enable-passwordless-login-ubuntu-18-04/))
+9. `sudo editor /etc/pam.d/gdm-password`, add `auth sufficient pam_succeed_if.so user ingroup nopasswdlogin`
+10. `sudo gpasswd --add kasse nopasswdlogin`
+11. `sudo apt-get install podman`
 
 
-## Install Kasse
 
-1. Install Ubuntu Desktop 24, system name "kasse"
-2. Setup fixed IP 192.168.178.144 in DEV network on router
-3. Setup user "admin"
-4. (optional) Setup SSH for user "admin" with certificates
-5. Disable Password authentication in `/etc/ssh/sshd_config`
-6. Edit `/etc/hosts` and add `192.168.178.65 https://quartier-depot-test.local`
-7. `sudo apt install 7zip-full`
-8. `wget https://www.eeti.com/touch_driver/Linux/20240510/eGTouch_v2.5.13219.L-x.7z`
-9. `7z x eGTouch_v2.5.13219.L-x.7z`
-10. `chmod +x ./setup.sh` and execute setup (as user "admin")
-11. eGTouch Utility > calibrate Touchscreen
-12. Add user "kasse" without with automatic login (Activities > System > Users > Unlock > Other Users)
-13. (Activities > System > Users > Unlock > Other Users)
-14. `sudo groupadd nopasswdlogin` (Passwordless login for user "kasse", see https://ubuntuhandbook.org/index.php/2019/02/enable-passwordless-login-ubuntu-18-04/)
-15. `sudo editor /etc/pam.d/gdm-password`, add `auth sufficient pam_succeed_if.so user ingroup nopasswdlogin`
-16. `sudo gpasswd --add kasse nopasswdlogin`
+
 17. `snap login`
 18. `snap install quartier-depot-self-checkout`
 19. `snap set quartier-depot-self-checkout ...` (see README.md)
