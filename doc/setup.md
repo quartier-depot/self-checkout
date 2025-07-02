@@ -25,32 +25,118 @@
 8. `sudo groupadd nopasswdlogin` (add passwordless login group, [see link](https://ubuntuhandbook.org/index.php/2019/02/enable-passwordless-login-ubuntu-18-04/))
 9. `sudo editor /etc/pam.d/gdm-password`, add `auth sufficient pam_succeed_if.so user ingroup nopasswdlogin`
 10. `sudo gpasswd --add kasse nopasswdlogin`
-11. `sudo apt-get install podman`
-
-
-
-
-17. `snap login`
-18. `snap install quartier-depot-self-checkout`
-19. `snap set quartier-depot-self-checkout ...` (see README.md)
-20. Install `sudo apt install unattended-upgrades`
-21. `systemctl status unattended-upgrades` should be active + running
-22. `sudo vi /etc/apt/apt/apt.conf.d/20auto-upgrades` > both lines should be enabled
-23. `sudo vi /etc/apt/apt/apt.conf.d/50unattended-upgrades`
+11. Download driver for Touchscreen [64 bit Multi-Touch USB Driver (AMD64/Intel - x86_64)](https://assets.ctfassets.net/of6pv6scuh5x/5VjIPJkh9TYLqu8EMIwGHu/9ddc1d2347c4aba3ba9939f4ea01a7e7/SW603069_Elo_Linux_MT_USB_Driver_v4.4.0.0_x86_64.tgz)
+12. Install following the [installation instructions](https://assets.ctfassets.net/of6pv6scuh5x/6KeK55CH83sFuNlGlmgr0D/32b557e47e3e52b59e0e409c4961b9ac/Installation_Instruction.txt)
+    * `cp -r ./bin-mt-usb/  /etc/opt/elo-mt-usb`
+    * `cd /etc/opt/elo-mt-usb`
+    * `chmod 777`
+    * `chmod 444 *.txt`
+    * `cp /etc/opt/elo-mt-usb/99-elotouch.rules /etc/udev/rules.d`
+    * `cp /etc/opt/elo-mt-usb/elo.service /etc/systemd/system/`
+    * `systemctl enable elo.service`
+13. Set touchscreen matrix as it is not correct
+    * `vi /etc/udev/rules.d/99-elotouch.rules`
+    * add `ATTRS{name}=="Elo multi-touch digitizer - 0 - 04e7:0020", ENV{LIBINPUT_CALIBRATION_MATRIX}="-1 0 1 0 -1 1 0 0 1"`
+    * `sudo udevadm control --reload`
+    * `sudo udevadm trigger`
+    * `sudo reboot`
+14. `sudo apt-get install podman`
+15. `sudo apt install unattended-upgrades`
+16. `systemctl status unattended-upgrades` should be active + running
+17. `sudo vi /etc/apt/apt/apt.conf.d/20auto-upgrades` > both lines should be enabled
+18. `sudo vi /etc/apt/apt/apt.conf.d/50unattended-upgrades`
     * uncomment "${distro_id}:${distro_codename}-updates"; 
     * uncomment "${distro_id}:${distro_codename}-proposed";
     * uncomment "${distro_id}:${distro_codename}-backports";
     * set "Unattended-Upgrade::InstallOnShutdown "true";
-24. Create `/etc/systemd/system/snap-update-shutdown.service`  and `/etc/systemd/system/snap-update-shutdown.timer` (see below)
-25. `sudo systemctl daemon-reload`
-26. `sudo systemctl enable snap-update-shutdown.timer`
-27. `sudo systemctl start snap-update-shutdown.timer`
-28. `sudo systemctl status snap-update-shutdown.timer` or `sudo systemctl status snap-update-shutdown.service` to verify
-29. As "kasse":
-30. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644 (see below)
-31. Disable "automatic screen lock" in settings
-32. Set keyboard layout to English (for the scanner to read barcodes correctly) 
+19. Create `/usr/local/sbin/nightly-maintenance.sh` (see below)
+20. `chmod +x /usr/local/sbin/nightly-maintenance.sh`
+21. `sudo systemctl daemon-reexec`
+22. `sudo systemctl daemon-reload`
+23. `sudo systemctl enable --now nightly-maintenance.timer`
+24. Create `/etc/logrotate.d/nightly-maintenance` (see below)
+25. As "kasse":
+26. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644 (see below)
+27. Disable "automatic screen lock" in settings 
+28. Set keyboard layout to English (for the scanner to read barcodes correctly) 
 
+
+### /usr/local/sbin/nightly-maintenance.sh
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+LOG_FILE="/var/log/nightly-maintenance.log"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+echo
+echo "===== Nightly Maintenance Started at $(date) ====="
+
+# 1. Stop Firefox snap
+echo "[INFO] Stopping Firefox snap..."
+snap stop firefox || echo "[WARN] Firefox snap was not running."
+
+# 2. Refresh snaps
+echo "[INFO] Refreshing snaps..."
+snap refresh
+
+# 3. Stop all Podman containers
+echo "[INFO] Stopping all Podman containers..."
+podman stop --all || echo "[INFO] No running Podman containers."
+
+# 4. Pull latest httpd image
+echo "[INFO] Pulling latest httpd image from docker.io..."
+podman pull docker.io/library/httpd
+
+# 5. Autoremove unused packages
+echo "[INFO] Running apt autoremove..."
+apt autoremove -y
+
+# 6. Shutdown
+echo "[INFO] Shutting down the system..."
+shutdown -h now
+
+```
+
+### /etc/systemd/system/nightly-maintenance.service
+
+```
+[Unit]
+Description=Nightly Maintenance Script
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/nightly-maintenance.sh
+```
+
+### /etc/systemd/system/nightly-maintenance.timer
+
+```
+[Unit]
+Description=Run nightly maintenance at 2:00 AM daily
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+### /etc/logrotate.d/nightly-maintenance
+
+```
+/var/log/nightly-maintenance.log {
+    weekly
+    rotate 4
+    compress
+    missingok
+    notifempty
+}
+```
 
 ### ~/.config/autostart/firefox-kiosk.desktop
 
@@ -65,34 +151,6 @@ Name=Firefox Kiosk Mode
 Comment=Start Firefox in kiosk mode on login
 ```
 
-### /etc/systemd/system/snap-update-shutdown.service
-
-[Unit]
-Description=Update snaps and shutdown system
-After=network.target
-
-[Service]
-Type=oneshot
-# First stop all running snap services
-ExecStartPre=/bin/sh -c 'snap list | grep -v "^Name" | awk "{print \$1}" | xargs -r snap stop'
-# Then refresh all snaps
-ExecStart=/bin/sh -c 'snap refresh && shutdown -h now'
-User=root
-
-[Install]
-WantedBy=multi-user.target
-
-### /etc/systemd/system/snap-update-shutdown.timer
-
-[Unit]
-Description=Run snap updates and shutdown at 2am
-
-[Timer]
-OnCalendar=*-*-* 02:00:00
-Persistent=true
-
-[Install]
-WantedBy=timers.target
 
 
 Possible TODOs:
