@@ -29,65 +29,48 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 ### Install
 
 ```bash
+$ cd ./app
 $ npm install
 ```
 
-### Run (development)
+### Run (react app)
 
 ```bash
 $ npm run dev
 ```
 
-Create `.env` file first with `.env.template`.
+Create `.env` file first with `.env.template` in `./app` folder.
 
 
-### Run (build without snap)
+### Run (express server)
 
 ```bash
+$ cd ./app
+$ npm install
 $ npm run build
-$ npx dotenvx run -- node webserver.cjs
+$ cd ../server
+$ npm install
+$ npx dotenvx run -f ../app/.env -- node webserver.cjs
 ```
 
-Create `.env` file first with `.env.template`.
+### Run (container)
 
+```bash
+$ podman build -t quartier-depot-self-checkout -f Containerfile . 
+$ podman run --env-file ./app/.env -p 3000:3000 localhost/quartier-depot-self-checkout:latest
+```
 
 ## Release
 
-Note: Use the `release.sh` script to build and publish.
-
-## Version
-
-1. Set the version number in [snapcraft.yaml](./snap/snapscraft.yaml)
-
-### Build
-
-1. `npm run build` creates the application in `/dist`
-2. `snapcraft` creates the `*.snap`
-
-## Publish
-
-```bash
-$ snapcraft login
-$ snapcraft push quartier-depot-self-checkout_0.0.1_amd64.snap --release=stable
-$ snapcraft list-revisions quartier-depot-self-checkout
-```
+tbd.
 
 ## Install
 
-```bash
-$ sudo snap login
-$ sudo snap install quartier-depot-self-checkout
-$ sudo snap set quartier-depot-self-checkout woocommerce-url=https://webshop.quartier-depot.ch woocommerce-consumer-key=ck_b... woocommerce-consumer-secret=cs_5... applicationinsights-connection-string="InstrumentationKey=6..."
-```
+tbd.
 
 ### Update 
 
-```bash
-$ sudo snap stop quartier-depot-self-checkout
-$ sudo snap refresh quartier-depot-self-checkout
-```
-
-The system automatically refreshes all snaps on shutdown (see setup.md).
+tbd.
 
 ### Recommended IDE Setup
 
@@ -99,20 +82,13 @@ The system automatically refreshes all snaps on shutdown (see setup.md).
 ## Deployment at Quartierdepot
 
 Although there are other deployment options (like hosting on a Webserver),
-we deploy the application directly to the POS device as an Ubuntu Snap application.
+we deploy the application directly to the POS device in a container.
 
-The Snap application runs an Express server internally and takes care of calls to the backend,
+The container runs an Express server internally and takes care of calls to the backend,
 keeping the secrets save (they are not exposed to the browser and encrypted for backend communication)
 and taking care of CORS (all calls from web application are routed through a proxy).
 
 See also [setup.md](./doc/setup.md)
-
-## Troubleshooting
-
-* `sudo snap logs quartier-depot-self-checkout`
-* `sudo journalctl -ef -u snap.quartier-depot-self-checkout.quartier-depot-self-checkout`
-
-See also: https://snapcraft.io/blog/snapcraft-development-tips-how-to-troubleshoot-snaps-with-services
 
 ## Credits
 
