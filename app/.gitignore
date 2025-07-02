@@ -1,5 +1,6 @@
 # build
 dist
+node_modules
 
 # env
 .env
@@ -11,6 +12,9 @@ notes.md
 logs
 *.log
 npm-debug.log*
+
+# test-results
+test-results.json
 
 # Editor directories and files
 .vscode/*
