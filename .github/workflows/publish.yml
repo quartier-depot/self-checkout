@@ -37,4 +37,4 @@ jobs:
           context: .
           file: ./Containerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ steps.extract_version.outputs.version }}
+          tags: ghcr.io/quartier-depot/self-checkout:${{ steps.extract_version.outputs.version }}
