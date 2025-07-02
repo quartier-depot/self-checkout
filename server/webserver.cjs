@@ -26,6 +26,10 @@ const options = {
 }
 
 useAzureMonitor(options);
+
+// Note: warning "Accessing resource attributes before async attributes settled []" is noise
+// see: https://github.com/microsoft/ApplicationInsights-node.js/issues/1218"
+
 registerInstrumentations({
   instrumentations: [
     // Express instrumentation expects HTTP layer to be instrumented
