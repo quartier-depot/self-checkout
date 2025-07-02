@@ -62,22 +62,24 @@ $ podman run --env-file ./app/.env -p 3000:3000 localhost/quartier-depot-self-ch
 
 ## Release
 
-tbd.
+1. Tag the codebase (i.e. '1.0.0') and push `git push --tags`.
+2. A [GitHub action] builds the container and publishes it.
 
 ## Install
 
-tbd.
+1. Prepare an `.env` file.
+2. `podman run --env-file .env -p 3000:3000 ghcr.io/quartier-depot/self-checkout:latest`
 
-### Update 
+## Update
 
-tbd.
+1. `podman stop --all`
+2. Re-run with `:latest`
 
 ### Recommended IDE Setup
 
 * [VSCode](https://code.visualstudio.com/)
 * [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 * [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-
 
 ## Deployment at Quartierdepot
 
