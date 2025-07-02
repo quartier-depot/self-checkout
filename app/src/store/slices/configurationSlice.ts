@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../store';
 
 interface Configuration {
   woocommerce?: {
@@ -9,9 +8,6 @@ interface Configuration {
   };
   applicationInsights?: {
     connectionString: string;
-  };
-  snap?: {
-    version: string;
   };
 }
 
@@ -32,8 +28,6 @@ const configurationSlice = createSlice({
     },
   },
 });
-
-export const selectSnapVersion = (state: RootState) => state.configuration.configuration?.snap?.version;
 
 export const { setConfiguration } = configurationSlice.actions;
 export default configurationSlice.reducer; 

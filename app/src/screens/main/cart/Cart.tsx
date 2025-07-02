@@ -10,11 +10,9 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setCartQuantity } from '../../../store/slices/cartSlice';
 import { startNewSession } from '../../../store/slices/appSlice';
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
-import { selectSnapVersion } from '../../../store/slices/configurationSlice';
 
 export function Cart() {
     const dispatch = useAppDispatch();
-    const snapVersion = useAppSelector(selectSnapVersion);
     const cart = useAppSelector(state => state.cart.cart);
     const applicationInsights = useAppInsightsContext();
 
@@ -99,7 +97,7 @@ export function Cart() {
                                     <b>KASSE</b><br />
                                     neu starten<br />
                                     <br />
-                                    {snapVersion && <div className="text-sm text-center mt-4">Version: {snapVersion}</div>}
+                                    <div className="text-sm text-center mt-4">Version: {__APP_VERSION__}</div>
                                 </div>
                             </Button>
                         </div>
