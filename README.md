@@ -68,7 +68,8 @@ $ podman run --env-file ./app/.env -p 3000:3000 localhost/quartier-depot-self-ch
 ## Install
 
 1. Prepare an `.env` file.
-2. `podman run --env-file .env -p 3000:3000 ghcr.io/quartier-depot/self-checkout:latest`
+2. `echo $CR_PAT | podman login ghcr.io -u USERNAME --password-stdin`
+3. `podman run --env-file .env -p 3000:3000 ghcr.io/quartier-depot/self-checkout:latest`
 
 ## Update
 
