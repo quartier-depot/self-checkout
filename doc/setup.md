@@ -15,18 +15,27 @@
 
 ## Install
 
-1. Install Ubuntu Desktop 24, system name "quartier-depot-kasse"
+### General
+
+1. Install Ubuntu Desktop 24, system name "quartier-depot-kasse", user "kasse"
 2. Setup fixed IP 192.168.178.65 in DEV network on router
 3. Add user "admin"
-4. Switch to user "admin"
-5. Setup SSH with certificates ([see link](https://linuxconfig.org/quick-guide-to-enabling-ssh-on-ubuntu-24-04))
-6. System > Users > Other Users > kasse > automatic login
-7. System > Users > Other Users > kasse > not an admin
-8. `sudo groupadd nopasswdlogin` (add passwordless login group, [see link](https://ubuntuhandbook.org/index.php/2019/02/enable-passwordless-login-ubuntu-18-04/))
-9. `sudo editor /etc/pam.d/gdm-password`, add `auth sufficient pam_succeed_if.so user ingroup nopasswdlogin`
-10. `sudo gpasswd --add kasse nopasswdlogin`
-11. Download driver for Touchscreen [64 bit Multi-Touch USB Driver (AMD64/Intel - x86_64)](https://assets.ctfassets.net/of6pv6scuh5x/5VjIPJkh9TYLqu8EMIwGHu/9ddc1d2347c4aba3ba9939f4ea01a7e7/SW603069_Elo_Linux_MT_USB_Driver_v4.4.0.0_x86_64.tgz)
-12. Install following the [installation instructions](https://assets.ctfassets.net/of6pv6scuh5x/6KeK55CH83sFuNlGlmgr0D/32b557e47e3e52b59e0e409c4961b9ac/Installation_Instruction.txt)
+
+### Admin
+
+1. Switch to user "admin"
+2. Setup SSH ([see link](https://linuxconfig.org/quick-guide-to-enabling-ssh-on-ubuntu-24-04))
+3. Allow ony user "admin" to SSH:
+    * `sudo nano /etc/ssh/sshd_config`
+    * add `AllowUsers otheruser`
+    * `sudo systemctl restart sshd`
+4. System > Users > Other Users > kasse > automatic login
+5. System > Users > Other Users > kasse > not an admin
+6. `sudo groupadd nopasswdlogin` (add passwordless login group, [see link](https://ubuntuhandbook.org/index.php/2019/02/enable-passwordless-login-ubuntu-18-04/))
+7. `sudo editor /etc/pam.d/gdm-password`, add `auth sufficient pam_succeed_if.so user ingroup nopasswdlogin`
+8. `sudo gpasswd --add kasse nopasswdlogin`
+9. Download driver for Touchscreen [64 bit Multi-Touch USB Driver (AMD64/Intel - x86_64)](https://assets.ctfassets.net/of6pv6scuh5x/5VjIPJkh9TYLqu8EMIwGHu/9ddc1d2347c4aba3ba9939f4ea01a7e7/SW603069_Elo_Linux_MT_USB_Driver_v4.4.0.0_x86_64.tgz)
+10. Install following the [installation instructions](https://assets.ctfassets.net/of6pv6scuh5x/6KeK55CH83sFuNlGlmgr0D/32b557e47e3e52b59e0e409c4961b9ac/Installation_Instruction.txt)
     * `cp -r ./bin-mt-usb/  /etc/opt/elo-mt-usb`
     * `cd /etc/opt/elo-mt-usb`
     * `chmod 777`
@@ -34,32 +43,42 @@
     * `cp /etc/opt/elo-mt-usb/99-elotouch.rules /etc/udev/rules.d`
     * `cp /etc/opt/elo-mt-usb/elo.service /etc/systemd/system/`
     * `systemctl enable elo.service`
-13. Set touchscreen matrix as it is not correct
+11. Set touchscreen matrix as it is not correct
     * `vi /etc/udev/rules.d/99-elotouch.rules`
     * add `ATTRS{name}=="Elo multi-touch digitizer - 0 - 04e7:0020", ENV{LIBINPUT_CALIBRATION_MATRIX}="-1 0 1 0 -1 1 0 0 1"`
     * `sudo udevadm control --reload`
     * `sudo udevadm trigger`
     * `sudo reboot`
-14. `sudo apt-get install podman`
-15. `sudo apt install unattended-upgrades`
-16. `systemctl status unattended-upgrades` should be active + running
-17. `sudo vi /etc/apt/apt/apt.conf.d/20auto-upgrades` > both lines should be enabled
-18. `sudo vi /etc/apt/apt/apt.conf.d/50unattended-upgrades`
+12. `sudo apt-get install podman`
+13. `sudo apt install unattended-upgrades`
+14. `systemctl status unattended-upgrades` should be active and running
+15. `sudo vi /etc/apt/apt/apt.conf.d/20auto-upgrades` > both lines should be enabled
+16. `sudo vi /etc/apt/apt/apt.conf.d/50unattended-upgrades`
     * uncomment "${distro_id}:${distro_codename}-updates"; 
     * uncomment "${distro_id}:${distro_codename}-proposed";
     * uncomment "${distro_id}:${distro_codename}-backports";
     * set "Unattended-Upgrade::InstallOnShutdown "true";
-19. Create `/usr/local/sbin/nightly-maintenance.sh` (see below)
-20. `chmod +x /usr/local/sbin/nightly-maintenance.sh`
-21. `sudo systemctl daemon-reexec`
-22. `sudo systemctl daemon-reload`
-23. `sudo systemctl enable --now nightly-maintenance.timer`
-24. Create `/etc/logrotate.d/nightly-maintenance` (see below)
-25. As "kasse":
-26. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644 (see below)
-27. Disable "automatic screen lock" in settings 
-28. Set keyboard layout to English (for the scanner to read barcodes correctly) 
+17. Create `/usr/local/sbin/nightly-maintenance.sh` (see below)
+18. `sudo chmod 771 /usr/local/sbin/nightly-maintenance.sh`
+19. Create `/etc/systemd/system/nightly-maintenance.timer` (see below)
+20. `sudo systemctl daemon-reexec`
+21. `sudo systemctl daemon-reload`
+22. `sudo systemctl enable --now nightly-maintenance.timer`
+23. Create `/etc/logrotate.d/nightly-maintenance` (see below)
+24. Login to GitHub Container registry `echo <PAT> | podman login ghcr.io -u <USERNAME> --password-stdin`
+25. Create `/etc/systemd/system/quartier-depot-self-checkout-container.service` (see below)
+26. `sudo chmod 644 /etc/systemd/system/quartier-depot-self-checkout-container.service`
+27. `sudo systemctl daemon-reexec`
+28. `sudo systemctl daemon-reload`
+29. `sudo systemctl enable quartier-depot-self-checkout-container`
+30. `sudo systemctl start quartier-depot-self-checkout-container`
 
+### Kasse 
+
+1. As user "kasse":
+2. Create `~/.config/autostart/firefox-kiosk.desktop` with permissions 644 (see below)
+3. Disable "automatic screen lock" in settings
+4. Set keyboard-layout to English (for the scanner to read barcodes correctly)
 
 ### /usr/local/sbin/nightly-maintenance.sh
 
@@ -84,10 +103,12 @@ snap refresh
 # 3. Stop all Podman containers
 echo "[INFO] Stopping all Podman containers..."
 podman stop --all || echo "[INFO] No running Podman containers."
+podman container prune -f
 
-# 4. Pull latest httpd image
-echo "[INFO] Pulling latest httpd image from docker.io..."
-podman pull docker.io/library/httpd
+# 4. Pull latest image
+echo "[INFO] Pulling latest image"
+echo <PAT> | podman login ghcr.io -u quartier-depot --password-stdin
+podman pull ghcr.io/quartier-depot/self-checkout:latest
 
 # 5. Autoremove unused packages
 echo "[INFO] Running apt autoremove..."
@@ -95,7 +116,7 @@ apt autoremove -y
 
 # 6. Shutdown
 echo "[INFO] Shutting down the system..."
-shutdown -h now
+reboot
 
 ```
 
@@ -138,6 +159,24 @@ WantedBy=timers.target
 }
 ```
 
+### /etc/systemd/system/quartier-depot-self-checkout-container.service
+
+```
+[Unit]
+Description=Quartier-Depot Self-Checkout Container
+Requires=podman.service
+After=network.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/podman run --rm --name=quartier-depot-container --env-file /home/admin/self-checkout.env -p 3000:3000 ghcr.io/quartier-depot/self-checkout:latest
+ExecStop=/usr/bin/podman stop quartier-depot-container
+
+[Install]
+WantedBy=multi-user.target
+```
+
 ### ~/.config/autostart/firefox-kiosk.desktop
 
 ```
@@ -150,6 +189,13 @@ X-GNOME-Autostart-enabled=true
 Name=Firefox Kiosk Mode
 Comment=Start Firefox in kiosk mode on login
 ```
+
+
+## Log Files
+
+* `sudo grep unattended-upgrades /var/log/syslog`
+* `sudo cat /var/log/nightly-maintenance.log`
+* 
 
 
 

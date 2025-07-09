@@ -1,7 +1,7 @@
 {
     "name": "self-checkout-server",
     "private": true,
-    "version": "0.0.9",
+    "version": "0.0.10",
     "type": "module",
     "dependencies": {
         "@azure/monitor-opentelemetry": "^1.11.1",
