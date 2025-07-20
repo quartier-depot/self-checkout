@@ -9,6 +9,7 @@
         "@opentelemetry/instrumentation-express": "^0.51.0",
         "@opentelemetry/instrumentation-http": "^0.202.0",
         "@opentelemetry/sdk-trace-node": "^2.0.1",
+        "applicationinsights": "^3.7.0",
         "express": "^5.0.1",
         "http-proxy-middleware": "^3.0.3"
     },
