@@ -21,7 +21,6 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 - Typescript
 - React Redux
 - Tailwind
-- Snapcraft
 - Express
 
 ## Development

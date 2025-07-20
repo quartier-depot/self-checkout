@@ -22,6 +22,7 @@ function AppContent() {
         async function bootstrap() {
             let configuration = undefined;
             if (import.meta.env.VITE_WOOCOMMERCE_URL) {
+                // using vite dev
                 configuration = {
                     woocommerce: {
                         url: import.meta.env.VITE_WOOCOMMERCE_URL,
@@ -30,12 +31,10 @@ function AppContent() {
                     },
                     applicationInsights: {
                         connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING
-                    },
-                    snap: {
-                        version: import.meta.env.VITE_SNAP_VERSION
                     }
                 }
             } else {
+                // using express webserver
                 const url = '/api/configuration';
                 const response = await fetch(url);
                 if (response.ok) {
