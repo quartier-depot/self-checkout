@@ -1,52 +1,34 @@
-const { useAzureMonitor } = require("@azure/monitor-opentelemetry");
-const { registerInstrumentations } = require('@opentelemetry/instrumentation');
-const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
-const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
-const path = require('path');
+// connection string
+const appInsightsConnectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING;
 
-// configure
-let root = path.join(__dirname, '..', 'app', 'dist');
+// appInsights
+// Note: warning "Accessing resource attributes before async attributes settled []" is noise
+// see: https://github.com/microsoft/ApplicationInsights-node.js/issues/1218"
+const appInsights = require('applicationinsights');
+appInsights.setup(appInsightsConnectionString).start();
 
+// config
 let config = {
   woocommerce: {},
   applicationInsights: {}
 };
-
 config.woocommerce.url = process.env.WOOCOMMERCE_URL || process.env.VITE_WOOCOMMERCE_URL;
 config.woocommerce.consumerKey = process.env.WOOCOMMERCE_CONSUMER_KEY || process.env.VITE_WOOCOMMERCE_CONSUMER_KEY;
 config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET || process.env.VITE_WOOCOMMERCE_CONSUMER_SECRET;
-config.applicationInsights.connectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING;
-
-// tracking
-const options = {
-  azureMonitorExporterOptions: {
-    connectionString: config.applicationInsights.connectionString
-  },
-}
-
-useAzureMonitor(options);
-
-// Note: warning "Accessing resource attributes before async attributes settled []" is noise
-// see: https://github.com/microsoft/ApplicationInsights-node.js/issues/1218"
-
-registerInstrumentations({
-  instrumentations: [
-    // Express instrumentation expects HTTP layer to be instrumented
-    new HttpInstrumentation(),
-    new ExpressInstrumentation(),
-  ],
-});
+config.applicationInsights.connectionString = appInsightsConnectionString;
+config.applicationInsights.availabilityInterval = process.env.APPLICATIONINSIGHTS_AVAILABILITY_INTERVAL || process.env.VITE_APPLICATIONINSIGHTS_AVAILABILITY_INTERVAL || 900000;
 
 // express
 const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
-
 const app = express();
 
 // Serve static files from the dist folder
+const path = require('path');
+const root = path.join(__dirname, '..', 'app', 'dist');
 app.use(express.static(root));
 
 // Proxy /wp-json calls to the target server
+const { createProxyMiddleware } = require('http-proxy-middleware');
 app.use('/wp-json', createProxyMiddleware({
   target: `${config.woocommerce.url}/wp-json`,
   changeOrigin: true,
@@ -76,5 +58,9 @@ app.listen(PORT, () => {
 });
 
 setInterval(() => {
-  appInsights.defaultClient.trackMetric({name: "Heartbeat", value: 1});
-}, 300000); // 1000 ms = 5 minutes
+  appInsights.defaultClient.trackAvailability({name: "heartbeat", success: true, runLocation: 'server' });
+}, config.applicationInsights.availabilityInterval);
+
+const packageJson = require('./package.json');
+appInsights.defaultClient.trackMetric({name: "version", value: packageJson.version});
+appInsights.defaultClient.trackEvent({name: "server-start"});

@@ -4,11 +4,7 @@
     "version": "0.0.10",
     "type": "module",
     "dependencies": {
-        "@azure/monitor-opentelemetry": "^1.11.1",
-        "@opentelemetry/instrumentation": "^0.203.0",
-        "@opentelemetry/instrumentation-express": "^0.52.0",
-        "@opentelemetry/instrumentation-http": "^0.203.0",
-        "@opentelemetry/sdk-trace-node": "^2.0.1",
+        "applicationinsights": "^3.7.0",
         "express": "^5.0.1",
         "http-proxy-middleware": "^3.0.3"
     },
