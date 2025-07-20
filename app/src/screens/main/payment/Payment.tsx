@@ -86,7 +86,6 @@ export function Payment() {
             await updateOrder({
                 id: orderId,
                 payment_method: 'wallet',
-                payment_method_title: 'Wallet',
                 transaction_id: walletTransactionId.toString(),
                 status: 'completed'
             }).unwrap();
