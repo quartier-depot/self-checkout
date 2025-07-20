@@ -13,7 +13,7 @@ type Props = {
 
 export function Confirmation(props: Props) {
     return (
-            <Dialog title={'Vielen Dank für deinen Einkauf'}>
+            <Dialog title={'Einkauf erfolgreich abgeschlossen'}>
                 <div className="p-4 text-blue-gray-800">
                     <p>Dein virtuelles Konto wurde mit <span className="font-bold">{formatPrice(props.total)}</span> belastet, der neue Kontostand
                         beträgt <span className="font-bold">{formatPrice(props.newBalance)}</span>.</p>

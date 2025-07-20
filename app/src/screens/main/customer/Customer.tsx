@@ -34,7 +34,7 @@ export function Customer({ className }: CustomerProps) {
     return (
         <>
             <div onClick={handleClick} className={`m-2 ${className}`}>
-                <div>
+                <div className="font-bold text-xl">
                     {name}
                 </div>
                 <div className="text-right grow">
