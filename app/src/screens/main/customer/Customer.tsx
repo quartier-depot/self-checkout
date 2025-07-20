@@ -5,6 +5,7 @@ import info from '../../../assets/info.svg';
 
 import { useAppSelector } from '../../../store/store';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
+import classNames from 'classnames';
 
 type CustomerProps = {
     className?: string
@@ -34,7 +35,7 @@ export function Customer({ className }: CustomerProps) {
     return (
         <>
             <div onClick={handleClick} className={`m-2 ${className}`}>
-                <div className="font-bold text-xl">
+                <div className={classNames('h-6', { 'font-bold text-xl': loggedIn})}>
                     {name}
                 </div>
                 <div className="text-right grow">
