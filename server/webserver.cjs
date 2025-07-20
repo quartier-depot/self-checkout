@@ -1,5 +1,4 @@
 const { useAzureMonitor } = require("@azure/monitor-opentelemetry");
-const { NodeTracerProvider } = require('@opentelemetry/sdk-trace-node');
 const { registerInstrumentations } = require('@opentelemetry/instrumentation');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
@@ -75,3 +74,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+setInterval(() => {
+  appInsights.defaultClient.trackMetric({name: "Heartbeat", value: 1});
+}, 300000); // 1000 ms = 5 minutes
