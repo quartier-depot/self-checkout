@@ -10,6 +10,8 @@ import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 import cartXIcon from '../../../assets/cart-x.svg';
+const alert = new Audio('/assets/sounds/alert.mp3');
+const confirm = new Audio('/assets/sounds/confirm.mp3');
 
 export function Payment() {
     const dispatch = useAppDispatch();
@@ -41,6 +43,18 @@ export function Payment() {
             setShowMemberDialog(false);
         }
     }, [loggedIn]);
+    
+    useEffect(() => {
+        if (showConfirmation) {
+            confirm.play();
+        }
+    }, [showConfirmation]);
+
+    useEffect(() => {
+        if (showErrorDialog) {
+            alert.play();
+        }
+    }, [showErrorDialog])
 
     async function handlePayment() {
         if (!customer) {
