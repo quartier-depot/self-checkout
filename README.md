@@ -1,4 +1,4 @@
-# Quartier Depot Self Checkout
+# Woocommerce Self-Checkout Point Of Sale
 
 A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](https://www.quartier-depot.ch/).
 
@@ -98,6 +98,8 @@ See also [setup.md](./doc/setup.md)
 
 Kudos to the following projects for source code and inspiration:
 
+- Sound Effect "beep" by [zerolagtime](https://freesound.org/people/zerolagtime/) from [freesound.org](https://freesound.org/)
+- Sound Effect "confirm" by [floraphonic](https://pixabay.com/users/floraphonic-38928062) from [pixabay](https://pixabay.com)
 - Point of Sale: https://point-of-sale.dev/
 - Tailwind POS: https://github.com/emsifa/tailwind-pos
 - WooCommerce POS: https://wcpos.com / https://github.com/wcpos
