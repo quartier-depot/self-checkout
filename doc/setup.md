@@ -95,7 +95,7 @@
 4. Enable "blank screen" after 15 mins in settings
 5. Disable "go to suspend" in settings
 6. Set keyboard-layout to English (for the scanner to read barcodes correctly)
-7. Start `/etc/opt/elo-mt-usb/cpl` and disable beep-on-touch sound
+7. Start `/etc/opt/elo-mt-usb/cpl` and configure beep-on-touch sound (275, 20)
 
 ### /usr/local/sbin/nightly-maintenance.sh
 
