@@ -17,8 +17,7 @@ export const cartLoggingMiddleware: Middleware = () => (next) => (action) => {
         productId: product.artikel_id,
         hasBarcode: product.hasBarcodes(),
         quantity: Math.abs(quantity),
-        source: source,
-        timestamp: new Date().toISOString()
+        source: source
       }
     );
   }
