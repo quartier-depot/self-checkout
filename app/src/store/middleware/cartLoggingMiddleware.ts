@@ -15,7 +15,7 @@ export const cartLoggingMiddleware: Middleware = () => (next) => (action) => {
       { name: 'change-cart-quantity' },
       {
         productId: product.artikel_id,
-        hasBarcode: product.hasBarcodes(),
+        name: product.name.substring(0, 30),
         quantity: Math.abs(quantity),
         source: source
       }
