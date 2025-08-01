@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Item as ItemType } from '../../../store/api/cart/Cart';
 import cartIcon from '../../../assets/cart.svg';
 import { Item } from './Item';
@@ -10,21 +10,33 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setCartQuantity } from '../../../store/slices/cartSlice';
 import { startNewSession } from '../../../store/slices/appSlice';
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
+import { removeBulkItem } from '../../../store/slices/bulkItemSlice.ts';
 
 export function Cart() {
     const dispatch = useAppDispatch();
     const cart = useAppSelector(state => state.cart.cart);
+    const bulkItem = useAppSelector(state => state.bulkItem.bulkItem);
     const applicationInsights = useAppInsightsContext();
-
-    const [dialogItem, setDialogItem] = useState<ItemType | null>(null);
+    
+    const [dialogItem, setDialogItem] = useState<ItemType | null>();
     const [showCartDialog, setShowCartDialog] = useState(false);
-
+    
+    useEffect(() => {
+        if (bulkItem) {
+            const quantity = cart.items.find(item => item.product.id === bulkItem.id)?.quantity || 0;
+            setDialogItem({product: bulkItem, quantity});
+        }
+    }, [bulkItem])
+    
     function openDialog(item: ItemType): void {
         setDialogItem(item);
     }
 
     function closeDialog(quantity: number): void {
-        dispatch(setCartQuantity({ product: dialogItem!.product, quantity }));
+        if (!bulkItem || (bulkItem && quantity >= 0)) {
+            dispatch(setCartQuantity({ product: dialogItem!.product, quantity }));
+        }
+        dispatch(removeBulkItem());
         setDialogItem(null);
     }
 
