@@ -17,6 +17,9 @@ const customerSlice = createSlice({
     setCustomer: (state, action: PayloadAction<Customer | undefined>) => {
       state.customer = action.payload;
     },
+    logoutCustomer: (state) => {
+      state.customer = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(startNewSession, (state) => {
@@ -25,5 +28,5 @@ const customerSlice = createSlice({
   },
 });
 
-export const { setCustomer } = customerSlice.actions;
+export const { setCustomer, logoutCustomer } = customerSlice.actions;
 export default customerSlice.reducer; 

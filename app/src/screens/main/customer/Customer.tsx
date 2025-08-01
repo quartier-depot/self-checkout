@@ -2,10 +2,10 @@ import { useGetWalletBalanceQuery } from '../../../store/api/api';
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
 import info from '../../../assets/info.svg';
-
-import { useAppSelector } from '../../../store/store';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 import classNames from 'classnames';
+import { ResetDialog } from '../../../components/modal/dialog/resetDialog/ResetDialog.tsx';
+import { useAppSelector } from '../../../store/store.ts';
 
 type CustomerProps = {
     className?: string
@@ -13,7 +13,8 @@ type CustomerProps = {
 
 export function Customer({ className }: CustomerProps) {
     const customer = useAppSelector(state => state.customer.customer);
-    const [showDialog, setShowDialog] = useState(false);
+    const [showLoginDialog, setShowLoginDialog] = useState(false);
+    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
     const { data: walletBalance, isLoading, isSuccess } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
@@ -21,14 +22,16 @@ export function Customer({ className }: CustomerProps) {
     const name = loggedIn ? `${customer?.first_name} ${customer?.last_name}` : 'Mitgliedsausweis zeigen';
 
     function handleClick() {
-        if (!loggedIn) {
-            setShowDialog(!showDialog);
+        if (loggedIn) {
+            setShowLogoutDialog(!showLoginDialog);
+        } else {
+            setShowLoginDialog(!showLoginDialog);
         }
     }
 
     useEffect(() => {
         if (loggedIn) {
-            setShowDialog(false);
+            setShowLoginDialog(false);
         }
     }, [loggedIn]);
 
@@ -45,7 +48,9 @@ export function Customer({ className }: CustomerProps) {
                 </div>
             </div>
 
-            {showDialog && <MemberDialog onClose={() => setShowDialog(false)} /> }
+            {showLoginDialog && <MemberDialog onClose={() => setShowLoginDialog(false)} /> }
+
+            {showLogoutDialog && <ResetDialog onClose={() => setShowLogoutDialog(false)} /> }
         </>
     );
 }
