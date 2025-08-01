@@ -3,15 +3,19 @@ import { semicolonSeparatedList } from '../helper/semicolonSeparatedList';
 
 const NO_BARCODE_VALUE = 'KEIN BARCODE';
 
+const BULK_ITEM_REGEX = /(preis\s)?(pro|in)\s+(gramm|g|cl|centiliter|rappen)/i;
+
 export class Product {
   id: number;
   name: string;
   slug: string;
   price: number;
   external_url: string | undefined;
-  artikel_id: string | undefined;
+  artikel_id: string;
   barcodes: string[];
-  gestell: string | undefined;
+  gestell: string;
+  freitext: string;
+
 
   constructor(dto: any) {
     this.id = dto.id;
@@ -22,6 +26,7 @@ export class Product {
     this.artikel_id = getMetaData('artikel-id', dto);
     this.barcodes = semicolonSeparatedList(getMetaData('barcode', dto));
     this.gestell = getMetaData('gestell', dto);
+    this.freitext = getMetaData('freitext', dto);
   }
 
   hasMatchingBarcode(barcode: string): boolean {
@@ -29,6 +34,10 @@ export class Product {
   }
 
   hasBarcodes(): boolean {
-    return this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE)
+    return this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE);
+  }
+
+  isBulkItem(): boolean {
+    return BULK_ITEM_REGEX.test(this.freitext);
   }
 }
