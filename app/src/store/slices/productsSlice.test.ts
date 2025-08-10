@@ -83,6 +83,8 @@ describe('productsSlice', () => {
             slug: `product-${i + 1}`,
             price: (i + 1) * 10,
             external_url: '',
+            freitext: '',
+            isBulkItem: () => false,
         }));
 
         it('should return undefined when viewMode is empty', () => {

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from '../../store/api/products/Product';
+import { Product } from '../api/products/Product.ts';
 import { startNewSession } from './appSlice';
 import { RootState } from '../store';
 import { api } from '../api/api';
