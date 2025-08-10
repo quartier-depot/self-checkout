@@ -1,4 +1,4 @@
-import './App.css';
+ import './App.css';
 import { AppInsightsContext, AppInsightsErrorBoundary, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { Main } from './screens/main/Main';
 import { useEffect, useState } from 'react';
@@ -31,7 +31,8 @@ function AppContent() {
                     },
                     applicationInsights: {
                         connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING
-                    }
+                    },
+                    inactivityTimeout: import.meta.env.VITE_INACTIVITY_TIMEOUT,
                 }
             } else {
                 // using express webserver

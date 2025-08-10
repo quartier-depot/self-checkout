@@ -5,12 +5,20 @@ import { Payment } from './payment/Payment';
 import { Loading } from '../../components/modal/loading/Loading';
 import { Customer } from './customer/Customer';
 import { Barcode } from './barcode/Barcode';
+import { useInactivityTimer } from '../../hooks/useInactivityTimer.ts';
+import { InactivityDialog } from '../../components/modal/dialog/inactivityDialog/InactivityDialog.tsx';
+import { useAppSelector } from '../../store/store.ts';
 
 export function Main() {
     const { isSuccess: isProductsSuccess, isFetching: isProductsFetching } = useGetProductsQuery();
     const { isSuccess: isCustomersSuccess, isFetching: isCustomersFetching } = useGetCustomersQuery();
 
     const loadingData = isProductsFetching || isCustomersFetching || !isProductsSuccess || !isCustomersSuccess;
+
+    const configuration = useAppSelector(state => state.configuration.configuration);
+    const { showInactivityDialog, resetTimer } = useInactivityTimer({
+        timeout: configuration!.inactivityTimeout
+    });
 
     return (
             <>
@@ -28,6 +36,7 @@ export function Main() {
                 </div>
 
                 {loadingData && <Loading text={'Initialisierung'} />}
+                {showInactivityDialog && <InactivityDialog onConfirm={resetTimer} />}
                 <Barcode />
             </>
     );

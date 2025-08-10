@@ -9,6 +9,7 @@ interface Configuration {
   applicationInsights?: {
     connectionString: string;
   };
+  inactivityTimeout: number;
 }
 
 interface ConfigurationState {
