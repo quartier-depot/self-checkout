@@ -246,7 +246,10 @@ export const api = createApi({
     getCustomerOrders: builder.query<Order[], number>({
       query: (customerId) => ({
         url: 'orders',
-        params: { customer: customerId, status: 'completed' },
+        params: { 
+          customer: customerId,
+          per_page: 20,
+          status: 'completed' },
       }),
       transformResponse: (response: unknown): Order[] => {
         return response as Order[];

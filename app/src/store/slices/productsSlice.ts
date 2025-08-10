@@ -53,34 +53,34 @@ export const selectFilteredProducts = (state: RootState) => {
     if (!products) return undefined;
 
     switch (viewMode) {
-        case 'search':
-            if (!searchTerm) return [];
-            return products.filter(product =>
-                product.artikel_id?.endsWith(searchTerm)
-            );
+      case 'search':
+        if (!searchTerm) return [];
+        return products.filter(product =>
+          product.artikel_id?.endsWith(searchTerm)
+        );
 
-        case 'browse':
-            if (state.products.gestell) {
-                return products
-                    .filter(product => product.gestell === state.products.gestell)
-                    .filter(product =>!product.hasBarcodes());
-            } else {
-                // Group products by gestell
-                const gestelleMap = new Map<string, Product[]>();
-                products
-                    .filter(product => !product.hasBarcodes())
-                    .forEach(product => {
-                        if (product.gestell) {
-                            const products = gestelleMap.get(product.gestell) || [];
-                            products.push(product);
-                            gestelleMap.set(product.gestell, products);
-                        }
-                    });
-                return Array.from(gestelleMap.entries()).map(([gestell, products]) => ({
-                    gestell,
-                    products
-                }));
-            };
+      case 'browse':
+        if (state.products.gestell) {
+          return products
+            .filter(product => product.gestell === state.products.gestell)
+            .filter(product => !product.hasBarcodes());
+        } else {
+          // Group products by gestell
+          const gestelleMap = new Map<string, Product[]>();
+          products
+            .filter(product => !product.hasBarcodes())
+            .forEach(product => {
+              if (product.gestell) {
+                const products = gestelleMap.get(product.gestell) || [];
+                products.push(product);
+                gestelleMap.set(product.gestell, products);
+              }
+            });
+          return Array.from(gestelleMap.entries()).map(([gestell, products]) => ({
+            gestell,
+            products
+          }));
+        }
 
         case 'favourites':
             const customerId = state.customer.customer?.id;
