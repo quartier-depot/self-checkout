@@ -46,7 +46,11 @@ app.use('/wp-json', createProxyMiddleware({
 
 // Configuration
 app.get('/api/configuration', (_, res) => {
-  res.json({ applicationInsights: config.applicationInsights});
+  res.json({
+    applicationInsights: config.applicationInsights,
+    inactivityTimeout: config.inactivityTimeout,
+    inactivityConfirmationTimeout: config.inactivityConfirmationTimeout
+  })
 });
 
 // Fallback to index.html for SPA
