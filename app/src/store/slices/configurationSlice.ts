@@ -10,6 +10,7 @@ interface Configuration {
     connectionString: string;
   };
   inactivityTimeout: number;
+  inactivityConfirmationTimeout: number;
 }
 
 interface ConfigurationState {
@@ -17,7 +18,10 @@ interface ConfigurationState {
 }
 
 const initialState: ConfigurationState = {
-  configuration: null,
+  configuration: {
+    inactivityConfirmationTimeout: 30 * 1000,
+    inactivityTimeout: 60 * 1000,
+  }
 };
 
 const configurationSlice = createSlice({

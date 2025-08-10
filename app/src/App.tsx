@@ -33,6 +33,7 @@ function AppContent() {
                         connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING
                     },
                     inactivityTimeout: import.meta.env.VITE_INACTIVITY_TIMEOUT,
+                    inactivityConfirmationTimeout: import.meta.env.VITE_INACTIVITY_CONFIRMATION_TIMEOUT,
                 }
             } else {
                 // using express webserver

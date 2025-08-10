@@ -18,6 +18,7 @@ config.woocommerce.consumerSecret = process.env.WOOCOMMERCE_CONSUMER_SECRET || p
 config.applicationInsights.connectionString = appInsightsConnectionString;
 config.applicationInsights.availabilityInterval = process.env.APPLICATIONINSIGHTS_AVAILABILITY_INTERVAL || process.env.VITE_APPLICATIONINSIGHTS_AVAILABILITY_INTERVAL || 900000;
 config.inactivityTimeout = process.env.INACTIVITY_TIMEOUT || process.env.VITE_INACTIVITY_TIMEOUT || 60000;
+config.inactivityConfirmationTimeout = process.env.INACTIVITY_CONFIRMATION_TIMEOUT || process.env.INACTIVITY_CONFIRMATION_TIMEOUT || 30000;
 
 // express
 const express = require('express');
