@@ -68,5 +68,4 @@ setInterval(() => {
 }, config.applicationInsights.availabilityInterval);
 
 const packageJson = require('./package.json');
-appInsights.defaultClient.trackMetric({name: "version", value: packageJson.version});
-appInsights.defaultClient.trackEvent({name: "server-start"});
+appInsights.defaultClient.trackEvent({name: "server-start", properties: { version: packageJson.version }});
