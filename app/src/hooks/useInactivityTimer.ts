@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import { startNewSession } from '../store/slices/appSlice';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
+const alert = new Audio('/assets/sounds/alert.mp3');
 
 export function useInactivityTimer() {
   const configuration = useAppSelector(state => state.configuration.configuration);
@@ -38,6 +39,7 @@ export function useInactivityTimer() {
   const handleTimeout = useCallback(() => {
     if (shouldBeActive) {
       setShowInactivityDialog(true);
+      alert.play();
     }
   }, [shouldBeActive]);
 
