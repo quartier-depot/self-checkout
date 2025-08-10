@@ -61,9 +61,11 @@ $ podman run --env-file ./app/.env -p 3000:3000 localhost/quartier-depot-self-ch
 
 ## Release
 
-1. Set the version in both `package.json` files 
-2. Tag the codebase (i.e. '1.0.0') and push `git push --tags`.
-3. A [GitHub action] builds the container and publishes it.
+1. Set the version in both [app/package.json](./app/package.json) and in [server/package.json](./server/package.json) 
+2. Commit and push
+3. Tag the codebase (i.e. '1.0.0') 
+4. Push `git push --tags`.
+5. A [GitHub action](./.github/workflows/publish.yml) builds the container and publishes it.
 
 ## Install
 
