@@ -77,7 +77,7 @@
 23. Create `/home/admin/nightly-maintenance.sh` (see below)
 24. `sudo chmod 700 /usr/local/sbin/nightly-maintenance.sh`
 25. `sudo visudo -f /etc/sudoers.d/nightly-maintenance`
-    * # Allow admin user to run specific commands without password
+    * // Allow admin user to run specific commands without password
     * admin ALL=(ALL) NOPASSWD: /usr/bin/snap refresh
     * admin ALL=(ALL) NOPASSWD: /usr/sbin/reboot
     * admin ALL=(ALL) NOPASSWD: /usr/bin/pkill
