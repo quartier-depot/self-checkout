@@ -13,7 +13,17 @@
 
 * ELO 1509L Touchscreen Monitor
 
+### Scanner
+
+* Honeywell 7580g
+
 ## Install
+
+### Scanner
+
+* Activate Custom Defaults (1 - 6, DEFALT.)
+* Streaming Presentation - Mobile Phone (3 - 10, PAPSPC.)
+* Beeper Volume Good Read - Low (3-2,. BEPLVL1.) oder Beeper Good Read Off (3-2, BEPBEP1.)
 
 ### General
 
