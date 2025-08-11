@@ -10,6 +10,7 @@ import { api } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
 import { cartLoggingMiddleware } from './middleware/cartLoggingMiddleware';
 import { bulkItemMiddleware } from './middleware/bulkItemMiddleware.ts';
+import { productValidationMiddleware } from './middleware/productValidationMiddleware.ts';
 
 // We'll add our reducers here once we create them
 const store = configureStore({
@@ -26,10 +27,11 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false, // This might be needed for App Insights
     })
-    .concat(api.middleware)
-    .concat(soundMiddleware)
-    .concat(cartLoggingMiddleware)
-    .concat(bulkItemMiddleware),
+      .concat(api.middleware)
+      .concat(soundMiddleware)
+      .concat(cartLoggingMiddleware)
+      .concat(productValidationMiddleware)
+      .concat(bulkItemMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

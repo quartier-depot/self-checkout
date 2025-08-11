@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from './store/store';
 import { setConfiguration } from './store/slices/configurationSlice';
 import { initializeCartLoggingMiddleware } from './store/middleware/cartLoggingMiddleware';
 import { Error as ErrorScreen } from './screens/main/error/Error';
+ import { initializeProductValidationMiddleware } from './store/middleware/productValidationMiddleware.ts';
 
 function AppContent() {
     const dispatch = useAppDispatch();
@@ -60,6 +61,7 @@ function AppContent() {
             appInsights.trackPageView();
 
             initializeCartLoggingMiddleware(appInsights);
+            initializeProductValidationMiddleware(appInsights);
             setReactPlugin(reactPlugin);
         }
 
