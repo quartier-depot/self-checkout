@@ -1,4 +1,3 @@
-// store/middleware/productValidationMiddleware.ts
 import { Middleware } from '@reduxjs/toolkit';
 import { api } from '../api/api.ts';
 import { Product } from '../api/products/Product.ts';
