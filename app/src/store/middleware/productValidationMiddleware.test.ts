@@ -4,7 +4,9 @@ import { productValidationMiddleware, initializeProductValidationMiddleware } fr
 import { Product } from '../api/products/Product.ts';
 
 describe('productValidationMiddleware', () => {
-  let mockAppInsights: { trackEvent: ReturnType<typeof vi.fn> };
+  let mockAppInsights: { 
+    trackEvent: ReturnType<typeof vi.fn>, 
+    trackException: ReturnType<typeof vi.fn> };
   let mockNext: ReturnType<typeof vi.fn>;
   let mockStore: MiddlewareAPI;
   let middleware: Middleware;
@@ -13,6 +15,7 @@ describe('productValidationMiddleware', () => {
     // Create mock for AppInsights
     mockAppInsights = {
       trackEvent: vi.fn(),
+      trackException: vi.fn()
     };
 
     // Initialize the middleware with mock AppInsights
@@ -81,7 +84,7 @@ describe('productValidationMiddleware', () => {
     expect(mockAppInsights.trackEvent).not.toHaveBeenCalled();
   });
 
-  it('should handle products with no barcodes', () => {
+  it('should detect and track no barcodes', () => {
     const products: Product[] = [
       buildProduct(1, []),
       buildProduct(2, []),
@@ -90,9 +93,9 @@ describe('productValidationMiddleware', () => {
     const action = buildAction(products);
 
     middleware(mockStore)(mockNext)(action);
-
+    
     expect(mockNext).toHaveBeenCalledWith(action);
-    expect(mockAppInsights.trackEvent).not.toHaveBeenCalled();
+    expect(mockAppInsights.trackException).toHaveBeenCalled();
   });
 
   it('should handle undefined appInsights', () => {

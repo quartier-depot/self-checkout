@@ -13,7 +13,7 @@ export const productValidationMiddleware: Middleware = () => (next) => (action: 
   if (!appInsights) {
     return next(action);
   }
-  
+
   if (
     action.type === `${api.reducerPath}/executeQuery/fulfilled` &&
     action.meta?.arg?.endpointName === 'getProducts'
@@ -31,6 +31,14 @@ export const productValidationMiddleware: Middleware = () => (next) => (action: 
       });
     });
 
+    // Track no barcodes to Application Insights
+    const noBarcodes = barcodeMap.size === 0;
+    if (products.length && noBarcodes) {
+      appInsights.trackException(
+        { exception: new Error('no product contains a barcode') }
+      );
+    }
+
     // Track duplicates to Application Insights
     const duplicates = Array.from(barcodeMap.entries())
       .filter(([_, products]) => products.length > 1);
@@ -42,8 +50,8 @@ export const productValidationMiddleware: Middleware = () => (next) => (action: 
           properties: {
             barcode,
             productIds: duplicateProducts.map(p => p.id).join(','),
-            productNames: duplicateProducts.map(p => p.name).join(',')
-          }
+            productNames: duplicateProducts.map(p => p.name).join(','),
+          },
         });
       });
     }
