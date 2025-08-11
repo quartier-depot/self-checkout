@@ -10,7 +10,10 @@ export const initializeProductValidationMiddleware = (insights: any) => {
 };
 
 export const productValidationMiddleware: Middleware = () => (next) => (action: any) => {
-  // Check if this is a fulfilled action from getProducts query
+  if (!appInsights) {
+    return next(action);
+  }
+  
   if (
     action.type === `${api.reducerPath}/executeQuery/fulfilled` &&
     action.meta?.arg?.endpointName === 'getProducts'
@@ -32,7 +35,7 @@ export const productValidationMiddleware: Middleware = () => (next) => (action: 
     const duplicates = Array.from(barcodeMap.entries())
       .filter(([_, products]) => products.length > 1);
 
-    if (duplicates.length > 0 && appInsights) {
+    if (duplicates.length > 0) {
       duplicates.forEach(([barcode, duplicateProducts]) => {
         appInsights.trackEvent({
           name: 'duplicate-product-barcode-detected',
