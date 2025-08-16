@@ -22,7 +22,7 @@ export function Confirmation(props: Props) {
     }, [props.onClose]);
 
     return (
-            <Dialog title={'Einkauf erfolgreich'}>
+            <Dialog title={'Einkauf erfolgreich'} onBackdropClick={props.onClose}>
                 <div className="p-4 text-blue-gray-800">
                     <p>Vielen Dank für deinen Einkauf!</p>
                     <p className={'text-center mt-4'}>
@@ -31,14 +31,14 @@ export function Confirmation(props: Props) {
                     <div className={'grid grid-cols-2 gap-2 my-4'}>
                         <div>Betrag:</div>
                         <span className="font-bold text-right">{formatPrice(props.total)}</span>
-                        <div>Virtueller Kontostand neu:</div>
+                        <div>Neuer Kontostand:</div>
                         <span className="text-right">{formatPrice(props.newBalance)}</span>
                         <div>Bestellnummer:</div>
                         <span className="text-right">{props.orderId}</span>
                         <div>Transaktionsnummer:</div>
                         <span className="text-right">{props.transactionId}</span>
                     </div>
-                    <Button type="primary" onClick={() => props.onClose()}>Schliessen</Button>
+                    <Button type="primary" onClick={props.onClose}>Schliessen</Button>
                 </div>
             </Dialog>
     );

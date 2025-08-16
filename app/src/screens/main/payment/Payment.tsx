@@ -136,7 +136,7 @@ export function Payment() {
         setLog('');
     }
 
-    function closeThankYou() {
+    function closeConfirmation() {
         setShowConfirmation(false);
     }
 
@@ -153,7 +153,7 @@ export function Payment() {
             {showLoading && <Loading text={'Bezahlvorgang'} />}
 
             {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
-                transactionId={transactionId} onClose={closeThankYou} />}
+                transactionId={transactionId} onClose={closeConfirmation} />}
 
             {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
 
