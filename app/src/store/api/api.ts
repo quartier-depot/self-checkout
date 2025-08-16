@@ -220,6 +220,7 @@ export const api = createApi({
           shipping: customer.shipping,
           payment_method: 'wallet',
           payment_method_title: 'Virtuelles Konto',
+          created_via: 'pos-rest-api',
           line_items: cart.items.map(item => ({
             product_id: item.product.id,
             quantity: item.quantity,
