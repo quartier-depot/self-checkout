@@ -44,9 +44,8 @@ export const customerValidationMiddleware: Middleware = () => (next) => (action:
 
     if (duplicates.length > 0) {
       duplicates.forEach(([memberId, duplicateCustomers]) => {
-        appInsights.trackException({
-          exception: new Error(`Duplicate customer member_id: ${memberId} for customers ${duplicateCustomers.map(p => p.id).join(',')}`),
-        });
+        const error = new Error(`Duplicate customer member_id: ${memberId} for customers ${duplicateCustomers.map(p => p.id).join(',')}`);
+        appInsights.trackException({exception: error});
       });
     }
   }

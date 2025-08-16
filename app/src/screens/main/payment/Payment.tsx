@@ -125,7 +125,7 @@ export function Payment() {
             setLog(paymentLog);
             console.error('Payment failed:', paymentLog);
             setShowErrorDialog(true);
-            applicationInsights.getAppInsights().trackException({error: error as Error}, { paymentLog });
+            applicationInsights.getAppInsights().trackException({exception: error as Error, properties: {log: paymentLog} });
         } finally {
             setShowLoading(false);
         }

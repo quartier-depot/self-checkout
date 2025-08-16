@@ -11,6 +11,7 @@ import { soundMiddleware } from './middleware/soundMiddleware';
 import { cartLoggingMiddleware } from './middleware/cartLoggingMiddleware';
 import { bulkItemMiddleware } from './middleware/bulkItemMiddleware.ts';
 import { productValidationMiddleware } from './middleware/productValidationMiddleware.ts';
+import { customerValidationMiddleware } from './middleware/customerValidationMiddleware.ts';
 
 // We'll add our reducers here once we create them
 const store = configureStore({
@@ -31,6 +32,7 @@ const store = configureStore({
       .concat(soundMiddleware)
       .concat(cartLoggingMiddleware)
       .concat(productValidationMiddleware)
+      .concat(customerValidationMiddleware)
       .concat(bulkItemMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });

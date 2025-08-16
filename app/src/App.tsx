@@ -13,6 +13,7 @@ import { setConfiguration } from './store/slices/configurationSlice';
 import { initializeCartLoggingMiddleware } from './store/middleware/cartLoggingMiddleware';
 import { Error as ErrorScreen } from './screens/main/error/Error';
  import { initializeProductValidationMiddleware } from './store/middleware/productValidationMiddleware.ts';
+ import { initializeCustomerValidationMiddleware } from './store/middleware/customerValidationMiddleware.ts';
 
 function AppContent() {
     const dispatch = useAppDispatch();
@@ -62,6 +63,7 @@ function AppContent() {
 
             initializeCartLoggingMiddleware(appInsights);
             initializeProductValidationMiddleware(appInsights);
+            initializeCustomerValidationMiddleware(appInsights)
             setReactPlugin(reactPlugin);
         }
 
