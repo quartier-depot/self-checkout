@@ -1,0 +1,13 @@
+{
+    "name": "member-id-updater",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "update-members": "npx dotenvx run -f .env -- node updateMemberIds.js"
+    },
+    "dependencies": {
+        "@dotenvx/dotenvx": "^1.39.1",
+        "node-fetch": "^3.3.2"
+    }
+}
