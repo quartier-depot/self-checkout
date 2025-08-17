@@ -67,7 +67,10 @@ export function Payment() {
         let paymentLog = '';
 
         try {
-
+            
+            const start = performance.now();
+            
+            let startStep = performance.now();
             paymentLog = 'Creating order...';
             paymentLog += `\n  customerId: ${customer.id}`;
             paymentLog += `\n  cart: ${JSON.stringify(cart)}`;
@@ -77,9 +80,11 @@ export function Payment() {
             }).unwrap();
 
             paymentLog += `\nCreating order OK`;
+            paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\n  Order ID: ${orderId}`;
             paymentLog += `\n  Order total: ${orderTotal}`;
 
+            startStep = performance.now();
             paymentLog += '\nPaying with wallet...';
             paymentLog += `\n  amount: ${orderTotal}`;
 
@@ -90,8 +95,10 @@ export function Payment() {
             }).unwrap();
 
             paymentLog += '\nPaying with wallet OK';
+            paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\n  Transaction ID: ${walletTransactionId}`;
 
+            startStep = performance.now();
             paymentLog += '\nUpdating order...';
             paymentLog += `\n  order ID: ${orderId}`;
             paymentLog += `\n  payment method: wallet`;
@@ -106,11 +113,17 @@ export function Payment() {
             }).unwrap();
 
             paymentLog += '\nUpdating order OK';
+            paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\nRefetching wallet balance...`;
 
+            startStep = performance.now();
             const { data: newBalance } = await refetchWalletBalance();
             paymentLog += `\nRefetching wallet balance OK`;
+            paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\n  new balance: ${newBalance!.balance}`;
+
+            paymentLog += `\nPayment OK`;
+            paymentLog += `\n  Duration: ${performance.now() - start}ms`;
             console.log(paymentLog);
 
             dispatch(startNewSession());
@@ -119,7 +132,7 @@ export function Payment() {
             setTransactionId(walletTransactionId);
             setOrderId(orderId);
             setShowConfirmation(true);
-            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, { customer: customer.id, orderId: orderId, transactionId: walletTransactionId });
+            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, { customer: customer.id, orderId: orderId, transactionId: walletTransactionId, log: paymentLog});
         } catch (error) {
             paymentLog += `\nPayment failed: ${JSON.stringify(error)}`;
             setLog(paymentLog);
