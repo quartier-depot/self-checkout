@@ -132,7 +132,7 @@ export function Payment() {
             setTransactionId(walletTransactionId);
             setOrderId(orderId);
             setShowConfirmation(true);
-            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, { customer: customer.id, orderId: orderId, transactionId: walletTransactionId, log: paymentLog});
+            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, { customer: customer.id, orderId: orderId, transactionId: walletTransactionId, log: paymentLog, duration: performance.now() - start});
         } catch (error) {
             paymentLog += `\nPayment failed: ${JSON.stringify(error)}`;
             setLog(paymentLog);
