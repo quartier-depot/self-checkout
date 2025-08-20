@@ -1,6 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { api } from '../api/api.ts';
-import { Product } from '../api/products/Product.ts';
+import { NO_BARCODE_VALUE, Product } from '../api/products/Product.ts';
 
 let appInsights: any = null;
 
@@ -23,10 +23,12 @@ export const productValidationMiddleware: Middleware = () => (next) => (action: 
     const barcodeMap = new Map<string, Product[]>();
     products.forEach(product => {
       product.barcodes.forEach(barcode => {
-        if (!barcodeMap.has(barcode)) {
-          barcodeMap.set(barcode, []);
+        if (barcode !== NO_BARCODE_VALUE) {
+          if (!barcodeMap.has(barcode)) {
+            barcodeMap.set(barcode, []);
+          }
+          barcodeMap.get(barcode)!.push(product);
         }
-        barcodeMap.get(barcode)!.push(product);
       });
     });
 

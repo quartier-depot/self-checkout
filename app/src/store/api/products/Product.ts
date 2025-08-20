@@ -2,7 +2,7 @@ import { getMetaData } from '../helper/getMetaData';
 import { semicolonSeparatedList } from '../helper/semicolonSeparatedList';
 import { Unit, UNIT_MAPPING } from './Unit.ts';
 
-const NO_BARCODE_VALUE = 'KEIN BARCODE';
+export const NO_BARCODE_VALUE = 'KEIN BARCODE';
 
 const BULK_ITEM_REGEX = /(preis\s)?(pro|in)\s+(?<unit>kilogramm|kg|gramm|g|cl|centiliter|rappen)/i;
 

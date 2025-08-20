@@ -114,6 +114,23 @@ describe('productValidationMiddleware', () => {
     // Should not throw and should pass through the action
     expect(mockNext).toHaveBeenCalledWith(action);
   });
+
+  it('should ignore KEIN BARCODE', () => {
+    // Reset appInsights to undefined
+    initializeProductValidationMiddleware(undefined);
+
+    const products: Product[] = [
+      buildProduct(1, ['KEIN BARCODE']),
+      buildProduct(2, ['KEIN BARCODE']),
+    ];
+
+    const action = buildAction(products);
+
+    middleware(mockStore)(mockNext)(action);
+
+    expect(mockNext).toHaveBeenCalledWith(action);
+    expect(mockAppInsights.trackEvent).not.toHaveBeenCalled();
+  });
 });
 
 function buildProduct(id: number, barcodes: string[] = []): Product {
