@@ -117,21 +117,13 @@ describe('productValidationMiddleware', () => {
 });
 
 function buildProduct(id: number, barcodes: string[] = []): Product {
-  return {
+  return new Product({
     id: id,
     artikel_id: `A${id}`,
     barcodes: barcodes,
-    external_url: undefined,
-    gestell: '', 
-    hasBarcodes: barcodes.length > 0,
-    hasMatchingBarcode(barcode: string): boolean {
-      return barcodes.includes(barcode);
-    }, 
-    isBulkItem: false,
     name: `Product ${id}`,
-    slug: `product-${id}`,
-    price: 0,
-  };
+    slug: `product-${id}`
+  });
 }
 
 function buildAction(products: Product[]) {

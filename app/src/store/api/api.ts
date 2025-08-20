@@ -101,7 +101,7 @@ export const api = createApi({
         return {
           data: allProducts
             .filter(product => product && product.catalog_visibility === 'visible')
-            .map(dto => new Product(dto))
+            .map(dto => Product.createFromWooCommerceProduct(dto))
             .sort((a, b) => {
               if (!a.artikel_id && !b.artikel_id) return 0;
               if (!a.artikel_id) return 1;

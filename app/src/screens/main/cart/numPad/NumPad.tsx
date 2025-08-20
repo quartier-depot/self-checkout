@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Button } from "../../../../components/button/Button";
 import classNames from "classnames";
+import { Unit } from '../../../../store/api/products/Unit.ts';
 
 type NumPadProps = {
     value: number,
     text: string,
     onChange: (value: number) => void,
     onReportError?: () => void,
-    unit?: string
+    unit: Unit
 }
 
-export function NumPad({ value, text, onChange, onReportError, unit = ''}: NumPadProps) {
+export function NumPad({ value, text, onChange, onReportError, unit}: NumPadProps) {
     const [count, setCount] = useState(value);
     const [errorReported, setErrorReported] = useState(false);
 
@@ -40,13 +41,28 @@ export function NumPad({ value, text, onChange, onReportError, unit = ''}: NumPa
     const onOk = () => {
         onChange(count);
     }
+    
+    const translate = (unit: Unit) => {
+        switch (unit) {
+            case Unit.Gram:
+                return "g";
+            case Unit.Centiliter:
+                return "cl";
+            case Unit.Centime:
+                return "Rappen";
+            case Unit.Kilogram:
+                return "kg";
+            default:
+                return "";
+        }
+    }
 
     return (
         <div className="grid grid-cols-3 gap-4 p-4">
             <div>
                 <Button onClick={() => decrease()} type={'secondary'} className={'py-4 font-bold'} disabled={count === 0}>-</Button>
             </div>
-            <div className="text-4xl mt-5 text-center min-w-44">{count} {unit}</div>
+            <div className="text-4xl mt-5 text-center min-w-44">{count} {translate(unit)}</div>
             <div><Button onClick={increase} type={'secondary'} className={'py-4 font-bold'}>+</Button></div>
             <div className="col-span-3 text-2xl text-center text-ellipsis overflow-hidden whitespace-nowrap">{text}</div>
             <div>

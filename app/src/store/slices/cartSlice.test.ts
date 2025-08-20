@@ -145,16 +145,12 @@ function expectEmptyCart(actual: { cart: { items: { product: Product; quantity: 
   expect(actual.cart.quantity).toBe(0);
 }
 
-const product: Product = {
+const product: Product = new Product({
   price: 42.24,
   id: 42,
   artikel_id: 'product',
   name: 'name',
   slug: 'slug',
   barcodes: ['barcode'],
-  gestell: 'gestell',
-  external_url: 'external_url',
-  hasBarcodes:  true,
-  hasMatchingBarcode: (_: string) => true,
-  isBulkItem:  false,
-}; 
+  gestell: 'gestell'
+}); 

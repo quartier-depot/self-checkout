@@ -77,6 +77,7 @@ export function Cart() {
             {dialogItem && <Dialog><NumPad
                 text={dialogItem.product.name}
                 value={dialogItem.quantity}
+                unit={dialogItem.product.unit}
                 onChange={(quantity) => closeDialog(quantity)}
                 onReportError={() => reportError(dialogItem)} />
             </Dialog>}

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import productsReducer, { setViewMode, setSearchTerm, setGestell, selectFilteredProducts } from './productsSlice';
+import { describe, expect, it } from 'vitest';
+import productsReducer, { selectFilteredProducts, setGestell, setSearchTerm, setViewMode } from './productsSlice';
 import { startNewSession } from './appSlice';
 import { Product } from '../api/products/Product.ts';
 
@@ -72,19 +72,15 @@ describe('productsSlice', () => {
     });
 
     describe('selectFilteredProducts', () => {
-        const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => ({
+        const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => (new Product({
             id: i + 1,
             name: `Product ${i + 1}`,
             artikel_id: `A${i + 1}`,
             gestell: String.fromCharCode(65 + i), // A, B, C, etc.
             barcodes: [],
-            hasMatchingBarcode: (_: string) => false,
-            hasBarcodes:  false,
             slug: `product-${i + 1}`,
-            price: (i + 1) * 10,
-            external_url: '',
-            isBulkItem:  false,
-        }));
+            price: (i + 1) * 10
+        })));
 
         it('should return undefined when viewMode is empty', () => {
             const state = {
