@@ -121,18 +121,13 @@ function buildProduct(id: number, barcodes: string[] = []): Product {
     id: id,
     artikel_id: `A${id}`,
     barcodes: barcodes,
-    external_url: undefined, 
-    freitext: '', 
+    external_url: undefined,
     gestell: '', 
-    hasBarcodes(): boolean {
-      return barcodes.length > 0;
-    }, 
+    hasBarcodes: barcodes.length > 0,
     hasMatchingBarcode(barcode: string): boolean {
       return barcodes.includes(barcode);
     }, 
-    isBulkItem(): boolean {
-      return false;
-    },
+    isBulkItem: false,
     name: `Product ${id}`,
     slug: `product-${id}`,
     price: 0,

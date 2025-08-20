@@ -44,8 +44,6 @@ const productsSlice = createSlice({
 // Selectors
 export const selectViewMode = (state: RootState) => state.products.viewMode;
 export const selectSearchTerm = (state: RootState) => state.products.searchTerm;
-export const selectGestell = (state: RootState) => state.products.gestell;
-
 export const selectFilteredProducts = (state: RootState) => {
     const { viewMode, searchTerm } = state.products;
     const products = api.endpoints.getProducts.select()(state).data;
@@ -63,12 +61,12 @@ export const selectFilteredProducts = (state: RootState) => {
         if (state.products.gestell) {
           return products
             .filter(product => product.gestell === state.products.gestell)
-            .filter(product => !product.hasBarcodes());
+            .filter(product => !product.hasBarcodes);
         } else {
           // Group products by gestell
           const gestelleMap = new Map<string, Product[]>();
           products
-            .filter(product => !product.hasBarcodes())
+            .filter(product => !product.hasBarcodes)
             .forEach(product => {
               if (product.gestell) {
                 const products = gestelleMap.get(product.gestell) || [];

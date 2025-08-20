@@ -154,8 +154,7 @@ const product: Product = {
   barcodes: ['barcode'],
   gestell: 'gestell',
   external_url: 'external_url',
-  freitext: 'freitext',
-  hasBarcodes: () => true,
+  hasBarcodes:  true,
   hasMatchingBarcode: (_: string) => true,
-  isBulkItem: () => false,
+  isBulkItem:  false,
 }; 

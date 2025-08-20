@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { Product } from './Product';
 
 describe('Product', () => {
@@ -12,7 +12,7 @@ describe('Product', () => {
         meta_data: [],
       });
 
-      expect(product.hasBarcodes()).toBe(false);
+      expect(product.hasBarcodes).toBe(false);
     });
 
     it('should return false when barcode array contains "KEIN BARCODE"', () => {
@@ -26,7 +26,7 @@ describe('Product', () => {
         ],
       });
 
-      expect(product.hasBarcodes()).toBe(false);
+      expect(product.hasBarcodes).toBe(false);
     });
 
     it('should return true when barcode array contains valid barcode', () => {
@@ -40,7 +40,7 @@ describe('Product', () => {
         ],
       });
 
-      expect(product.hasBarcodes()).toBe(true);
+      expect(product.hasBarcodes).toBe(true);
     });
 
     it('should return true when barcode array contains valid barcodes', () => {
@@ -54,7 +54,7 @@ describe('Product', () => {
         ],
       });
 
-      expect(product.hasBarcodes()).toBe(true);
+      expect(product.hasBarcodes).toBe(true);
     });
   });
   describe('isBulkItem', () => {
@@ -73,7 +73,7 @@ describe('Product', () => {
         ],
       });
 
-      expect(product.isBulkItem()).toBe(true);
+      expect(product.isBulkItem).toBe(true);
     });
 
     it.each([[''], ['Preis pro kg'], ['in kilogramm'], ['Preis in Stück'], ['Depot -.30']])
@@ -91,7 +91,7 @@ describe('Product', () => {
         ],
       });
 
-      expect(product.isBulkItem()).toBe(false);
+      expect(product.isBulkItem).toBe(false);
     });
 
     it('should return false for product without freitext', () => {
@@ -104,7 +104,7 @@ describe('Product', () => {
         ],
       });
 
-      expect(product.isBulkItem()).toBe(false);
+      expect(product.isBulkItem).toBe(false);
     });
   });
 }); 

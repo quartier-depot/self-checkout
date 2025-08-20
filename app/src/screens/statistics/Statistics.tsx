@@ -24,7 +24,7 @@ export const Statistics: React.FC = () => {
     const totalProducts = products.length;
 
     // Calculate barcode statistics
-    const hasValidBarcode = products.filter((product: Product) => product.hasBarcodes());
+    const hasValidBarcode = products.filter((product: Product) => product.hasBarcodes);
     const noBarcode = products.filter(p => p.barcodes && p.barcodes.length > 0 && p.barcodes.includes(NO_BARCODE_VALUE));
     const unknownProducts = products.filter(p => p.barcodes && p.barcodes.length === 0);
 

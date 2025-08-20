@@ -14,8 +14,8 @@ export class Product {
   artikel_id: string;
   barcodes: string[];
   gestell: string;
-  freitext: string;
-
+  isBulkItem: boolean;
+  hasBarcodes: boolean;
 
   constructor(dto: any) {
     this.id = dto.id;
@@ -24,20 +24,16 @@ export class Product {
     this.price = parseFloat(dto.price);
     this.external_url = dto.external_url;
     this.artikel_id = getMetaData('artikel-id', dto);
-    this.barcodes = semicolonSeparatedList(getMetaData('barcode', dto));
     this.gestell = getMetaData('gestell', dto);
-    this.freitext = getMetaData('freitext', dto);
+    
+    this.barcodes = semicolonSeparatedList(getMetaData('barcode', dto));
+    this.hasBarcodes = this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE);
+    
+    const freitext = getMetaData('freitext', dto);
+    this.isBulkItem = BULK_ITEM_REGEX.test(freitext);
   }
 
   hasMatchingBarcode(barcode: string): boolean {
     return this.barcodes.includes(barcode);
-  }
-
-  hasBarcodes(): boolean {
-    return this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE);
-  }
-
-  isBulkItem(): boolean {
-    return BULK_ITEM_REGEX.test(this.freitext);
   }
 }

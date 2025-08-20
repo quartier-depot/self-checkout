@@ -79,12 +79,11 @@ describe('productsSlice', () => {
             gestell: String.fromCharCode(65 + i), // A, B, C, etc.
             barcodes: [],
             hasMatchingBarcode: (_: string) => false,
-            hasBarcodes: () => false,
+            hasBarcodes:  false,
             slug: `product-${i + 1}`,
             price: (i + 1) * 10,
             external_url: '',
-            freitext: '',
-            isBulkItem: () => false,
+            isBulkItem:  false,
         }));
 
         it('should return undefined when viewMode is empty', () => {
