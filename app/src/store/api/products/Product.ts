@@ -11,7 +11,6 @@ type ProductData = Partial<{
   name: string;
   slug: string;
   price: number;
-  external_url: string;
   artikel_id: string;
   barcodes: string[];
   gestell: string;
@@ -25,7 +24,6 @@ export class Product {
   name: string;
   slug: string;
   price: number;
-  external_url: string | undefined;
   artikel_id: string;
   barcodes: string[];
   gestell: string;
@@ -58,7 +56,6 @@ export class Product {
       name: dto.name,
       slug: dto.slug,
       price: parseFloat(dto.price),
-      external_url: dto.external_url,
       artikel_id: getMetaData('artikel-id', dto),
       gestell: getMetaData('gestell', dto),
       barcodes,
@@ -74,7 +71,7 @@ export class Product {
     this.name = data.name ?? '';
     this.slug = data.slug ?? '';
     this.price = data.price ?? 0;
-    this.external_url = data.external_url;
+    this.price = data.price ?? 0;
     this.artikel_id = data.artikel_id ?? '';
     this.barcodes = data.barcodes ?? [];
     this.hasBarcodes = this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE);
