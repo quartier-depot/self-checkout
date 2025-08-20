@@ -3,6 +3,8 @@ import { Product } from './products/Product';
 import { Customer } from './customers/Customer';
 import { Cart } from './cart/Cart';
 import { RootState } from '../store';
+import { Abo } from './abo/Abo.ts';
+import Papa from 'papaparse';
 
 export interface OrderUpdate {
   id: string;
@@ -39,7 +41,7 @@ interface Order {
 
 
 export const api = createApi({
-  reducerPath: 'api',
+  reducerPath: 'woocommerceApi',
   baseQuery: fetchBaseQuery({ 
     baseUrl: '/wp-json/wc/v3/',
     prepareHeaders: (headers, { getState }) => {
@@ -279,12 +281,71 @@ export const api = createApi({
   }),
 });
 
+export const aboApi = createApi({
+  reducerPath: 'aboApi',
+  baseQuery: fetchBaseQuery({
+    // https://developers.google.com/workspace/sheets/api/reference/rest
+    baseUrl: '/docs-google-com/spreadsheets/d/',
+    responseHandler: 'text'
+  }),
+  tagTypes: ['Abo'],
+  endpoints: (builder) => ({
+    getAbo: builder.query<Abo, void>({
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBaseQuery) {
+        
+        // TODO: this references copy of the document, make configurable
+        const documentId = "1yZolqnTz02fJXRl_KISmxzR7j4D-3nb7vgxHFli_yig";
+        const matrixPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv`);
+
+        const abo = new Abo();
+        
+        if (matrixPromise.data) {
+          const parsedMatrix = Papa.parse<any>(matrixPromise.data.toString(), {skipFirstNLines: 1, header: true})
+
+          const regex = /^.* \((?<articleId>[A-Z][0-9]{2})\)$/
+          parsedMatrix.data.forEach((row: any, index: number)=> {
+            if (index === 0) {
+              abo.description = row["Name"];
+            }
+            else {
+              const total = row["Alles"];
+              if (total !== "0") {
+                const customerId = row["Id"];
+                if (customerId) {
+                  const articleHeaders = Object.keys(row).filter((name: string) => regex.test(name));
+                  articleHeaders.forEach((articleHeader: string) => {
+                    const regexResult = regex.exec(articleHeader);
+                    const articleId = regexResult?.groups?.articleId;
+                    const quantity = row[articleHeader];
+                    if (quantity && articleId) {
+                      abo.addOrder(customerId, articleId, quantity);
+                    }
+                  })
+                }
+              }
+            }
+          })
+        }
+        
+        console.log(abo);
+        
+        return { data: abo };
+      },
+      providesTags: ['Abo'],
+    }),
+  }),
+})
+
 export const {
   useGetProductsQuery,
-  useGetCustomersQuery,
+  useGetCustomersQuery,   
   useGetWalletBalanceQuery,
   usePayWithWalletMutation,
   useCreateOrderMutation,
   useUpdateOrderMutation,
   useGetCustomerOrdersQuery,
 } = api; 
+
+export const {
+  useGetAboQuery
+} = aboApi;

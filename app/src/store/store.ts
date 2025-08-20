@@ -6,7 +6,7 @@ import customerReducer from './slices/customerSlice';
 import productsReducer from './slices/productsSlice';
 import sessionReducer from './slices/sessionSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
-import { api } from './api/api';
+import { aboApi, api } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
 import { cartLoggingMiddleware } from './middleware/cartLoggingMiddleware';
 import { bulkItemMiddleware } from './middleware/bulkItemMiddleware.ts';
@@ -23,12 +23,14 @@ const store = configureStore({
     products: productsReducer,
     session: sessionReducer,
     [api.reducerPath]: api.reducer,
+    [aboApi.reducerPath]: aboApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // This might be needed for App Insights
     })
       .concat(api.middleware)
+      .concat(aboApi.middleware)
       .concat(soundMiddleware)
       .concat(cartLoggingMiddleware)
       .concat(productValidationMiddleware)

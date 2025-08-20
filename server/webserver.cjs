@@ -44,6 +44,14 @@ app.use('/wp-json', createProxyMiddleware({
   }
 }));
 
+// Proxy calls to google docs for abo
+app.use('/docs-google-com', createProxyMiddleware({
+  target: `https://docs.google.com`,
+  changeOrigin: true,
+  followRedirects: true,
+  rewrite: (path) => path.replace(/^\/docs-google-com/, ''),
+}));
+
 // Configuration
 app.get('/api/configuration', (_, res) => {
   res.json({

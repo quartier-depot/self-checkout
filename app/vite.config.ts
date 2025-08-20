@@ -38,9 +38,15 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_WOOCOMMERCE_URL,
           changeOrigin: true,
           auth: `${env.VITE_WOOCOMMERCE_CONSUMER_KEY}:${env.VITE_WOOCOMMERCE_CONSUMER_SECRET}`,
-          secure: false
+          secure: false,
+        },
+        '/docs-google-com': {
+          target: 'https://docs.google.com',
+          changeOrigin: true,
+          followRedirects: true,
+          rewrite: (path) => path.replace(/^\/docs-google-com/, '')
         },
       },
     },
-  }
+  };
 });
