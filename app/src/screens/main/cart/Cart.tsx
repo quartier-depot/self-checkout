@@ -32,7 +32,7 @@ export function Cart() {
     }
 
     function closeDialog(quantity: number): void {
-        if (!bulkItem || (bulkItem && quantity >= 0)) {
+        if (!bulkItem || (bulkItem && quantity > 0)) {
             dispatch(setCartQuantity({ product: dialogItem!.product, quantity }));
         }
         dispatch(removeBulkItem());
