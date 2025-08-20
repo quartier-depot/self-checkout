@@ -5,11 +5,12 @@ import classNames from "classnames";
 type NumPadProps = {
     value: number,
     text: string,
-    onChange: (value: number) => void
-    onReportError?: () => void
+    onChange: (value: number) => void,
+    onReportError?: () => void,
+    unit?: string
 }
 
-export function NumPad({ value, text, onChange, onReportError }: NumPadProps) {
+export function NumPad({ value, text, onChange, onReportError, unit = ''}: NumPadProps) {
     const [count, setCount] = useState(value);
     const [errorReported, setErrorReported] = useState(false);
 
@@ -45,7 +46,7 @@ export function NumPad({ value, text, onChange, onReportError }: NumPadProps) {
             <div>
                 <Button onClick={() => decrease()} type={'secondary'} className={'py-4 font-bold'} disabled={count === 0}>-</Button>
             </div>
-            <div className="text-4xl mt-5 text-center">{count}</div>
+            <div className="text-4xl mt-5 text-center min-w-44">{count} {unit}</div>
             <div><Button onClick={increase} type={'secondary'} className={'py-4 font-bold'}>+</Button></div>
             <div className="col-span-3 text-2xl text-center text-ellipsis overflow-hidden whitespace-nowrap">{text}</div>
             <div>

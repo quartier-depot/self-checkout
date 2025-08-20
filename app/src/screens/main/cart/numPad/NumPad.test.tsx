@@ -5,11 +5,11 @@ import userEvent from '@testing-library/user-event';
 
 describe('NumPad', () => {
 
-    it('renders initial value and text', () => {
-        render(<NumPad value={42} text="Test Text" onChange={vi.fn()} />);
+    it('renders initial value, text and unit', () => {
+        render(<NumPad value={42} text="Test Text" unit='pcs' onChange={vi.fn()} />);
         
         expect(screen.getByText('Test Text')).toBeInTheDocument();
-        expect(screen.getByText('42')).toBeInTheDocument();
+        expect(screen.getByText('42 pcs')).toBeInTheDocument();
     });
 
     it('increases value when + button is clicked', async () => {
