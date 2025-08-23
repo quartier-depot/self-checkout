@@ -14,7 +14,7 @@ type ProductData = Partial<{
   price: number;
   artikel_id: string;
   barcodes: string[];
-  gestell: string;
+  category: string;
   isBulkItem: boolean;
   unit: Unit;
 }>;
@@ -27,7 +27,7 @@ export class Product {
   price: number;
   artikel_id: string;
   barcodes: string[];
-  gestell: string;
+  category: string;
   isBulkItem: boolean;
   hasBarcodes: boolean;
   unit: Unit;
@@ -58,7 +58,7 @@ export class Product {
       slug: dto.slug,
       price: parseFloat(dto.price),
       artikel_id: getMetaData('artikel-id', dto),
-      gestell: decode(getMetaData('gestell', dto)),
+      category: decode(getMetaData('gestell', dto)),
       barcodes,
       isBulkItem,
       unit
@@ -76,7 +76,7 @@ export class Product {
     this.artikel_id = data.artikel_id ?? '';
     this.barcodes = data.barcodes ?? [];
     this.hasBarcodes = this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE);
-    this.gestell = data.gestell ?? '';
+    this.category = data.category ?? '';
     this.isBulkItem = data.isBulkItem ?? false;
     this.unit = data.unit ?? Unit.NoUnit;
   }

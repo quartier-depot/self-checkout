@@ -152,5 +152,5 @@ const product: Product = new Product({
   name: 'name',
   slug: 'slug',
   barcodes: ['barcode'],
-  gestell: 'gestell'
+  category: 'category'
 }); 

@@ -7,14 +7,14 @@ import { Product as ProductType } from "../../../store/api/products/Product";
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
 import { selectFilteredDisplayItems } from '../../../store/slices/displaySlice.ts';
 
-type ProductOrGroup = ProductType | { gestell: string; products: ProductType[] };
+type ProductOrGroup = ProductType | { category: string; products: ProductType[] };
 
 export function Display() {
     const products = useAppSelector(selectFilteredDisplayItems);
 
     const getProductKey = (product: ProductOrGroup): string => {
         if ('products' in product) {
-            return product.gestell;
+            return product.category;
         }
         return product.id.toString();
     };

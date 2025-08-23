@@ -9,13 +9,13 @@ type ViewMode = '' | 'browse' | 'search' | 'favourites';
 interface DisplayState {
     viewMode: ViewMode;
     searchTerm: string;
-    gestell: string;
+    category: string;
 }
 
 const initialState: DisplayState = {
     viewMode: '',
     searchTerm: '',
-    gestell: '',
+    category: '',
 };
 
 const displaySlice = createSlice({
@@ -28,15 +28,15 @@ const displaySlice = createSlice({
         setSearchTerm: (state, action: PayloadAction<string>) => {
             state.searchTerm = action.payload;
         },
-        setGestell: (state, action: PayloadAction<string>) => {
-            state.gestell = action.payload;
+        setCategory: (state, action: PayloadAction<string>) => {
+            state.category = action.payload;
         }
     },
     extraReducers: (builder) => {
         builder.addCase(startNewSession, (state) => {
             state.viewMode = initialState.viewMode;
             state.searchTerm = initialState.searchTerm;
-            state.gestell = initialState.gestell;
+            state.category = initialState.category;
         });
     },
 });
@@ -58,24 +58,24 @@ export const selectFilteredDisplayItems = (state: RootState) => {
         );
 
       case 'browse':
-        if (state.display.gestell) {
+        if (state.display.category) {
           return products
-            .filter(product => product.gestell === state.display.gestell)
+            .filter(product => product.category === state.display.category)
             .filter(product => !product.hasBarcodes);
         } else {
-          // Group products by gestell
-          const gestelleMap = new Map<string, Product[]>();
+          // Group products by category
+          const categoryeMap = new Map<string, Product[]>();
           products
             .filter(product => !product.hasBarcodes)
             .forEach(product => {
-              if (product.gestell) {
-                const products = gestelleMap.get(product.gestell) || [];
+              if (product.category) {
+                const products = categoryeMap.get(product.category) || [];
                 products.push(product);
-                gestelleMap.set(product.gestell, products);
+                categoryeMap.set(product.category, products);
               }
             });
-          return Array.from(gestelleMap.entries()).map(([gestell, products]) => ({
-            gestell,
+          return Array.from(categoryeMap.entries()).map(([category, products]) => ({
+            category,
             products
           }));
         }
@@ -111,5 +111,5 @@ export const selectFilteredDisplayItems = (state: RootState) => {
     }
 };
 
-export const { setViewMode, setSearchTerm, setGestell } = displaySlice.actions;
+export const { setViewMode, setSearchTerm, setCategory } = displaySlice.actions;
 export default displaySlice.reducer; 

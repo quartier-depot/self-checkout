@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import productsReducer, { selectFilteredDisplayItems, setGestell, setSearchTerm, setViewMode } from './displaySlice.ts';
+import productsReducer, { selectFilteredDisplayItems, setCategory, setSearchTerm, setViewMode } from './displaySlice.ts';
 import { startNewSession } from './appSlice';
 import { Product } from '../api/products/Product.ts';
 
@@ -8,7 +8,7 @@ type ViewMode = '' | 'browse' | 'search' | 'favourites';
 interface ProductsState {
     viewMode: ViewMode;
     searchTerm: string;
-    gestell: string;
+    category: string;
 }
 
 describe('productsSlice', () => {
@@ -17,7 +17,7 @@ describe('productsSlice', () => {
             expect(productsReducer(undefined, { type: 'unknown' })).toEqual({
                 viewMode: '',
                 searchTerm: '',
-                gestell: '',
+                category: '',
             });
         });
 
@@ -25,7 +25,7 @@ describe('productsSlice', () => {
             const initialState: ProductsState = {
                 viewMode: '',
                 searchTerm: '',
-                gestell: '',
+                category: '',
             };
             expect(productsReducer(initialState, setViewMode('search'))).toEqual({
                 ...initialState,
@@ -37,7 +37,7 @@ describe('productsSlice', () => {
             const initialState: ProductsState = {
                 viewMode: '',
                 searchTerm: '',
-                gestell: '',
+                category: '',
             };
             expect(productsReducer(initialState, setSearchTerm('test'))).toEqual({
                 ...initialState,
@@ -45,15 +45,15 @@ describe('productsSlice', () => {
             });
         });
 
-        it('should handle setGestell', () => {
+        it('should handle setCategory', () => {
             const initialState: ProductsState = {
                 viewMode: '',
                 searchTerm: '',
-                gestell: '',
+                category: '',
             };
-            expect(productsReducer(initialState, setGestell('A1'))).toEqual({
+            expect(productsReducer(initialState, setCategory('A1'))).toEqual({
                 ...initialState,
-                gestell: 'A1',
+                category: 'A1',
             });
         });
 
@@ -61,12 +61,12 @@ describe('productsSlice', () => {
             const initialState: ProductsState = {
                 viewMode: 'search',
                 searchTerm: 'test',
-                gestell: 'A1',
+                category: 'A1',
             };
             expect(productsReducer(initialState, startNewSession())).toEqual({
                 viewMode: '',
                 searchTerm: '',
-                gestell: '',
+                category: '',
             });
         });
     });
@@ -76,7 +76,7 @@ describe('productsSlice', () => {
             id: i + 1,
             name: `Product ${i + 1}`,
             artikel_id: `A${i + 1}`,
-            gestell: String.fromCharCode(65 + i), // A, B, C, etc.
+            category: String.fromCharCode(65 + i), // A, B, C, etc.
             barcodes: [],
             slug: `product-${i + 1}`,
             price: (i + 1) * 10
@@ -87,7 +87,7 @@ describe('productsSlice', () => {
                 products: {
                     viewMode: '',
                     searchTerm: '',
-                    gestell: '',
+                    category: '',
                 },
                 woocommerceApi: {
                     queries: {
@@ -108,7 +108,7 @@ describe('productsSlice', () => {
                 products: {
                     viewMode: 'search',
                     searchTerm: '5',
-                    gestell: '',
+                    category: '',
                 },
                 api: {
                     queries: {
@@ -134,7 +134,7 @@ describe('productsSlice', () => {
                 products: {
                     viewMode: 'browse',
                     searchTerm: '',
-                    gestell: 'A',
+                    category: 'A',
                 },
                 api: {
                     queries: {
@@ -150,15 +150,15 @@ describe('productsSlice', () => {
             const result = selectFilteredDisplayItems(state as any);
             expect(result).toHaveLength(1);
             const product = result![0] as Product;
-            expect(product.gestell).toBe('A');
+            expect(product.category).toBe('A');
         });
 
-        it('should group products by gestell when no specific gestell is selected', () => {
+        it('should group products by category when no specific category is selected', () => {
             const state = {
                 products: {
                     viewMode: 'browse',
                     searchTerm: '',
-                    gestell: '',
+                    category: '',
                 },
                 api: {
                     queries: {
@@ -173,10 +173,10 @@ describe('productsSlice', () => {
             };
             const result = selectFilteredDisplayItems(state as any);
             expect(result).toHaveLength(15);
-            const firstGroup = result![0] as { gestell: string; products: Product[] };
-            const secondGroup = result![1] as { gestell: string; products: Product[] };
-            expect(firstGroup.gestell).toBe('A');
-            expect(secondGroup.gestell).toBe('B');
+            const firstGroup = result![0] as { category: string; products: Product[] };
+            const secondGroup = result![1] as { category: string; products: Product[] };
+            expect(firstGroup.category).toBe('A');
+            expect(secondGroup.category).toBe('B');
         });
 
         it('should sort favourite products by order frequency', () => {
@@ -184,7 +184,7 @@ describe('productsSlice', () => {
                 products: {
                     viewMode: 'favourites',
                     searchTerm: '',
-                    gestell: '',
+                    category: '',
                 },
                 api: {
                     queries: {
@@ -218,7 +218,7 @@ describe('productsSlice', () => {
                 products: {
                     viewMode: 'favourites',
                     searchTerm: '',
-                    gestell: '',
+                    category: '',
                 },
                 api: {
                     queries: {
@@ -262,7 +262,7 @@ describe('productsSlice', () => {
                 products: {
                     viewMode: 'favourites',
                     searchTerm: '',
-                    gestell: '',
+                    category: '',
                 },
                 api: {
                     queries: {

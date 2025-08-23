@@ -1,6 +1,6 @@
 import { Button } from "../../../../../components/button/Button";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
-import { setViewMode, selectViewMode, setGestell } from "../../../../../store/slices/displaySlice.ts";
+import { setViewMode, selectViewMode, setCategory } from "../../../../../store/slices/displaySlice.ts";
 
 
 export function Browse() {
@@ -10,7 +10,7 @@ export function Browse() {
 
     function handleClick() {
         dispatch(setViewMode('browse'));
-        dispatch(setGestell(''));
+        dispatch(setCategory(''));
     }
 
     return (
