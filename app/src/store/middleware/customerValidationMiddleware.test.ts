@@ -157,7 +157,7 @@ function buildCustomer(id: number, memberId: string): Customer {
 
 function buildAction(customers: Customer[]) {
   return {
-    type: `api/executeQuery/fulfilled`,
+    type: `woocommerceApi/executeQuery/fulfilled`,
     meta: {
       arg: {
         endpointName: 'getCustomers',

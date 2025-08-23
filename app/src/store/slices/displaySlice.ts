@@ -47,9 +47,10 @@ export const selectSearchTerm = (state: RootState) => state.display.searchTerm;
 export const selectFilteredDisplayItems = (state: RootState) => {
     const { viewMode, searchTerm } = state.display;
     const products = api.endpoints.getProducts.select()(state).data;
-
+    
     if (!products) return undefined;
 
+    console.log(viewMode);
     switch (viewMode) {
       case 'search':
         if (!searchTerm) return [];

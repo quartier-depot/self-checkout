@@ -145,7 +145,7 @@ function buildProduct(id: number, barcodes: string[] = []): Product {
 
 function buildAction(products: Product[]) {
   return {
-    type: `api/executeQuery/fulfilled`,
+    type: `woocommerceApi/executeQuery/fulfilled`,
     meta: {
       arg: {
         endpointName: 'getProducts',
