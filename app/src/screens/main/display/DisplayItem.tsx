@@ -4,11 +4,11 @@ import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { changeCartQuantity } from '../../../store/slices/cartSlice';
 import { setGestell } from '../../../store/slices/productsSlice';
 
-interface ProductProps {
+interface DisplayItemProps {
     product: ProductClass | { gestell: string; products: ProductClass[] };
 }
 
-export function DisplayItem({ product }: ProductProps) {
+export function DisplayItem({ product }: DisplayItemProps) {
     const dispatch = useAppDispatch();  
     const viewMode = useAppSelector(state => state.products.viewMode);
     const isGestell = product.hasOwnProperty('products');
