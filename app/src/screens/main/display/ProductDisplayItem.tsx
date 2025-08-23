@@ -19,7 +19,7 @@ export function ProductDisplayItem({ product, quantity }: ProductDisplayItemProp
                     className={
                         'relative select-none cursor-pointer overflow-hidden rounded-lg bg-slate-50 p-2 text-center'
                     }
-                    onClick={() => dispatch(changeCartQuantity({ product: product, quantity: 1, source: viewMode }))}
+                    onClick={() => dispatch(changeCartQuantity({ product: product, quantity: quantity, source: viewMode }))}
             >
                 <h2 className={'text-2xl font-bold '}>
                     {product.artikel_id}

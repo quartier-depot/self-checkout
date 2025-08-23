@@ -62,14 +62,14 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
       if (!searchTerm) return [];
       return products.filter(product =>
         product.artikel_id?.endsWith(searchTerm)
-      ).map(createProductDisplayItem);
+      ).map(product => createProductDisplayItem(product, 1));
 
     case 'browse':
       if (state.display.category) {
         return products
           .filter(product => product.category === state.display.category)
           .filter(product => !product.hasBarcodes)
-          .map(createProductDisplayItem);
+          .map(product => createProductDisplayItem(product, 1));
       } else {
         const categories = products
           .filter(product => !product.hasBarcodes)
@@ -103,7 +103,7 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
           return freqB - freqA;
         })
         .slice(0, 14)
-        .map(createProductDisplayItem);
+        .map(product => createProductDisplayItem(product, 1));
             
     case 'abo':
       if (!customerId) return [];
