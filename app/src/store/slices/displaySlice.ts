@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product as ProductType, Product } from '../api/products/Product.ts';
+import { Product as ProductType } from '../api/products/Product.ts';
 import { startNewSession } from './appSlice';
 import { RootState } from '../store';
 import { api } from '../api/api';
@@ -46,7 +46,7 @@ export const selectViewMode = (state: RootState) => state.display.viewMode;
 export const selectSearchTerm = (state: RootState) => state.display.searchTerm;
 
 export type ProductDisplayItemType = { key: string; type: 'product', product: ProductType; quantity: number};
-export type CategoryDisplayItemType = { key: string; type: 'category', products: ProductType[] };
+export type CategoryDisplayItemType = { key: string; type: 'category'};
 export type DisplayItemType = ProductDisplayItemType | CategoryDisplayItemType;
 
 export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] => {
@@ -69,18 +69,12 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
             .filter(product => !product.hasBarcodes)
             .map(createProductDisplayItem);
         } else {
-          // Group products by category
-          const categoryMap = new Map<string, Product[]>();
-          products
+          const categories = products
             .filter(product => !product.hasBarcodes)
-            .forEach(product => {
-              if (product.category) {
-                const products = categoryMap.get(product.category) || [];
-                products.push(product);
-                categoryMap.set(product.category, products);
-              }
-            });
-          return Array.from(categoryMap.entries()).map(([category, products]) => createCategoryDisplayItem(category, products));
+            .filter(product => product.category)
+            .map(product => product.category);
+          const distinctCategories = [...new Set(categories)];
+          return distinctCategories.map(category => createCategoryDisplayItem(category));
         }
 
         case 'favourites':
@@ -124,11 +118,10 @@ function createProductDisplayItem(product: ProductType, quantity: number = 0): D
   };
 }
 
-function createCategoryDisplayItem(category: string, products: ProductType[]): DisplayItemType {
+function createCategoryDisplayItem(category: string): DisplayItemType {
   return {
     key: category,
-    type: 'category',
-    products
+    type: 'category'
   };
 }
 
