@@ -48,7 +48,7 @@ describe('SearchPad', () => {
         await user.click(numberButton);
         await user.click(numberButton);
 
-        const searchButton = screen.getByText('Suchen');
+        const searchButton = screen.getByText('OK');
         await user.click(searchButton);
         
         expect(onSearch).toHaveBeenCalledWith("333");
