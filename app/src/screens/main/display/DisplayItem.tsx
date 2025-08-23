@@ -8,7 +8,7 @@ interface ProductProps {
     product: ProductClass | { gestell: string; products: ProductClass[] };
 }
 
-export function Product({ product }: ProductProps) {
+export function DisplayItem({ product }: ProductProps) {
     const dispatch = useAppDispatch();  
     const viewMode = useAppSelector(state => state.products.viewMode);
     const isGestell = product.hasOwnProperty('products');

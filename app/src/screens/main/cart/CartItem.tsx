@@ -1,13 +1,13 @@
-import { Item as ItemType } from '../../../store/api/cart/Cart';
+import { CartItem as CartItemType } from '../../../store/api/cart/Cart';
 import { formatPrice } from '../../../format/formatPrice';
 import moreHorizontal from '../../../assets/more-horizontal.svg';
 
 interface ItemProps {
-    item: ItemType;
-    onClick: (item: ItemType) => void;
+    item: CartItemType;
+    onClick: (item: CartItemType) => void;
 }
 
-export function Item({ item, onClick }: ItemProps) {
+export function CartItem({ item, onClick }: ItemProps) {
     return (
             <tr className={'h-10 border-b-slate-500 border-b-1'} onClick={() => onClick(item)}>
                 <td>

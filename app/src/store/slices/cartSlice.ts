@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Cart, Item } from '../api/cart/Cart';
+import { Cart, CartItem } from '../api/cart/Cart';
 import { Product } from '../api/products/Product';
 import { startNewSession } from './sessionSlice';
 
@@ -36,7 +36,7 @@ const cartSlice = createSlice({
       const { product, quantity: delta } = action.payload;
       const cart = state.cart;
       const alreadyInCart = cart.items.find((item) => item.product.id === product.id);
-      let items: Item[] = [];
+      let items: CartItem[] = [];
 
       if (Number.isNaN(delta)) {
         throw new Error('NaN');
@@ -72,7 +72,7 @@ const cartSlice = createSlice({
       const { product, quantity: delta } = action.payload;
       const cart = state.cart;
       const alreadyInCart = cart.items.find((item) => item.product.id === product.id);
-      let items: Item[] = [];
+      let items: CartItem[] = [];
 
       if (alreadyInCart) {
         items = cart.items.map((item) => {

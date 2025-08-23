@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Item as ItemType } from '../../../store/api/cart/Cart';
+import { CartItem as ItemType } from '../../../store/api/cart/Cart';
 import cartIcon from '../../../assets/cart.svg';
-import { Item } from './Item';
+import { CartItem } from './CartItem.tsx';
 import { NumPad } from './numPad/NumPad';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
@@ -77,7 +77,7 @@ export function Cart() {
                     </colgroup>
                     <tbody>
                         {cart.items.map((item) => (
-                            <Item key={item.product.id} item={item} onClick={() => openDialog(item)} />
+                            <CartItem key={item.product.id} item={item} onClick={() => openDialog(item)} />
                         ))}
                     </tbody>
                 </table>

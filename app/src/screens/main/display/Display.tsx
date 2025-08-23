@@ -1,6 +1,6 @@
 import { EmptySearch } from './EmptySearch';
 import { Instructions } from './Instructions';
-import { Product } from './Product';
+import { DisplayItem } from './DisplayItem.tsx';
 import { Menu } from './menu/Menu';
 import { useAppSelector } from '../../../store/store';
 import { selectFilteredProducts } from "../../../store/slices/productsSlice";
@@ -9,7 +9,7 @@ import Scrollbar from '../../../components/scrollbar/Scrollbar';
 
 type ProductOrGroup = ProductType | { gestell: string; products: ProductType[] };
 
-export function Products() {
+export function Display() {
     const products = useAppSelector(selectFilteredProducts);
 
     const getProductKey = (product: ProductOrGroup): string => {
@@ -28,7 +28,7 @@ export function Products() {
             <Scrollbar>
                 <div className={'grid grid-cols-2 gap-2P'}>
                     {products.map((product: ProductOrGroup) => (
-                        <Product 
+                        <DisplayItem 
                             key={getProductKey(product)} 
                             product={product} 
                         />

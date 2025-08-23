@@ -1,12 +1,12 @@
 import { Product } from '../products/Product';
 
 export type Cart = {
-  items: Item[];
+  items: CartItem[];
   quantity: number;
   price: number;
 };
 
-export type Item = {
+export type CartItem = {
   product: Product;
   quantity: number;
 };
