@@ -21,6 +21,7 @@ export function Search() {
 
     function handleClick() {
         dispatch(setViewMode('search'));
+        dispatch(setSearchTerm(''));
         setDialogOpen(!dialogOpen);
     }
 
