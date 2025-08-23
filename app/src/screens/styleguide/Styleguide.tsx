@@ -1,4 +1,5 @@
 import { Button } from "../../components/button/Button";
+import { Badge } from '../../components/badge/Badge.tsx';
 import { Progress } from '../../components/progress/Progress.tsx';
 import { CircularCountdown } from '../../components/circularCountdown/CircularCountdown.tsx';
 const add = new Audio('/assets/sounds/add.mp3');
@@ -69,6 +70,11 @@ export function Styleguide() {
                     <CircularCountdown duration={10000} />
                 </div>
 
+                <div className={'bg-slate-50 p-2'}>
+                    <span className="relative">Primary
+                        <Badge >99+</Badge>
+                    </span>
+                </div>
             </div>
     );
 }

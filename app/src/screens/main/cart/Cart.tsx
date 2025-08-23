@@ -10,6 +10,7 @@ import { setCartQuantity } from '../../../store/slices/cartSlice';
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
 import { removeBulkItem } from '../../../store/slices/bulkItemSlice.ts';
 import { ResetDialog } from '../../../components/modal/dialog/resetDialog/ResetDialog.tsx';
+import { Badge } from '../../../components/badge/Badge.tsx';
 
 export function Cart() {
     const dispatch = useAppDispatch();
@@ -56,14 +57,7 @@ export function Cart() {
             <div className={'text-left flex'}>
                 <div className={'pl-2 pt-1 pb-2 relative'}>
                     <img src={cartIcon} alt="cart" className={'h-6 inline-block'} />
-                    <div
-                        onClick={() => setShowCartDialog(true)}
-                        className={
-                            'text-center absolute bg-emerald-800 text-white w-5 h-5 text-xs p-0 leading-5 rounded-full -right-2 top-3 cursor-pointer'
-                        }
-                    >
-                        {cart.quantity}
-                    </div>
+                    <Badge className={'absolute top-0 left-5'}>{cart.quantity}</Badge>
                 </div>
             </div>
 
