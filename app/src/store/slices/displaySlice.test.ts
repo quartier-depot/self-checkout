@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import displayReducer, { selectFilteredDisplayItems, setCategory, setSearchTerm, setViewMode } from './displaySlice.ts';
+import displayReducer, {
+  CategoryDisplayItemType,
+  DisplayItemType, ProductDisplayItemType,
+  selectFilteredDisplayItems,
+  setCategory,
+  setSearchTerm,
+  setViewMode
+} from './displaySlice.ts';
 import { startNewSession } from './appSlice';
 import { Product } from '../api/products/Product.ts';
 
@@ -123,10 +130,10 @@ describe('displaySlice', () => {
       };
       const result = selectFilteredDisplayItems(state as any);
       expect(result).toHaveLength(2); // A5, A15
-      const product1 = result![0] as Product;
-      expect(product1.name).toBe('Product 5');
-      const product2 = result![1] as Product;
-      expect(product2.name).toBe('Product 15');
+      const item1 = result![0] as ProductDisplayItemType;
+      expect(item1.product.name).toBe('Product 5');
+      const item2 = result![1] as ProductDisplayItemType;
+      expect(item2.product.name).toBe('Product 15');
     });
 
     it('should filter display items by shell', () => {
@@ -149,8 +156,8 @@ describe('displaySlice', () => {
       };
       const result = selectFilteredDisplayItems(state as any);
       expect(result).toHaveLength(1);
-      const product = result![0] as Product;
-      expect(product.category).toBe('A');
+      const category = result![0] as CategoryDisplayItemType;
+      expect(category.key).toBe('A');
     });
 
     it('should group display items by category when no specific category is selected', () => {
@@ -173,10 +180,10 @@ describe('displaySlice', () => {
       };
       const result = selectFilteredDisplayItems(state as any);
       expect(result).toHaveLength(15);
-      const firstGroup = result![0] as { category: string; products: Product[] };
-      const secondGroup = result![1] as { category: string; products: Product[] };
-      expect(firstGroup.category).toBe('A');
-      expect(secondGroup.category).toBe('B');
+      const firstGroup = result![0] as CategoryDisplayItemType;
+      const secondGroup = result![1] as CategoryDisplayItemType;
+      expect(firstGroup.key).toBe('A');
+      expect(secondGroup.key).toBe('B');
     });
 
     it('should sort favourite display items by order frequency', () => {
@@ -209,8 +216,8 @@ describe('displaySlice', () => {
       const result = selectFilteredDisplayItems(state as any);
 
       expect(result).toHaveLength(2);
-      expect((result![0] as Product).id).toBe(2);
-      expect((result![1] as Product).id).toBe(1);
+      expect((result![0] as ProductDisplayItemType).product.id).toBe(2);
+      expect((result![1] as ProductDisplayItemType).product.id).toBe(1);
     });
 
     it('should slice the first 14 display items products', () => {

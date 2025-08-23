@@ -1,38 +1,41 @@
 import { EmptySearch } from './EmptySearch';
 import { Instructions } from './Instructions';
-import { DisplayItem } from './DisplayItem.tsx';
+import { ProductDisplayItem } from './ProductDisplayItem.tsx';
 import { Menu } from './menu/Menu';
 import { useAppSelector } from '../../../store/store';
-import { Product as ProductType } from "../../../store/api/products/Product";
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
-import { selectFilteredDisplayItems } from '../../../store/slices/displaySlice.ts';
+import { DisplayItemType, selectFilteredDisplayItems } from '../../../store/slices/displaySlice.ts';
+import { CategoryDisplayItem } from './CategoryDisplayItem.tsx';
 
-type DisplayItemType = ProductType | { category: string; products: ProductType[] };
 
 export function Display() {
-    const products = useAppSelector(selectFilteredDisplayItems);
-
-    const getProductKey = (product: DisplayItemType): string => {
-        if ('products' in product) {
-            return product.category;
-        }
-        return product.id.toString();
-    };
+    const displayItems = useAppSelector(selectFilteredDisplayItems);
 
     return (
         <>
             <Menu />
-            {products === undefined && <Instructions />}
-            {products && products.length === 0 && <EmptySearch />}
-            {products && products.length > 0 && (
+            {displayItems === undefined && <Instructions />}
+            {displayItems && displayItems.length === 0 && <EmptySearch />}
+            {displayItems && displayItems.length > 0 && (
             <Scrollbar>
                 <div className={'grid grid-cols-2 gap-2P'}>
-                    {products.map((product: DisplayItemType) => (
-                        <DisplayItem 
-                            key={getProductKey(product)} 
-                            product={product} 
-                        />
-                    ))}
+                    {displayItems.map((displayItem: DisplayItemType) => {
+                      switch (displayItem.type) {
+                        case 'product':
+                          return (<ProductDisplayItem
+                            key={displayItem.key}
+                            product={displayItem.product}
+                            quantity={displayItem.quantity}
+                          />)
+                        
+                        case 'category':
+                          return  (<CategoryDisplayItem
+                            key={displayItem.key}
+                            category={displayItem.key}
+                          />)
+                      }
+                    }
+                    )}
                 </div>
             </Scrollbar>
             )}

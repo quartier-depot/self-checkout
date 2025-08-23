@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from '../api/products/Product.ts';
-import { startNewSession } from './sessionSlice';
+import { Product as ProductType, Product } from '../api/products/Product.ts';
+import { startNewSession } from './appSlice';
 import { RootState } from '../store';
 import { api } from '../api/api';
 
@@ -44,41 +44,43 @@ const displaySlice = createSlice({
 // Selectors
 export const selectViewMode = (state: RootState) => state.display.viewMode;
 export const selectSearchTerm = (state: RootState) => state.display.searchTerm;
-export const selectFilteredDisplayItems = (state: RootState) => {
+
+export type ProductDisplayItemType = { key: string; type: 'product', product: ProductType; quantity: number};
+export type CategoryDisplayItemType = { key: string; type: 'category', products: ProductType[] };
+export type DisplayItemType = ProductDisplayItemType | CategoryDisplayItemType;
+
+export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] => {
     const { viewMode, searchTerm } = state.display;
     const products = api.endpoints.getProducts.select()(state).data;
     
-    if (!products) return undefined;
-
-    console.log(viewMode);
+    if (!products) return [];
+    
     switch (viewMode) {
       case 'search':
         if (!searchTerm) return [];
         return products.filter(product =>
           product.artikel_id?.endsWith(searchTerm)
-        );
+        ).map(createProductDisplayItem);
 
       case 'browse':
         if (state.display.category) {
           return products
             .filter(product => product.category === state.display.category)
-            .filter(product => !product.hasBarcodes);
+            .filter(product => !product.hasBarcodes)
+            .map(createProductDisplayItem);
         } else {
           // Group products by category
-          const categoryeMap = new Map<string, Product[]>();
+          const categoryMap = new Map<string, Product[]>();
           products
             .filter(product => !product.hasBarcodes)
             .forEach(product => {
               if (product.category) {
-                const products = categoryeMap.get(product.category) || [];
+                const products = categoryMap.get(product.category) || [];
                 products.push(product);
-                categoryeMap.set(product.category, products);
+                categoryMap.set(product.category, products);
               }
             });
-          return Array.from(categoryeMap.entries()).map(([category, products]) => ({
-            category,
-            products
-          }));
+          return Array.from(categoryMap.entries()).map(([category, products]) => createCategoryDisplayItem(category, products));
         }
 
         case 'favourites':
@@ -105,12 +107,30 @@ export const selectFilteredDisplayItems = (state: RootState) => {
                     const freqB = productFrequency.get(b.id.toString()) || 0;
                     return freqB - freqA;
                 })
-                .slice(0, 14);
+                .slice(0, 14)
+                .map(createProductDisplayItem);
 
         default:
-            return undefined;
+            return [];
     }
 };
+
+function createProductDisplayItem(product: ProductType, quantity: number = 0): DisplayItemType {
+  return {
+    key: product.id.toString(),
+    type: 'product',
+    product,
+    quantity: quantity
+  };
+}
+
+function createCategoryDisplayItem(category: string, products: ProductType[]): DisplayItemType {
+  return {
+    key: category,
+    type: 'category',
+    products
+  };
+}
 
 export const { setViewMode, setSearchTerm, setCategory } = displaySlice.actions;
 export default displaySlice.reducer; 
