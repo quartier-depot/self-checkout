@@ -20,6 +20,23 @@ describe('cartSlice', () => {
     expectProductOnce(actual);
   });
 
+  test('when cart is empty, on change cart quantity by string sets product as number', () => {
+    const initialState = {
+      cart: {
+        price: 0,
+        quantity: 0,
+        items: [],
+      },
+    };
+
+    const actual = cartReducer(
+      initialState,
+      changeCartQuantity({ product, quantity: "1" as unknown as number, source: '' }),
+    );
+
+    expectProductOnce(actual);
+  });
+
   test('when cart is empty, on set cart quantity to 2 sets product twice', () => {
     const initialState = {
       cart: {

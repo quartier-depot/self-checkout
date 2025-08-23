@@ -33,7 +33,9 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     changeCartQuantity: (state, action: PayloadAction<ChangeCartQuantityPayload>) => {
-      const { product, quantity: delta } = action.payload;
+      const product = action.payload.product;
+      const delta = ensureNumber(action.payload.quantity);
+      
       const cart = state.cart;
       const alreadyInCart = cart.items.find((item) => item.product.id === product.id);
       let items: CartItem[] = [];
@@ -69,7 +71,8 @@ const cartSlice = createSlice({
       state.cart = { price, quantity, items };
     },
     setCartQuantity: (state, action: PayloadAction<SetCartQuantityPayload>) => {
-      const { product, quantity: delta } = action.payload;
+      const product = action.payload.product;
+      const delta = ensureNumber(action.payload.quantity);
       const cart = state.cart;
       const alreadyInCart = cart.items.find((item) => item.product.id === product.id);
       let items: CartItem[] = [];
@@ -111,6 +114,14 @@ const cartSlice = createSlice({
     });
   },
 });
+
+function ensureNumber(value: number | string): number {
+  if (typeof value === 'string') {
+    return Number.parseInt(value);
+  } else {
+    return value;
+  }
+}
 
 export const { changeCartQuantity, setCartQuantity } = cartSlice.actions;
 export default cartSlice.reducer; 
