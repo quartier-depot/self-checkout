@@ -29,7 +29,7 @@ export function Display() {
                           />)
                         
                         case 'category':
-                          return  (<CategoryDisplayItem
+                          return (<CategoryDisplayItem
                             key={displayItem.key}
                             category={displayItem.key}
                           />)

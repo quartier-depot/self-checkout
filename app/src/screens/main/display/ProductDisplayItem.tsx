@@ -8,22 +8,21 @@ interface ProductDisplayItemProps {
     quantity: number,
 }
 
-export function ProductDisplayItem({ product }: ProductDisplayItemProps) {
+export function ProductDisplayItem({ product, quantity }: ProductDisplayItemProps) {
     const dispatch = useAppDispatch();
     const viewMode = useAppSelector(state => state.display.viewMode);
-
-    const item = product as ProductClass;
+    
     return (
             <div
                     role="button"
                     className={
                         'select-none cursor-pointer overflow-hidden rounded-lg bg-slate-50 p-2 text-center'
                     }
-                    onClick={() => dispatch(changeCartQuantity({ product: item, quantity: 1, source: viewMode }))}
+                    onClick={() => dispatch(changeCartQuantity({ product: product, quantity: 1, source: viewMode }))}
             >
-                <h2 className={'text-2xl font-bold'}>{item.artikel_id}</h2>
-                <p className={'grow truncate mr-1'}>{item.name}</p>
-                <p className={'nowrap text-l'}>{formatPrice(item.price)}</p>
+                <h2 className={'text-2xl font-bold'}>{product.artikel_id} {quantity}</h2>
+                <p className={'grow truncate mr-1'}>{product.name}</p>
+                <p className={'nowrap text-l'}>{formatPrice(product.price)}</p>
             </div>
     );
 }

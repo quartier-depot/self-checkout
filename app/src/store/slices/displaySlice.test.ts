@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import displayReducer, {
   CategoryDisplayItemType,
-  DisplayItemType, ProductDisplayItemType,
+  ProductDisplayItemType,
   selectFilteredDisplayItems,
   setCategory,
   setSearchTerm,

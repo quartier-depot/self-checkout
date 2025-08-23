@@ -15,7 +15,7 @@ const initialState: CartState = {
   },
 };
 
-export type CartActionSource = 'scan' | 'favourites' | 'search' | 'browse' | 'cart' | '';
+export type CartActionSource = 'scan' | 'favourites' | 'search' | 'browse' | 'abo' | 'cart' | '';
 
 interface ChangeCartQuantityPayload {
   product: Product;

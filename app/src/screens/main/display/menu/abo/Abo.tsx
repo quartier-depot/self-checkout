@@ -6,14 +6,13 @@ import { setViewMode, selectViewMode } from "../../../../../store/slices/display
 import { MemberDialog } from "../../../../../components/modal/dialog/memberDialog/MemberDialog";
 import { useGetAboQuery } from '../../../../../store/api/api.ts';
 
-
 export function Abo() {
     const dispatch = useAppDispatch();
     const customer = useAppSelector(state => state.customer.customer);
     const { isLoading, isSuccess, refetch } = useGetAboQuery();
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const viewMode = useAppSelector(selectViewMode);
-    const isActive = viewMode === 'favourites';
+    const isActive = viewMode === 'abo';
     const loggedIn = Boolean(customer);
 
     const disabled = !customer || !isSuccess;
@@ -31,7 +30,7 @@ export function Abo() {
             setShowMemberDialog(true);
         } else {
             refetch();
-            dispatch(setViewMode('favourites'));
+            dispatch(setViewMode('abo'));
         }
     }
 
