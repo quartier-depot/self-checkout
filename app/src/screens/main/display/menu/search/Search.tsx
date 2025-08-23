@@ -3,7 +3,7 @@ import { Button } from "../../../../../components/button/Button";
 import { Dialog } from "../../../../../components/modal/dialog/Dialog";
 import { SearchPad } from "./searchPad/SearchPad";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
-import { setSearchTerm, selectViewMode, setViewMode } from "../../../../../store/slices/productsSlice";
+import { setSearchTerm, selectViewMode, setViewMode } from "../../../../../store/slices/displaySlice.ts";
 
 
 export function Search() {

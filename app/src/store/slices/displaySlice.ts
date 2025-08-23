@@ -6,20 +6,20 @@ import { api } from '../api/api';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';
 
-interface ProductsState {
+interface DisplayState {
     viewMode: ViewMode;
     searchTerm: string;
     gestell: string;
 }
 
-const initialState: ProductsState = {
+const initialState: DisplayState = {
     viewMode: '',
     searchTerm: '',
     gestell: '',
 };
 
-const productsSlice = createSlice({
-    name: 'products',
+const displaySlice = createSlice({
+    name: 'display',
     initialState,
     reducers: {
         setViewMode: (state, action: PayloadAction<ViewMode>) => {
@@ -42,10 +42,10 @@ const productsSlice = createSlice({
 });
 
 // Selectors
-export const selectViewMode = (state: RootState) => state.products.viewMode;
-export const selectSearchTerm = (state: RootState) => state.products.searchTerm;
-export const selectFilteredProducts = (state: RootState) => {
-    const { viewMode, searchTerm } = state.products;
+export const selectViewMode = (state: RootState) => state.display.viewMode;
+export const selectSearchTerm = (state: RootState) => state.display.searchTerm;
+export const selectFilteredDisplayItems = (state: RootState) => {
+    const { viewMode, searchTerm } = state.display;
     const products = api.endpoints.getProducts.select()(state).data;
 
     if (!products) return undefined;
@@ -58,9 +58,9 @@ export const selectFilteredProducts = (state: RootState) => {
         );
 
       case 'browse':
-        if (state.products.gestell) {
+        if (state.display.gestell) {
           return products
-            .filter(product => product.gestell === state.products.gestell)
+            .filter(product => product.gestell === state.display.gestell)
             .filter(product => !product.hasBarcodes);
         } else {
           // Group products by gestell
@@ -111,5 +111,5 @@ export const selectFilteredProducts = (state: RootState) => {
     }
 };
 
-export const { setViewMode, setSearchTerm, setGestell } = productsSlice.actions;
-export default productsSlice.reducer; 
+export const { setViewMode, setSearchTerm, setGestell } = displaySlice.actions;
+export default displaySlice.reducer; 

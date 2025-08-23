@@ -2,7 +2,7 @@ import { Product as ProductClass } from '../../../store/api/products/Product';
 import { formatPrice } from '../../../format/formatPrice';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { changeCartQuantity } from '../../../store/slices/cartSlice';
-import { setGestell } from '../../../store/slices/productsSlice';
+import { setGestell } from '../../../store/slices/displaySlice.ts';
 
 interface DisplayItemProps {
     product: ProductClass | { gestell: string; products: ProductClass[] };
@@ -10,7 +10,7 @@ interface DisplayItemProps {
 
 export function DisplayItem({ product }: DisplayItemProps) {
     const dispatch = useAppDispatch();  
-    const viewMode = useAppSelector(state => state.products.viewMode);
+    const viewMode = useAppSelector(state => state.display.viewMode);
     const isGestell = product.hasOwnProperty('products');
 
     if (isGestell) {

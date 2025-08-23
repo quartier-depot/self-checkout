@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import productsReducer, { selectFilteredProducts, setGestell, setSearchTerm, setViewMode } from './productsSlice';
-import { startNewSession } from './sessionSlice';
+import productsReducer, { selectFilteredDisplayItems, setGestell, setSearchTerm, setViewMode } from './displaySlice.ts';
+import { startNewSession } from './appSlice';
 import { Product } from '../api/products/Product.ts';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';
@@ -100,7 +100,7 @@ describe('productsSlice', () => {
                     customer: null,
                 },
             };
-            expect(selectFilteredProducts(state as any)).toBeUndefined();
+            expect(selectFilteredDisplayItems(state as any)).toBeUndefined();
         });
 
         it('should filter products by search term', () => {
@@ -121,7 +121,7 @@ describe('productsSlice', () => {
                     customer: null,
                 },
             };
-            const result = selectFilteredProducts(state as any);
+            const result = selectFilteredDisplayItems(state as any);
             expect(result).toHaveLength(2); // A5, A15
             const product1 = result![0] as Product;
             expect(product1.name).toBe('Product 5');
@@ -147,7 +147,7 @@ describe('productsSlice', () => {
                     customer: null,
                 },
             };
-            const result = selectFilteredProducts(state as any);
+            const result = selectFilteredDisplayItems(state as any);
             expect(result).toHaveLength(1);
             const product = result![0] as Product;
             expect(product.gestell).toBe('A');
@@ -171,7 +171,7 @@ describe('productsSlice', () => {
                     customer: null,
                 },
             };
-            const result = selectFilteredProducts(state as any);
+            const result = selectFilteredDisplayItems(state as any);
             expect(result).toHaveLength(15);
             const firstGroup = result![0] as { gestell: string; products: Product[] };
             const secondGroup = result![1] as { gestell: string; products: Product[] };
@@ -206,7 +206,7 @@ describe('productsSlice', () => {
                 },
             };
 
-            const result = selectFilteredProducts(state as any);
+            const result = selectFilteredDisplayItems(state as any);
 
             expect(result).toHaveLength(2);
             expect((result![0] as Product).id).toBe(2);
@@ -253,7 +253,7 @@ describe('productsSlice', () => {
                 },
             };
 
-            const result = selectFilteredProducts(state as any);
+            const result = selectFilteredDisplayItems(state as any);
             expect(result).toHaveLength(14);
         });
 
@@ -278,7 +278,7 @@ describe('productsSlice', () => {
                     customer: null,
                 },
             };
-            const result = selectFilteredProducts(state as any);
+            const result = selectFilteredDisplayItems(state as any);
             expect(result).toHaveLength(0);
         });
     });

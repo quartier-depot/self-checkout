@@ -1,5 +1,5 @@
 import magnifier from '../../../assets/magnifier.svg';
-import { selectSearchTerm } from '../../../store/slices/productsSlice';
+import { selectSearchTerm } from '../../../store/slices/displaySlice.ts';
 import { useAppSelector } from '../../../store/store';
 
 export function EmptySearch() {

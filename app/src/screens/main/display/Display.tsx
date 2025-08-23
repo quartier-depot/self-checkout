@@ -3,14 +3,14 @@ import { Instructions } from './Instructions';
 import { DisplayItem } from './DisplayItem.tsx';
 import { Menu } from './menu/Menu';
 import { useAppSelector } from '../../../store/store';
-import { selectFilteredProducts } from "../../../store/slices/productsSlice";
 import { Product as ProductType } from "../../../store/api/products/Product";
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
+import { selectFilteredDisplayItems } from '../../../store/slices/displaySlice.ts';
 
 type ProductOrGroup = ProductType | { gestell: string; products: ProductType[] };
 
 export function Display() {
-    const products = useAppSelector(selectFilteredProducts);
+    const products = useAppSelector(selectFilteredDisplayItems);
 
     const getProductKey = (product: ProductOrGroup): string => {
         if ('products' in product) {

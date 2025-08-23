@@ -3,8 +3,8 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import configurationReducer from './slices/configurationSlice';
 import cartReducer from './slices/cartSlice';
 import customerReducer from './slices/customerSlice';
-import productsReducer from './slices/productsSlice';
-import sessionReducer from './slices/sessionSlice';
+import displayReducer from './slices/displaySlice.ts';
+import orderReducer from './slices/appSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
 import { aboApi, api } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
@@ -20,8 +20,8 @@ const store = configureStore({
     cart: cartReducer,
     configuration: configurationReducer,
     customer: customerReducer,
-    products: productsReducer,
-    session: sessionReducer,
+    display: displayReducer,
+    order: orderReducer,
     [api.reducerPath]: api.reducer,
     [aboApi.reducerPath]: aboApi.reducer,
   },

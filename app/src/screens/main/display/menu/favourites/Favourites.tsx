@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { Button } from "../../../../../components/button/Button";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
-import { setViewMode, selectViewMode } from "../../../../../store/slices/productsSlice";
+import { setViewMode, selectViewMode } from "../../../../../store/slices/displaySlice.ts";
 import { useGetCustomerOrdersQuery } from "../../../../../store/api/api";
 import { MemberDialog } from "../../../../../components/modal/dialog/memberDialog/MemberDialog";
 

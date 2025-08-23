@@ -1,6 +1,6 @@
 import { Button } from "../../../../../components/button/Button";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
-import { setViewMode, selectViewMode, setGestell } from "../../../../../store/slices/productsSlice";
+import { setViewMode, selectViewMode, setGestell } from "../../../../../store/slices/displaySlice.ts";
 
 
 export function Browse() {
