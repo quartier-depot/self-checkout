@@ -1,7 +1,7 @@
  import './App.css';
 import { AppInsightsContext, AppInsightsErrorBoundary, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { Main } from './screens/main/Main';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
@@ -19,6 +19,7 @@ function AppContent() {
     const dispatch = useAppDispatch();
     const configuration = useAppSelector(state => state.configuration.configuration);
     const [reactPlugin, setReactPlugin] = useState<ReactPlugin | undefined>(undefined);
+    const availabilityIntervalRef = useRef<NodeJS.Timeout>(null);
 
     useEffect(() => {
         async function bootstrap() {
@@ -32,7 +33,8 @@ function AppContent() {
                         consumerSecret: import.meta.env.VITE_WOOCOMMERCE_CONSUMER_SECRET
                     },
                     applicationInsights: {
-                        connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING
+                        connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING,
+                        availabilityInterval: import.meta.env.VITE_APPlICATIONINSIGHTS_AVAILABILITY_INTERVAL,
                     },
                     inactivityTimeout: import.meta.env.VITE_INACTIVITY_TIMEOUT,
                     inactivityConfirmationTimeout: import.meta.env.VITE_INACTIVITY_CONFIRMATION_TIMEOUT,
@@ -69,6 +71,29 @@ function AppContent() {
 
         bootstrap();
     }, []);
+
+    useEffect(() => {
+        if (configuration?.applicationInsights?.availabilityInterval) {
+            if (availabilityIntervalRef.current) {
+                clearInterval(availabilityIntervalRef.current);
+            }
+
+            availabilityIntervalRef.current = setInterval(async () => {
+                try {
+                    await fetch('/api/availability', { method: 'POST' });
+                    console.error('Sent availability ping:');
+                } catch (error) {
+                    console.error('Failed to send availability ping:', error);
+                }
+            }, configuration.applicationInsights.availabilityInterval);
+
+            return () => {
+                if (availabilityIntervalRef.current) {
+                    clearInterval(availabilityIntervalRef.current);
+                }
+            };
+        }
+    }, [configuration]);
 
     if (!reactPlugin || !configuration) {
         return <h1>Loading configuration...</h1>;

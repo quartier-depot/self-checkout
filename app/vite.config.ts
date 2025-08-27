@@ -12,6 +12,16 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      {
+        name: 'availability-endpoint',
+        configureServer(server) {
+          server.middlewares.use('/api/availability', (_, res) => {
+            console.log('Availability endpoint hit at:', new Date().toISOString());
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ message: 'Availability endpoint hit' }));
+          });
+        },
+      },
     ],
     define: {
       __APP_VERSION__: JSON.stringify(pkg.version),

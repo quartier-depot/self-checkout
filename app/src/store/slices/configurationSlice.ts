@@ -8,6 +8,7 @@ interface Configuration {
   };
   applicationInsights?: {
     connectionString: string;
+    availabilityInterval: number;
   };
   inactivityTimeout: number;
   inactivityConfirmationTimeout: number;

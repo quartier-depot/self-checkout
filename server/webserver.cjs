@@ -53,6 +53,11 @@ app.get('/api/configuration', (_, res) => {
   })
 });
 
+// frontend availability
+app.post('/api/availability', () => {
+  appInsights.defaultClient.trackAvailability({name: "heartbeat", success: true, runLocation: 'frontend' });
+});
+
 // Fallback to index.html for SPA
 app.get('*splat', (req, res) => {
   res.sendFile(path.join(root, 'index.html'));
