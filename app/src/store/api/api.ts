@@ -9,14 +9,27 @@ export interface OrderUpdate {
   payment_method: string;
   transaction_id: string;
   status: string;
-} 
+}
 
-interface CreateOrderResponse {
+interface OrderUpdateResponse {
+  response: string;
+  isError: boolean;
   orderId: string;
   orderTotal: number;
+  status: string;
+}
+
+interface CreateOrderResponse {
+  response: string;
+  isError: boolean;
+  orderId: string;
+  orderTotal: number;
+  status: string;
 }
 
 interface PayWithWalletResponse {
+  response: string;
+  isError: boolean;
   transactionId: number;
 }
 
@@ -201,6 +214,8 @@ export const api = createApi({
       }),
       transformResponse: (response: { response: string; id: number }): PayWithWalletResponse => {
         return {
+          response: response.response,
+          isError: response.response === 'error',
           transactionId: response.id
         };
       },
@@ -229,19 +244,31 @@ export const api = createApi({
       }),
       transformResponse: (response: any): CreateOrderResponse => {
         return {
+          response: response.response,
+          isError: response.response === 'error',
           orderId: response.id,
-          orderTotal: parseFloat(response.total)
+          orderTotal: parseFloat(response.total),
+          status: response.status
         };
       }
     }),
 
-    updateOrder: builder.mutation<void, OrderUpdate>({
+    updateOrder: builder.mutation<OrderUpdateResponse, OrderUpdate>({
       query: (update) => ({
         url: `orders/${update.id}`,
         method: 'PUT',
         body: update,
       }),
       invalidatesTags: ['Orders'],
+      transformResponse: (response: any): OrderUpdateResponse => {
+        return {
+          response: response.response,
+          isError: response.response === 'error',
+          orderId: response.id,
+          orderTotal: parseFloat(response.total),
+          status: response.status,
+        };
+      }
     }),
 
     getCustomerOrders: builder.query<Order[], number>({

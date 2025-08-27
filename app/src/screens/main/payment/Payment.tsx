@@ -5,11 +5,17 @@ import { Confirmation } from './confirmation/Confirmation';
 import { Button } from '../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { startNewSession as startNewSession } from '../../../store/slices/appSlice';
-import { useGetWalletBalanceQuery, usePayWithWalletMutation, useCreateOrderMutation, useUpdateOrderMutation } from '../../../store/api/api';
+import {
+    useGetWalletBalanceQuery,
+    usePayWithWalletMutation,
+    useCreateOrderMutation,
+    useUpdateOrderMutation
+} from '../../../store/api/api';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 import cartXIcon from '../../../assets/cart-x.svg';
+
 const alert = new Audio('/assets/sounds/alert.mp3');
 const confirm = new Audio('/assets/sounds/confirm.mp3');
 
@@ -18,7 +24,11 @@ export function Payment() {
     const applicationInsights = useAppInsightsContext();
     const customer = useAppSelector(state => state.customer.customer);
     const cart = useAppSelector(state => state.cart.cart);
-    const { data: walletBalance, isSuccess: isWalletSuccess, refetch: refetchWalletBalance } = useGetWalletBalanceQuery(customer?.email || '', {
+    const {
+        data: walletBalance,
+        isSuccess: isWalletSuccess,
+        refetch: refetchWalletBalance
+    } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
     const [showLoading, setShowLoading] = useState(false);
@@ -43,7 +53,7 @@ export function Payment() {
             setShowMemberDialog(false);
         }
     }, [loggedIn]);
-    
+
     useEffect(() => {
         if (showConfirmation) {
             confirm.play();
@@ -54,7 +64,7 @@ export function Payment() {
         if (showErrorDialog) {
             alert.play();
         }
-    }, [showErrorDialog])
+    }, [showErrorDialog]);
 
     async function handlePayment() {
         if (!customer) {
@@ -67,19 +77,23 @@ export function Payment() {
         let paymentLog = '';
 
         try {
-            
+
             const start = performance.now();
-            
+
             let startStep = performance.now();
             paymentLog = 'Creating order...';
             paymentLog += `\n  customerId: ${customer.id}`;
             paymentLog += `\n  cart: ${JSON.stringify(cart)}`;
-            const { orderId, orderTotal } = await createOrder({
+            const { isError: isCreateOrderError, orderId, orderTotal } = await createOrder({
                 customer: customer,
                 cart: cart
             }).unwrap();
+            
+            if (isCreateOrderError) {
+                throw new Error('Error creating order');
+            }
 
-            paymentLog += `\nCreating order OK`;
+            paymentLog += `\nCreating order OK:`;
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\n  Order ID: ${orderId}`;
             paymentLog += `\n  Order total: ${orderTotal}`;
@@ -88,13 +102,20 @@ export function Payment() {
             paymentLog += '\nPaying with wallet...';
             paymentLog += `\n  amount: ${orderTotal}`;
 
-            const { transactionId: walletTransactionId } = await payWithWallet({
+            const { isError: isPayWithWalletError, response: payWithWalletResponse, transactionId: walletTransactionId } = await payWithWallet({
                 customer: customer,
                 amount: orderTotal,
                 note: `For self-checkout-order payment #${orderId}`
             }).unwrap();
 
-            paymentLog += '\nPaying with wallet OK';
+            if (isPayWithWalletError) {
+                paymentLog += '\nPaying with wallet failed:';
+                paymentLog += `\n  Response: ${payWithWalletResponse}`;
+                
+                throw new Error('Error paying with wallet');
+            }
+
+            paymentLog += '\nPaying with wallet OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\n  Transaction ID: ${walletTransactionId}`;
 
@@ -105,22 +126,29 @@ export function Payment() {
             paymentLog += `\n  transaction ID: ${walletTransactionId}`;
             paymentLog += `\n  status: completed`;
 
-            await updateOrder({
+            const { isError: isUpdateError, response: updateOrderResponse } = await updateOrder({
                 id: orderId,
                 payment_method: 'wallet',
                 transaction_id: walletTransactionId.toString(),
                 status: 'completed'
             }).unwrap();
 
-            paymentLog += '\nUpdating order OK';
+            if (isUpdateError) {
+                paymentLog += '\nUpdating order failed:';
+                paymentLog += `\n  Response: ${updateOrderResponse}`;
+
+                throw new Error('Error updating order');
+            }
+
+            paymentLog += '\nUpdating order OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\nRefetching wallet balance...`;
 
             startStep = performance.now();
             const { data: newBalance } = await refetchWalletBalance();
-            paymentLog += `\nRefetching wallet balance OK`;
+            paymentLog += `\nRefetching wallet balance returned:`;
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
-            paymentLog += `\n  new balance: ${newBalance!.balance}`;
+            paymentLog += `\n  New balance: ${newBalance!.balance}`;
 
             paymentLog += `\nPayment OK`;
             paymentLog += `\n  Duration: ${performance.now() - start}ms`;
@@ -132,13 +160,22 @@ export function Payment() {
             setTransactionId(walletTransactionId);
             setOrderId(orderId);
             setShowConfirmation(true);
-            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, { customer: customer.id, orderId: orderId, transactionId: walletTransactionId, log: paymentLog, duration: performance.now() - start});
-        } catch (error) {
-            paymentLog += `\nPayment failed: ${JSON.stringify(error)}`;
+            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, {
+                customer: customer.id,
+                orderId: orderId,
+                transactionId: walletTransactionId,
+                log: paymentLog,
+                duration: performance.now() - start
+            });
+        } catch (error: any) {
+            paymentLog += `\nPayment failed: ${error?.message}`;
             setLog(paymentLog);
             console.error('Payment failed:', paymentLog);
             setShowErrorDialog(true);
-            applicationInsights.getAppInsights().trackException({exception: error as Error, properties: {log: paymentLog} });
+            applicationInsights.getAppInsights().trackException({
+                exception: error as Error,
+                properties: { log: paymentLog }
+            });
         } finally {
             setShowLoading(false);
         }
@@ -154,38 +191,38 @@ export function Payment() {
     }
 
     return (
-        <>
-            <div className={'w-full text-center mt-2 '}>
-                <div className={'flex font-mono'}>
-                    <div>TOTAL</div>
-                    <div className={'text-right w-full'}>CHF {formatPrice(cart.price)}</div>
+            <>
+                <div className={'w-full text-center mt-2 '}>
+                    <div className={'flex font-mono'}>
+                        <div>TOTAL</div>
+                        <div className={'text-right w-full'}>CHF {formatPrice(cart.price)}</div>
+                    </div>
+                    <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>Bezahlen</Button>
                 </div>
-                <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>Bezahlen</Button>
-            </div>
 
-            {showLoading && <Loading text={'Bezahlvorgang'} />}
+                {showLoading && <Loading text={'Bezahlvorgang'} />}
 
-            {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
-                transactionId={transactionId} onClose={closeConfirmation} />}
+                {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
+                                                   transactionId={transactionId} onClose={closeConfirmation} />}
 
-            {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
+                {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
 
-            {showErrorDialog && (
-                <Dialog onBackdropClick={closeErrorDialog} title="Es ist ein Fehler aufgetreten">
-                    <p className={'text-center mt-4'}>
-                        <img src={cartXIcon} alt="failure" className={'h-24 inline-block'} />
-                    </p>
-                    <div className={'mt-4 flex-grow'}>
-                        Der Bezahlvorgang konnte nicht abgeschlossen werden. Bitte melde dich bei uns.
-                        <br />
-                        Die folgenden Informationen wurden übermittelt:
-                        <pre>{log}</pre>
-                    </div>
-                    <div className={'mt-4'}>
-                        <Button type="primary" onClick={closeErrorDialog}>OK</Button>
-                    </div>
-                </Dialog>
-            )}
-        </>
+                {showErrorDialog && (
+                        <Dialog onBackdropClick={closeErrorDialog} title="Es ist ein Fehler aufgetreten">
+                            <p className={'text-center mt-4'}>
+                                <img src={cartXIcon} alt="failure" className={'h-24 inline-block'} />
+                            </p>
+                            <div className={'mt-4 flex-grow'}>
+                                Der Bezahlvorgang konnte nicht abgeschlossen werden. Bitte melde dich bei uns.
+                                <br />
+                                Die folgenden Informationen wurden übermittelt:
+                                <pre>{log}</pre>
+                            </div>
+                            <div className={'mt-4'}>
+                                <Button type="primary" onClick={closeErrorDialog}>OK</Button>
+                            </div>
+                        </Dialog>
+                )}
+            </>
     );
 }
