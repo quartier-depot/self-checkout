@@ -42,7 +42,7 @@ export function Payment() {
     const [orderId, setOrderId] = useState('');
     const loggedIn = Boolean(customer);
 
-    const paymentEnabled = isWalletSuccess && walletBalance && walletBalance.balance >= cart.price;
+    const paymentEnabled = isWalletSuccess && walletBalance && walletBalance.balance >= cart.price && cart.price > 0;
 
     const [payWithWallet] = usePayWithWalletMutation();
     const [createOrder] = useCreateOrderMutation();
@@ -69,6 +69,10 @@ export function Payment() {
     async function handlePayment() {
         if (!customer) {
             setShowMemberDialog(true);
+            return;
+        }
+        
+        if (!paymentEnabled) {
             return;
         }
 
