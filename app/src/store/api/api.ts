@@ -12,16 +12,12 @@ export interface OrderUpdate {
 }
 
 interface OrderUpdateResponse {
-  response: string;
-  isError: boolean;
   orderId: string;
   orderTotal: number;
   status: string;
 }
 
 interface CreateOrderResponse {
-  response: string;
-  isError: boolean;
   orderId: string;
   orderTotal: number;
   status: string;
@@ -244,8 +240,6 @@ export const api = createApi({
       }),
       transformResponse: (response: any): CreateOrderResponse => {
         return {
-          response: response.response,
-          isError: response.response === 'error',
           orderId: response.id,
           orderTotal: parseFloat(response.total),
           status: response.status
@@ -262,8 +256,6 @@ export const api = createApi({
       invalidatesTags: ['Orders'],
       transformResponse: (response: any): OrderUpdateResponse => {
         return {
-          response: response.response,
-          isError: response.response === 'error',
           orderId: response.id,
           orderTotal: parseFloat(response.total),
           status: response.status,

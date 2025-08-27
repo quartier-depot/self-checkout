@@ -88,19 +88,16 @@ export function Payment() {
             paymentLog = 'Creating order...';
             paymentLog += `\n  customerId: ${customer.id}`;
             paymentLog += `\n  cart: ${JSON.stringify(cart)}`;
-            const { isError: isCreateOrderError, orderId, orderTotal } = await createOrder({
+            const { status: createOrderStatus, orderId, orderTotal } = await createOrder({
                 customer: customer,
                 cart: cart
             }).unwrap();
-            
-            if (isCreateOrderError) {
-                throw new Error('Error creating order');
-            }
 
             paymentLog += `\nCreating order OK:`;
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             paymentLog += `\n  Order ID: ${orderId}`;
             paymentLog += `\n  Order total: ${orderTotal}`;
+            paymentLog += `\n  Status: ${createOrderStatus}`;
 
             startStep = performance.now();
             paymentLog += '\nPaying with wallet...';
@@ -130,22 +127,16 @@ export function Payment() {
             paymentLog += `\n  transaction ID: ${walletTransactionId}`;
             paymentLog += `\n  status: completed`;
 
-            const { isError: isUpdateError, response: updateOrderResponse } = await updateOrder({
+            const { status: updateOrderStatus } = await updateOrder({
                 id: orderId,
                 payment_method: 'wallet',
                 transaction_id: walletTransactionId.toString(),
                 status: 'completed'
             }).unwrap();
 
-            if (isUpdateError) {
-                paymentLog += '\nUpdating order failed:';
-                paymentLog += `\n  Response: ${updateOrderResponse}`;
-
-                throw new Error('Error updating order');
-            }
-
             paymentLog += '\nUpdating order OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
+            paymentLog += `\n  Status: ${updateOrderStatus}`;
             paymentLog += `\nRefetching wallet balance...`;
 
             startStep = performance.now();
@@ -201,7 +192,9 @@ export function Payment() {
                         <div>TOTAL</div>
                         <div className={'text-right w-full'}>CHF {formatPrice(cart.price)}</div>
                     </div>
-                    <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>Bezahlen</Button>
+                    <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>
+                        {(walletBalance && walletBalance.balance >= cart.price) ? 'Bezahlen' : 'Kontostand nicht ausreichend'}
+                    </Button>
                 </div>
 
                 {showLoading && <Loading text={'Bezahlvorgang'} />}
