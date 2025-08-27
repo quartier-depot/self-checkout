@@ -73,19 +73,22 @@ function AppContent() {
     }, []);
 
     useEffect(() => {
+        const sendAvailabilityPing = async () => {
+            try {
+                await fetch('/api/availability', { method: 'POST' });
+            } catch (error) {
+                console.error('Failed to send availability ping:', error);
+            }
+        }
+        
         if (configuration?.applicationInsights?.availabilityInterval) {
             if (availabilityIntervalRef.current) {
                 clearInterval(availabilityIntervalRef.current);
             }
 
-            availabilityIntervalRef.current = setInterval(async () => {
-                try {
-                    await fetch('/api/availability', { method: 'POST' });
-                    console.error('Sent availability ping:');
-                } catch (error) {
-                    console.error('Failed to send availability ping:', error);
-                }
-            }, configuration.applicationInsights.availabilityInterval);
+            // noinspection JSIgnoredPromiseFromCall
+            sendAvailabilityPing();
+            availabilityIntervalRef.current = setInterval(sendAvailabilityPing, configuration.applicationInsights.availabilityInterval);
 
             return () => {
                 if (availabilityIntervalRef.current) {

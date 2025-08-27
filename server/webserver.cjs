@@ -68,6 +68,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+appInsights.defaultClient.trackAvailability({name: "heartbeat", success: true, runLocation: 'server' });
 setInterval(() => {
   appInsights.defaultClient.trackAvailability({name: "heartbeat", success: true, runLocation: 'server' });
 }, config.applicationInsights.availabilityInterval);
