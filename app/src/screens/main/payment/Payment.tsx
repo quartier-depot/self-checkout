@@ -15,6 +15,7 @@ import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 import cartXIcon from '../../../assets/cart-x.svg';
+import { NotEnoughBalanceDialog } from './notEnoughBalanceDialog/NotEnoughtBalanceDialog.tsx';
 
 const alert = new Audio('/assets/sounds/alert.mp3');
 const confirm = new Audio('/assets/sounds/confirm.mp3');
@@ -35,6 +36,7 @@ export function Payment() {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const [showErrorDialog, setShowErrorDialog] = useState(false);
+    const [showNotEnoughBalanceDialog, setShowNotEnoughBalanceDialog] = useState(false);
     const [log, setLog] = useState('');
     const [total, setTotal] = useState(0);
     const [newBalance, setNewBalance] = useState(0);
@@ -66,9 +68,17 @@ export function Payment() {
         }
     }, [showErrorDialog]);
 
+
+    const isNotEnoughWalletBalance = customer && walletBalance && walletBalance.balance < cart.price;
+
     async function handlePayment() {
         if (!customer) {
             setShowMemberDialog(true);
+            return;
+        }
+        
+        if (isNotEnoughWalletBalance) {
+            setShowNotEnoughBalanceDialog(true);
             return;
         }
         
@@ -193,7 +203,7 @@ export function Payment() {
                         <div className={'text-right w-full'}>CHF {formatPrice(cart.price)}</div>
                     </div>
                     <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>
-                        {(customer && walletBalance && walletBalance.balance < cart.price) ? 'Kontostand nicht ausreichend': 'Bezahlen'}
+                        {isNotEnoughWalletBalance ? 'Kontostand nicht ausreichend': 'Bezahlen'}
                     </Button>
                 </div>
 
@@ -203,6 +213,8 @@ export function Payment() {
                                                    transactionId={transactionId} onClose={closeConfirmation} />}
 
                 {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
+
+                {showNotEnoughBalanceDialog && <NotEnoughBalanceDialog onClose={() => setShowNotEnoughBalanceDialog(false)} /> }
 
                 {showErrorDialog && (
                         <Dialog onBackdropClick={closeErrorDialog} title="Es ist ein Fehler aufgetreten">

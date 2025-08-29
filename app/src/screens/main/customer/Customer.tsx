@@ -13,8 +13,8 @@ type CustomerProps = {
 
 export function Customer({ className }: CustomerProps) {
     const customer = useAppSelector(state => state.customer.customer);
-    const [showLoginDialog, setShowLoginDialog] = useState(false);
-    const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+    const [showMemberDialog, setShowMemberDialog] = useState(false);
+    const [showResetDialog, setShowResetDialog] = useState(false);
     const { data: walletBalance, isLoading, isSuccess } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
@@ -23,15 +23,15 @@ export function Customer({ className }: CustomerProps) {
 
     function handleClick() {
         if (loggedIn) {
-            setShowLogoutDialog(!showLoginDialog);
+            setShowResetDialog(!showMemberDialog);
         } else {
-            setShowLoginDialog(!showLoginDialog);
+            setShowMemberDialog(!showMemberDialog);
         }
     }
 
     useEffect(() => {
         if (loggedIn) {
-            setShowLoginDialog(false);
+            setShowMemberDialog(false);
         }
     }, [loggedIn]);
 
@@ -48,9 +48,9 @@ export function Customer({ className }: CustomerProps) {
                 </div>
             </div>
 
-            {showLoginDialog && <MemberDialog onClose={() => setShowLoginDialog(false)} /> }
+            {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} /> }
 
-            {showLogoutDialog && <ResetDialog onClose={() => setShowLogoutDialog(false)} /> }
+            {showResetDialog && <ResetDialog onClose={() => setShowResetDialog(false)} /> }
         </>
     );
 }

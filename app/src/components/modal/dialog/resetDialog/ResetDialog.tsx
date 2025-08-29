@@ -2,6 +2,8 @@ import { Dialog } from '../Dialog';
 import { Button } from '../../../button/Button';
 import { startNewSession } from '../../../../store/slices/appSlice.ts';
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
+import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
+import { formatPrice } from '../../../../format/formatPrice.ts';
 
 type ResetDialogProps = {
     onClose: () => void;
@@ -11,9 +13,20 @@ export function ResetDialog({ onClose }: ResetDialogProps) {
     const dispatch = useAppDispatch();
     const cart = useAppSelector(state => state.cart.cart);
     const customer = useAppSelector(state => state.customer.customer);
+    const {
+        data: walletBalance,
+        refetch: refetchWalletBalance
+    } = useGetWalletBalanceQuery(customer?.email || '', {
+        skip: !customer?.email
+    });
 
     function restartCart() {
         dispatch(startNewSession());
+        onClose();
+    }
+
+    async function refetchWallet() {
+        await refetchWalletBalance();
         onClose();
     }
 
@@ -38,13 +51,21 @@ export function ResetDialog({ onClose }: ResetDialogProps) {
     return (
             <Dialog title="Was möchtest du tun?" onBackdropClick={onClose}>
                 <div className="p-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         <Button type="secondary" onClick={restartCart} className="aspect-square">
                             <div className='normal-case'>
                                 <b>EINKAUF</b><br />
                                 neu starten<br />
                                 <br />
                                 <div className="text-sm text-center mt-4">{getText()}</div>
+                            </div>
+                        </Button>
+                        <Button type="secondary" onClick={refetchWallet} className="aspect-square" disabled={!customer}>
+                            <div className='normal-case'>
+                                <b>VIRTUELLES KONTO</b><br />
+                                neu laden<br />
+                                <br />
+                                <div className="text-sm text-center mt-4">Aktuell {formatPrice(walletBalance?.balance)}</div>
                             </div>
                         </Button>
                         <Button type="secondary" onClick={restartApplication} className="aspect-square">
@@ -57,7 +78,7 @@ export function ResetDialog({ onClose }: ResetDialogProps) {
                         </Button>
                     </div>
 
-                    <Button type="primary" onClick={onClose} className="mt-4">Abbrechen</Button>
+                    <Button type="primary" onClick={onClose} className="mt-4">Schliessen</Button>
                 </div>
             </Dialog>
     );
