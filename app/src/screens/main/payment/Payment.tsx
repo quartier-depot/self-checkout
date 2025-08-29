@@ -11,11 +11,10 @@ import {
     useCreateOrderMutation,
     useUpdateOrderMutation
 } from '../../../store/api/api';
-import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
-import cartXIcon from '../../../assets/cart-x.svg';
 import { NotEnoughBalanceDialog } from './notEnoughBalanceDialog/NotEnoughtBalanceDialog.tsx';
+import { ErrorDialog } from './errorDialog/ErrorDialog.tsx';
 
 const alert = new Audio('/assets/sounds/alert.mp3');
 const confirm = new Audio('/assets/sounds/confirm.mp3');
@@ -177,6 +176,7 @@ export function Payment() {
             setLog(paymentLog);
             console.error('Payment failed:', paymentLog);
             setShowErrorDialog(true);
+            dispatch(startNewSession());
             applicationInsights.getAppInsights().trackException({
                 exception: error as Error,
                 properties: { log: paymentLog }
@@ -216,22 +216,7 @@ export function Payment() {
 
                 {showNotEnoughBalanceDialog && <NotEnoughBalanceDialog onClose={() => setShowNotEnoughBalanceDialog(false)} /> }
 
-                {showErrorDialog && (
-                        <Dialog onBackdropClick={closeErrorDialog} title="Es ist ein Fehler aufgetreten">
-                            <p className={'text-center mt-4'}>
-                                <img src={cartXIcon} alt="failure" className={'h-24 inline-block'} />
-                            </p>
-                            <div className={'mt-4 flex-grow'}>
-                                Der Bezahlvorgang konnte nicht abgeschlossen werden. Bitte melde dich bei uns.
-                                <br />
-                                Die folgenden Informationen wurden übermittelt:
-                                <pre>{log}</pre>
-                            </div>
-                            <div className={'mt-4'}>
-                                <Button type="primary" onClick={closeErrorDialog}>OK</Button>
-                            </div>
-                        </Dialog>
-                )}
+                {showErrorDialog && <ErrorDialog onClose={closeErrorDialog} log={log} />}
             </>
     );
 }
