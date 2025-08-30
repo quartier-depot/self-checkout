@@ -1,10 +1,22 @@
 import { Button } from "../../../components/button/Button";
 import { Dialog } from "../../../components/modal/dialog/Dialog";
-import { startNewSession } from "../../../store/slices/appSlice";
-import { useAppDispatch } from "../../../store/store";
+import { startNewSession } from "../../../store/slices/sessionSlice";
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { useEffect } from 'react';
 
 export function Error() {
     const dispatch = useAppDispatch();
+    const configuration = useAppSelector(state => state.configuration.configuration);
+
+    useEffect(() => {
+        if (configuration?.inactivityTimeout) {
+            const timer = setTimeout(() => {
+                dispatch(startNewSession());
+            }, configuration.inactivityTimeout);
+
+            return () => clearTimeout(timer);
+        }
+    }, [configuration]);
 
     return (
             <>

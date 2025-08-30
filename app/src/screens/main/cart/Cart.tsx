@@ -15,10 +15,18 @@ export function Cart() {
     const dispatch = useAppDispatch();
     const cart = useAppSelector(state => state.cart.cart);
     const bulkItem = useAppSelector(state => state.bulkItem.bulkItem);
+    const session = useAppSelector(state => state.session.session);
     const applicationInsights = useAppInsightsContext();
     
     const [dialogItem, setDialogItem] = useState<ItemType | null>();
     const [showCartDialog, setShowCartDialog] = useState(false);
+
+    useEffect(() => {
+        if (session.initialState) {
+            setShowCartDialog(false);
+            setDialogItem(null);
+        }
+    }, [session.initialState]);
     
     useEffect(() => {
         if (bulkItem) {

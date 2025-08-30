@@ -1,9 +1,9 @@
 import { Dialog } from '../Dialog';
 import { Button } from '../../../button/Button';
-import { startNewSession } from '../../../../store/slices/appSlice.ts';
-import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
-import { formatPrice } from '../../../../format/formatPrice.ts';
+import { startNewSession } from '../../../../store/slices/sessionSlice';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { useGetWalletBalanceQuery } from '../../../../store/api/api';
+import { formatPrice } from '../../../../format/formatPrice';
 
 type ResetDialogProps = {
     onClose: () => void;

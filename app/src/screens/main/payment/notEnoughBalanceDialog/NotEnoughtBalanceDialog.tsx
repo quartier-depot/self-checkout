@@ -1,11 +1,11 @@
-import { startNewSession } from '../../../../store/slices/appSlice.ts';
-import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
-import { Dialog } from '../../../../components/modal/dialog/Dialog.tsx';
-import { Button } from '../../../../components/button/Button.tsx';
+import { startNewSession } from '../../../../store/slices/sessionSlice';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { useGetWalletBalanceQuery } from '../../../../store/api/api';
+import { Dialog } from '../../../../components/modal/dialog/Dialog';
+import { Button } from '../../../../components/button/Button';
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Loading } from '../../../../components/modal/loading/Loading.tsx';
+import { Loading } from '../../../../components/modal/loading/Loading';
 
 type NotEnoughBalanceDialogProps = {
     onClose: () => void;

@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store';
-import { startNewSession } from '../store/slices/appSlice';
+import { startNewSession, logActivity } from '../store/slices/sessionSlice';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 const alert = new Audio('/assets/sounds/alert.mp3');
 
@@ -10,9 +10,8 @@ export function useInactivityTimer() {
   const dispatch = useAppDispatch();
   const applicationInsights = useAppInsightsContext();
 
-  const cart = useAppSelector(state => state.cart.cart);
-  const customer = useAppSelector(state => state.customer.customer);
-  const shouldBeActive = cart.quantity > 0 || Boolean(customer);
+  const session = useAppSelector(state => state.session.session);
+  const shouldBeActive = !session.initialState;
 
   const resetTimer = useCallback(() => {
     setShowInactivityDialog(false);
@@ -45,21 +44,22 @@ export function useInactivityTimer() {
 
   useEffect(() => {
     let inactivityTimer: NodeJS.Timeout;
-
+    let activityLogged = false;
+    
     const resetInactivityTimer = () => {
+      if (!activityLogged) {
+        dispatch(logActivity());
+        activityLogged = true;
+      }
       clearTimeout(inactivityTimer);
       inactivityTimer = setTimeout(handleTimeout, configuration?.inactivityTimeout);
     };
 
     const events = [
       'mousedown',
-      'mousemove',
       'keypress',
-      'scroll',
       'touchstart',
     ];
-
-    resetInactivityTimer();
 
     events.forEach(event => {
       document.addEventListener(event, resetInactivityTimer);

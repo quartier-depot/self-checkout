@@ -1,10 +1,10 @@
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
 import { Loading } from '../../../components/modal/loading/Loading';
-import { Confirmation } from './confirmation/Confirmation';
+import { ConfirmationDialog } from './confirmationDialog/ConfirmationDialog.tsx';
 import { Button } from '../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { startNewSession as startNewSession } from '../../../store/slices/appSlice';
+import { startNewSession as startNewSession } from '../../../store/slices/sessionSlice';
 import {
     useGetWalletBalanceQuery,
     usePayWithWalletMutation,
@@ -31,8 +31,9 @@ export function Payment() {
     } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
+    const session = useAppSelector(state => state.session.session);
     const [showLoading, setShowLoading] = useState(false);
-    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [showNotEnoughBalanceDialog, setShowNotEnoughBalanceDialog] = useState(false);
@@ -48,6 +49,17 @@ export function Payment() {
     const [payWithWallet] = usePayWithWalletMutation();
     const [createOrder] = useCreateOrderMutation();
     const [updateOrder] = useUpdateOrderMutation();
+    
+    useEffect(() => {
+        if (session.initialState) {
+            setShowErrorDialog(false);
+            setShowConfirmationDialog(false);
+            setShowLoading(false);
+            setShowErrorDialog(false);
+            setShowNotEnoughBalanceDialog(false);
+            setLog('');
+        }
+    }, [session.initialState]);
 
     useEffect(() => {
         if (loggedIn) {
@@ -56,10 +68,10 @@ export function Payment() {
     }, [loggedIn]);
 
     useEffect(() => {
-        if (showConfirmation) {
+        if (showConfirmationDialog) {
             confirm.play();
         }
-    }, [showConfirmation]);
+    }, [showConfirmationDialog]);
 
     useEffect(() => {
         if (showErrorDialog) {
@@ -163,7 +175,7 @@ export function Payment() {
             setTotal(orderTotal);
             setTransactionId(walletTransactionId);
             setOrderId(orderId);
-            setShowConfirmation(true);
+            setShowConfirmationDialog(true);
             applicationInsights.getAppInsights().trackEvent({ name: 'success' }, {
                 customer: customer.id,
                 orderId: orderId,
@@ -192,7 +204,7 @@ export function Payment() {
     }
 
     function closeConfirmation() {
-        setShowConfirmation(false);
+        setShowConfirmationDialog(false);
     }
 
     return (
@@ -209,8 +221,8 @@ export function Payment() {
 
                 {showLoading && <Loading text={'Bezahlvorgang'} />}
 
-                {showConfirmation && <Confirmation total={total} newBalance={newBalance} orderId={orderId}
-                                                   transactionId={transactionId} onClose={closeConfirmation} />}
+                {showConfirmationDialog && <ConfirmationDialog total={total} newBalance={newBalance} orderId={orderId}
+                                                               transactionId={transactionId} onClose={closeConfirmation} />}
 
                 {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
 

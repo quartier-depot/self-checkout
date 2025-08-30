@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import productsReducer, { selectFilteredProducts, setGestell, setSearchTerm, setViewMode } from './productsSlice';
-import { startNewSession } from './appSlice';
+import { startNewSession } from './sessionSlice';
 import { Product } from '../api/products/Product.ts';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';

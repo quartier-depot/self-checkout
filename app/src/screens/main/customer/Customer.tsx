@@ -13,6 +13,7 @@ type CustomerProps = {
 
 export function Customer({ className }: CustomerProps) {
     const customer = useAppSelector(state => state.customer.customer);
+    const session = useAppSelector(state => state.session.session);
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const [showResetDialog, setShowResetDialog] = useState(false);
     const { data: walletBalance, isLoading, isSuccess } = useGetWalletBalanceQuery(customer?.email || '', {
@@ -35,6 +36,12 @@ export function Customer({ className }: CustomerProps) {
         }
     }, [loggedIn]);
 
+    useEffect(() => {
+        if (session.initialState) {
+            setShowMemberDialog(false);
+            setShowResetDialog(false);
+        }
+    }, [session.initialState]);
     return (
         <>
             <div onClick={handleClick} className={`m-2 ${className}`}>

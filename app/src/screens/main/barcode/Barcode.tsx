@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import KeyboardBarcodeScanner from '../../../external/@point-of-sale/keyboard-barcode-scanner/main';
-import { useAppDispatch } from '../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setCustomer } from '../../../store/slices/customerSlice';
 import { changeCartQuantity } from '../../../store/slices/cartSlice';
 import { Product } from '../../../store/api/products/Product';
@@ -25,6 +25,15 @@ export function Barcode() {
     const [showNoProductFound, setShowNoProductFound] = useState(false);
     const [showNoCustomerFound, setShowNoCustomerFound] = useState(false);
     const [barcode, setBarcode] = useState('');
+    const session = useAppSelector(state => state.session.session);
+    
+    useEffect(() => {
+        if (session.initialState) {
+            setShowNoProductFound(false);
+            setShowNoCustomerFound(false);
+        }
+    }, [session.initialState]);
+    
     useEffect(() => {
         if (isProductsSuccess && isCustomersSuccess) {
             const keyboardScanner = new KeyboardBarcodeScanner();

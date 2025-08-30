@@ -2,7 +2,6 @@ import { formatPrice } from '../../../../format/formatPrice';
 import { Dialog } from '../../../../components/modal/dialog/Dialog';
 import { Button } from '../../../../components/button/Button';
 import cartCheckIcon from '../../../../assets/cart-check.svg';
-import { useEffect } from 'react';
 
 type Props = {
     total: number,
@@ -12,15 +11,7 @@ type Props = {
     onClose: () => void,
 }
 
-export function Confirmation(props: Props) {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            props.onClose();
-        }, 60000); // 60 seconds
-
-        return () => clearTimeout(timer);
-    }, [props.onClose]);
-
+export function ConfirmationDialog(props: Props) {
     return (
             <Dialog title={'Einkauf erfolgreich'} onBackdropClick={props.onClose}>
                 <div className="p-4 text-blue-gray-800">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from 'react';
 import { Button } from "../../../../../components/button/Button";
 import { Dialog } from "../../../../../components/modal/dialog/Dialog";
 import { SearchPad } from "./searchPad/SearchPad";
@@ -9,8 +9,15 @@ import { setSearchTerm, selectViewMode, setViewMode } from "../../../../../store
 export function Search() {
     const dispatch = useAppDispatch();
     const viewMode = useAppSelector(selectViewMode);
+    const session = useAppSelector(state => state.session.session);
     const [dialogOpen, setDialogOpen] = useState(false);
     const isActive = viewMode === 'search';
+
+    useEffect(() => {
+        if (session.initialState) {
+            setDialogOpen(false);
+        }
+    }, [session.initialState]);
 
     function handleClick() {
         dispatch(setViewMode('search'));

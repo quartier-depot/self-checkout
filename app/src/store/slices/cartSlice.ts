@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Cart, Item } from '../api/cart/Cart';
 import { Product } from '../api/products/Product';
-import { startNewSession } from './appSlice';
+import { startNewSession } from './sessionSlice';
 
 interface CartState {
   cart: Cart;
