@@ -38,7 +38,7 @@ export function Favourites() {
     return (
         <>
             <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive} className={classNames({ 'animate-pulse': isLoading })}>
-                Favoriten
+                Meine Favoriten
             </Button>
             
             {showDialog && <MemberDialog onClose={() => setShowDialog(false)} />}
