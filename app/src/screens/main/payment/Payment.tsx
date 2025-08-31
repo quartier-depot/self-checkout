@@ -39,6 +39,7 @@ export function Payment() {
     const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [showNotEnoughBalanceDialog, setShowNotEnoughBalanceDialog] = useState(false);
     const [currentPercentage, setCurrentPercentage] = useState(0);
+    const [maxPercentage, setMaxPercentage] = useState(0);
     const [log, setLog] = useState('');
     const [total, setTotal] = useState(0);
     const [newBalance, setNewBalance] = useState(0);
@@ -58,6 +59,7 @@ export function Payment() {
             setShowNotEnoughBalanceDialog(false);
             setLog('');
             setCurrentPercentage(0);
+            setMaxPercentage(0);
         }
     }, [session.initialState]);
 
@@ -98,6 +100,7 @@ export function Payment() {
         }
 
         setShowPaymentDialog(true);
+        setMaxPercentage(60);
 
         let paymentLog = '';
 
@@ -116,7 +119,8 @@ export function Payment() {
 
             paymentLog += `\nCreating order OK:`;
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
-            setCurrentPercentage(62);
+            setCurrentPercentage(60);
+            setMaxPercentage(65);
             paymentLog += `\n  Order ID: ${orderId}`;
             paymentLog += `\n  Order total: ${orderTotal}`;
             paymentLog += `\n  Status: ${createOrderStatus}`;
@@ -141,6 +145,7 @@ export function Payment() {
             paymentLog += '\nPaying with wallet OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
             setCurrentPercentage(65);
+            setMaxPercentage(95);
             paymentLog += `\n  Transaction ID: ${walletTransactionId}`;
 
             startStep = performance.now();
@@ -159,7 +164,8 @@ export function Payment() {
 
             paymentLog += '\nUpdating order OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
-            setCurrentPercentage(97);
+            setCurrentPercentage(95);
+            setMaxPercentage(99);
             paymentLog += `\n  Status: ${updateOrderStatus}`;
             paymentLog += `\nRefetching wallet balance...`;
 
@@ -230,7 +236,7 @@ export function Payment() {
                     </Button>
                 </div>
 
-                {showPaymentDialog && <PaymentDialog percentage={currentPercentage} estimatedTime={20000}/>}
+                {showPaymentDialog && <PaymentDialog percentage={currentPercentage} maxPercentage={maxPercentage} estimatedTime={20000}/>}
 
                 {showConfirmationDialog && <ConfirmationDialog total={total} newBalance={newBalance} orderId={orderId}
                                                                transactionId={transactionId}

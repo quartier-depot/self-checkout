@@ -14,7 +14,7 @@ type Props = {
 export function ConfirmationDialog(props: Props) {
     return (
             <Dialog title={'Einkauf erfolgreich'} onBackdropClick={props.onClose}>
-                <div className="p-4 text-blue-gray-800">
+                <div className="p-4 text-blue-gray-800 w-lg h-100">
                     <p>Vielen Dank für deinen Einkauf!</p>
                     <p className={'text-center mt-4'}>
                         <img src={cartCheckIcon} alt="success" className={'h-24 inline-block'} />

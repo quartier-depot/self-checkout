@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 
 type ProgressProps = {
     percentage: number;
-    estimatedTime?: number; // milliseconds
+    maxPercentage: number;
+    estimatedTime: number; // milliseconds
 }
 
 export function Progress(props: ProgressProps) {
@@ -21,7 +22,7 @@ export function Progress(props: ProgressProps) {
         const interval = setInterval(() => {
             setCurrentPercentage(prevPercentage => {
                 const newPercentage = prevPercentage + percentagePerSecond;
-                return newPercentage >= 99 ? 99 : newPercentage;
+                return newPercentage >= props.maxPercentage ? props.maxPercentage : newPercentage;
             });
         }, 1000);
 
