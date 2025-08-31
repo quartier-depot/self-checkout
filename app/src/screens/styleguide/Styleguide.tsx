@@ -1,4 +1,5 @@
 import { Button } from "../../components/button/Button";
+import { Progress } from '../../components/progress/Progress.tsx';
 const add = new Audio('/assets/sounds/add.mp3');
 const remove = new Audio('/assets/sounds/remove.mp3');
 const alert = new Audio('/assets/sounds/alert.mp3');
@@ -71,6 +72,11 @@ export function Styleguide() {
                     <a className={'text-blue-950 underline'} onClick={() => remove.play()}> Remove</a> | 
                     <a className={'text-blue-950 underline'} onClick={() => alert.play()}> Alert</a> | 
                     <a className={'text-blue-950 underline'} onClick={() => confirm.play()}> Confirm</a> 
+                </div>
+
+                <div className={'bg-slate-50 p-2'}>
+                    <h1>Progress</h1>
+                    <Progress percentage={25} estimatedTime={10000}/>
                 </div>
 
             </div>

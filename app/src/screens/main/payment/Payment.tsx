@@ -1,6 +1,5 @@
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
-import { Loading } from '../../../components/modal/loading/Loading';
 import { ConfirmationDialog } from './confirmationDialog/ConfirmationDialog.tsx';
 import { Button } from '../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
@@ -15,6 +14,7 @@ import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
 import { NotEnoughBalanceDialog } from './notEnoughBalanceDialog/NotEnoughtBalanceDialog.tsx';
 import { ErrorDialog } from './errorDialog/ErrorDialog.tsx';
+import { PaymentDialog } from './paymentDialog/PaymentDialog.tsx';
 
 const alert = new Audio('/assets/sounds/alert.mp3');
 const confirm = new Audio('/assets/sounds/confirm.mp3');
@@ -24,6 +24,7 @@ export function Payment() {
     const applicationInsights = useAppInsightsContext();
     const customer = useAppSelector(state => state.customer.customer);
     const cart = useAppSelector(state => state.cart.cart);
+    const configuration = useAppSelector(state => state.configuration.configuration);
     const {
         data: walletBalance,
         isSuccess: isWalletSuccess,
@@ -32,11 +33,12 @@ export function Payment() {
         skip: !customer?.email
     });
     const session = useAppSelector(state => state.session.session);
-    const [showLoading, setShowLoading] = useState(false);
+    const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const [showErrorDialog, setShowErrorDialog] = useState(false);
     const [showNotEnoughBalanceDialog, setShowNotEnoughBalanceDialog] = useState(false);
+    const [currentPercentage, setCurrentPercentage] = useState(0);
     const [log, setLog] = useState('');
     const [total, setTotal] = useState(0);
     const [newBalance, setNewBalance] = useState(0);
@@ -52,12 +54,10 @@ export function Payment() {
     
     useEffect(() => {
         if (session.initialState) {
-            setShowErrorDialog(false);
-            setShowConfirmationDialog(false);
-            setShowLoading(false);
-            setShowErrorDialog(false);
+            setShowPaymentDialog(false);
             setShowNotEnoughBalanceDialog(false);
             setLog('');
+            setCurrentPercentage(0);
         }
     }, [session.initialState]);
 
@@ -97,7 +97,7 @@ export function Payment() {
             return;
         }
 
-        setShowLoading(true);
+        setShowPaymentDialog(true);
 
         let paymentLog = '';
 
@@ -116,6 +116,7 @@ export function Payment() {
 
             paymentLog += `\nCreating order OK:`;
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
+            setCurrentPercentage(62);
             paymentLog += `\n  Order ID: ${orderId}`;
             paymentLog += `\n  Order total: ${orderTotal}`;
             paymentLog += `\n  Status: ${createOrderStatus}`;
@@ -139,6 +140,7 @@ export function Payment() {
 
             paymentLog += '\nPaying with wallet OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
+            setCurrentPercentage(65);
             paymentLog += `\n  Transaction ID: ${walletTransactionId}`;
 
             startStep = performance.now();
@@ -157,6 +159,7 @@ export function Payment() {
 
             paymentLog += '\nUpdating order OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
+            setCurrentPercentage(97);
             paymentLog += `\n  Status: ${updateOrderStatus}`;
             paymentLog += `\nRefetching wallet balance...`;
 
@@ -164,6 +167,7 @@ export function Payment() {
             const { data: newBalance } = await refetchWalletBalance();
             paymentLog += `\nRefetching wallet balance returned:`;
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
+            setCurrentPercentage(100);
             paymentLog += `\n  New balance: ${newBalance!.balance}`;
 
             paymentLog += `\nPayment OK`;
@@ -175,7 +179,11 @@ export function Payment() {
             setTotal(orderTotal);
             setTransactionId(walletTransactionId);
             setOrderId(orderId);
+            setShowPaymentDialog(false);
             setShowConfirmationDialog(true);
+            setTimeout(() => {
+                setShowConfirmationDialog(false);
+            }, configuration?.inactivityTimeout || 60000);
             applicationInsights.getAppInsights().trackEvent({ name: 'success' }, {
                 customer: customer.id,
                 orderId: orderId,
@@ -188,13 +196,16 @@ export function Payment() {
             setLog(paymentLog);
             console.error('Payment failed:', paymentLog);
             setShowErrorDialog(true);
+            setTimeout(() => {
+                setShowErrorDialog(false);
+            }, configuration?.inactivityTimeout || 60000);
             dispatch(startNewSession());
             applicationInsights.getAppInsights().trackException({
                 exception: error as Error,
                 properties: { log: paymentLog }
             });
         } finally {
-            setShowLoading(false);
+            setShowPaymentDialog(false);
         }
     }
 
@@ -215,18 +226,20 @@ export function Payment() {
                         <div className={'text-right w-full'}>CHF {formatPrice(cart.price)}</div>
                     </div>
                     <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>
-                        {isNotEnoughWalletBalance ? 'Kontostand nicht ausreichend': 'Bezahlen'}
+                        {isNotEnoughWalletBalance ? 'Kontostand nicht ausreichend' : 'Bezahlen'}
                     </Button>
                 </div>
 
-                {showLoading && <Loading text={'Bezahlvorgang'} />}
+                {showPaymentDialog && <PaymentDialog percentage={currentPercentage} estimatedTime={20000}/>}
 
                 {showConfirmationDialog && <ConfirmationDialog total={total} newBalance={newBalance} orderId={orderId}
-                                                               transactionId={transactionId} onClose={closeConfirmation} />}
+                                                               transactionId={transactionId}
+                                                               onClose={closeConfirmation} />}
 
                 {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
 
-                {showNotEnoughBalanceDialog && <NotEnoughBalanceDialog onClose={() => setShowNotEnoughBalanceDialog(false)} /> }
+                {showNotEnoughBalanceDialog &&
+                        <NotEnoughBalanceDialog onClose={() => setShowNotEnoughBalanceDialog(false)} />}
 
                 {showErrorDialog && <ErrorDialog onClose={closeErrorDialog} log={log} />}
             </>
