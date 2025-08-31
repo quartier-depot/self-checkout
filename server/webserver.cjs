@@ -23,6 +23,8 @@ config.inactivityConfirmationTimeout = process.env.INACTIVITY_CONFIRMATION_TIMEO
 // express
 const express = require('express');
 const app = express();
+app.use(express.json()); // parse body for post requests
+app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the dist folder
 const path = require('path');
@@ -54,8 +56,9 @@ app.get('/api/configuration', (_, res) => {
 });
 
 // frontend availability
-app.post('/api/availability', () => {
+app.post('/api/availability', (_, res) => {
   appInsights.defaultClient.trackAvailability({name: "heartbeat", success: true, runLocation: 'frontend' });
+  res.json({ response: 'ok' });
 });
 
 // Fallback to index.html for SPA
