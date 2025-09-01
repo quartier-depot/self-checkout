@@ -23,8 +23,6 @@ config.inactivityConfirmationTimeout = process.env.INACTIVITY_CONFIRMATION_TIMEO
 // express
 const express = require('express');
 const app = express();
-app.use(express.json()); // parse body for post requests
-app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the dist folder
 const path = require('path');
@@ -38,7 +36,7 @@ app.use('/wp-json', createProxyMiddleware({
   changeOrigin: true,
   secure: false,
   on: {
-    proxyReq: (proxyReq, req, res) => {
+    proxyReq: (proxyReq, _, res) => {
       // the auth property from the createProxyMiddleware did not work on Ubuntu, so we set it manually
       const auth = Buffer.from(`${config.woocommerce.consumerKey}:${config.woocommerce.consumerSecret}`).toString('base64');
       proxyReq.setHeader('Authorization', `Basic ${auth}`);
