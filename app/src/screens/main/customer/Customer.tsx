@@ -45,13 +45,13 @@ export function Customer({ className }: CustomerProps) {
     return (
         <>
             <div onClick={handleClick} className={`m-2 ${className}`}>
-                <div className={classNames('h-6', { 'font-bold text-xl': loggedIn})}>
+                <div className={classNames('h-8', { 'font-bold text-xl': loggedIn})}>
                     {name}
                 </div>
-                <div className="text-right grow">
-                    {!loggedIn && <img src={info} alt="info" className="h-6 inline-block" />}
-                    {loggedIn && isLoading && <span className='animate-pulse'>Guthaben laden</span>}
-                    {loggedIn && isSuccess && formatPrice(walletBalance.balance)}
+                <div className="text-right h-12 flex flex-col items-end justify-end">
+                    {!loggedIn && <img src={info} alt="info" className="h-8 inline-block" />}
+                    {loggedIn && isLoading && <span className={'inline-block animate-pulse'}>Guthaben laden</span>}
+                    {loggedIn && isSuccess && (<><span className={'text-sm'}>Kontostand</span><span className={'font-mono text-xl '}>CHF {formatPrice(walletBalance.balance)}</span></>)}
                 </div>
             </div>
 
