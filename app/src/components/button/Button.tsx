@@ -23,7 +23,7 @@ export function Button({ disabled, onClick, type, toggled, className, children }
                 { 'text-emerald-950': type === 'secondary' },
                 { 'bg-emerald-400 border-emerald-400 active:border-emerald-300 active:bg-emerald-300': type === 'secondary' && !toggled && !disabled },
                 { 'bg-emerald-400 border-emerald-700 active:border-emerald-700 active:bg-emerald-300 border-4': type === 'secondary' && toggled },
-                { 'bg-slate-300 border-slate-300': type === 'secondary' && disabled },
+                { 'bg-slate-500 border-slate-500 text-white': type === 'secondary' && disabled },
 
                 { 'text-slate-950 border-slate-500 border-4': type === 'tertiary' },
                     

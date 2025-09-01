@@ -18,44 +18,28 @@ export function Styleguide() {
                 </div>
 
                 <div className={'bg-slate-50 p-2'}>
-                    <button
-                            className={'rounded-lg w-full py-2 bg-emerald-700 text-white border-4 border-emerald-700 active:border-emerald-600 active:bg-emerald-600 uppercase'}>Primary
-                        Button
-                    </button>
                     <Button onClick={() => {}} type={'primary'}>Primary</Button>
                 </div>
 
                 <div className={'bg-slate-50 p-2'}>
-                    <button
-                            className={'rounded-lg w-full py-2 bg-slate-500 text-white border-4 border-slate-500 active:border-slate-400 active:bg-slate-400 uppercase'}>Disabled
-                        Button
-                    </button>
-                    <Button onClick={() => {}} type={'primary'} disabled>Primary</Button>
+                    <Button onClick={() => {}} type={'primary'} disabled>Primary disabled</Button>
                 </div>
 
 
                 <div className={'bg-slate-50 p-2'}>
-                    <button
-                            className={'rounded-lg w-full py-2 bg-emerald-400 border-4 border-emerald-400 text-emerald-950 active:border-emerald-300 active:bg-emerald-300 uppercase'}>Secondary
-                        Button
-                    </button>
                     <Button onClick={() => {}} type={'secondary'}>Secondary</Button>
                 </div>
+                
+                <div className={'bg-slate-50 p-2'}>
+                    <Button onClick={() => {}} type={'secondary'} disabled>Secondary disabled</Button>
+                </div>
 
 
                 <div className={'bg-slate-50 p-2'}>
-                    <button
-                            className={'rounded-lg w-full py-2 bg-emerald-400 border-4 border-emerald-700 text-emerald-950 active:border-emerald-300 active:bg-emerald-300 uppercase'}>Secondary
-                        Button toggled
-                    </button>
-                    <Button onClick={() => {}} type={'secondary'} toggled>Secondary</Button>
+                    <Button onClick={() => {}} type={'secondary'} toggled>Secondary Toggled</Button>
                 </div>
 
                 <div className={'bg-slate-50 p-2'}>
-                    <button
-                            className={'rounded-lg w-full py-2 border-4 border-slate-500 uppercase text-slate-950'}>Tertiary
-                        Button
-                    </button>
                     <Button onClick={() => {}} type={'tertiary'}>Tertiary</Button>
                 </div>
 
