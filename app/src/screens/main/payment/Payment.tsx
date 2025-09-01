@@ -229,7 +229,7 @@ export function Payment() {
                 <div className={'w-full text-center mt-2 '}>
                     <div className={'flex font-mono'}>
                         <div>TOTAL</div>
-                        <div className={'text-right w-full'}>CHF {formatPrice(cart.price)}</div>
+                        <div className={'text-right w-full text-xl'}>{formatPrice(cart.price)} CHF</div>
                     </div>
                     <Button disabled={!paymentEnabled} onClick={handlePayment} type={'primary'}>
                         {isNotEnoughWalletBalance ? 'Kontostand nicht ausreichend' : 'Bezahlen'}

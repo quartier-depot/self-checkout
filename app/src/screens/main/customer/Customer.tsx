@@ -51,7 +51,7 @@ export function Customer({ className }: CustomerProps) {
                 <div className="text-right h-12 flex flex-col items-end justify-end">
                     {!loggedIn && <img src={info} alt="info" className="h-8 inline-block" />}
                     {loggedIn && isLoading && <span className={'inline-block animate-pulse'}>Guthaben laden</span>}
-                    {loggedIn && isSuccess && (<><span className={'text-sm'}>Kontostand</span><span className={'font-mono text-xl '}>CHF {formatPrice(walletBalance.balance)}</span></>)}
+                    {loggedIn && isSuccess && (<><span className={'text-sm'}>Kontostand</span><span className={'font-mono text-xl '}>{formatPrice(walletBalance.balance)} CHF</span></>)}
                 </div>
             </div>
 
