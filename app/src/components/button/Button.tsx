@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 import classNames from "classnames";
+import lock from '../../assets/lock.svg';
 
 type ButtonProps = PropsWithChildren<{
     type: 'primary' | 'secondary' | 'tertiary',
@@ -31,5 +32,6 @@ export function Button({ disabled, onClick, type, toggled, className, children }
             )}
         >
             {children}
+            {disabled && <img src={lock} alt="locked" className="pl-1 h-4 inline-block" />}
         </button>);
 }
