@@ -7,10 +7,11 @@ type ButtonProps = PropsWithChildren<{
     disabled?: boolean,
     toggled?: boolean,
     onClick: () => void,
-    className?: string
+    className?: string,
+    withDisabledLock?: boolean
 }>;
 
-export function Button({ disabled, onClick, type, toggled, className, children }: ButtonProps) {
+export function Button({ disabled, onClick, type, toggled, className, children, withDisabledLock = false }: ButtonProps) {
     return (
         <button
             onClick={onClick}
@@ -32,6 +33,6 @@ export function Button({ disabled, onClick, type, toggled, className, children }
             )}
         >
             {children}
-            {disabled && <img src={lock} alt="locked" className="pl-1 h-4 inline-block" />}
+            {disabled && withDisabledLock && <img src={lock} alt="locked" className="pl-1 h-4 inline-block" />}
         </button>);
 }

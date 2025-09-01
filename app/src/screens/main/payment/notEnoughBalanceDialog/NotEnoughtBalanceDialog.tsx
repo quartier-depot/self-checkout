@@ -46,7 +46,7 @@ export function NotEnoughBalanceDialog({ onClose }: NotEnoughBalanceDialogProps)
                                 Ich möchte den <b>Einkauf an der Kasse abbrechen</b>.
                             </div>
                         </Button>
-                        <Button type="secondary" onClick={() => setStep(2)} className="aspect-square" disabled={!customer}>
+                        <Button type="secondary" onClick={() => setStep(2)} className="aspect-square" disabled={!customer} withDisabledLock={true}>
                             <div className="normal-case">
                                 Ich möchte das <b>Virtuelle Konto aufladen</b>.
                             </div>
@@ -66,7 +66,7 @@ export function NotEnoughBalanceDialog({ onClose }: NotEnoughBalanceDialogProps)
                         <div className={'flex justify-center items-center'}>
                             <QRCodeSVG value="https://webshop.quartier-depot.ch/mein-konto/virtuelles-konto/add/" className='h-72 w-72' />
                         </div>
-                        <Button type="secondary" onClick={refetchWallet} className="aspect-square" disabled={!customer}>
+                        <Button type="secondary" onClick={refetchWallet} className="aspect-square" disabled={!customer} withDisabledLock={true}>
                             <div className="normal-case">
                                 Ich habe das <b>Virtuelle Konto im Webshop aufgeladen</b>.
                             </div>

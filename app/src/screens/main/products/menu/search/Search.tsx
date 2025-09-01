@@ -35,7 +35,7 @@ export function Search() {
 
     return (
         <>
-            <Button type="secondary" onClick={handleClick} toggled={isActive}>
+            <Button type="secondary" onClick={handleClick} toggled={isActive} withDisabledLock={true}>
                 Nummer
             </Button>
 

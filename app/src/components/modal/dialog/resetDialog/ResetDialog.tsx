@@ -60,12 +60,12 @@ export function ResetDialog({ onClose }: ResetDialogProps) {
                                 <div className="text-sm text-center mt-4">{getText()}</div>
                             </div>
                         </Button>
-                        <Button type="secondary" onClick={refetchWallet} className="aspect-square" disabled={!customer}>
+                        <Button type="secondary" onClick={refetchWallet} className="aspect-square" disabled={!customer} >
                             <div className='normal-case'>
                                 <b>VIRTUELLES KONTO</b><br />
                                 neu laden<br />
                                 <br />
-                                <div className="text-sm text-center mt-4">Aktuell {formatPrice(walletBalance?.balance)}</div>
+                                <div className="text-sm text-center mt-4">{customer && <>Aktuell {formatPrice(walletBalance?.balance)}</>}</div>
                             </div>
                         </Button>
                         <Button type="secondary" onClick={restartApplication} className="aspect-square">

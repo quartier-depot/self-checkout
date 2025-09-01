@@ -37,7 +37,7 @@ export function Favourites() {
 
     return (
         <>
-            <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive} className={classNames({ 'animate-pulse': isLoading })}>
+            <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive} className={classNames({ 'animate-pulse': isLoading })} withDisabledLock={true}>
                 Meine Favoriten
             </Button>
             

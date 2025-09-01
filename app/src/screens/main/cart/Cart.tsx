@@ -53,8 +53,8 @@ export function Cart() {
 
     return (
         <>
-            <div className={'h-12 text-left flex'}>
-                <div className={'pl-2 py-2 relative'}>
+            <div className={'text-left flex'}>
+                <div className={'pl-2 pt-1 pb-2 relative'}>
                     <img src={cartIcon} alt="cart" className={'h-6 inline-block'} />
                     <div
                         onClick={() => setShowCartDialog(true)}
@@ -70,9 +70,10 @@ export function Cart() {
             <Scrollbar className="flex-1 font-mono">
                 <table className={'table-fixed w-full select-none'}>
                     <colgroup>
+                        <col className="w-[25px]" />
                         <col className="w-[45px]" />
                         <col className="truncate" />
-                        <col className="w-1/6" />
+                        <col className="w-[60px]" />
                     </colgroup>
                     <tbody>
                         {cart.items.map((item) => (

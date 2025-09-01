@@ -22,7 +22,7 @@ export function Styleguide() {
                 </div>
 
                 <div className={'bg-slate-50 p-2'}>
-                    <Button onClick={() => {}} type={'primary'} disabled>Primary disabled</Button>
+                    <Button onClick={() => {}} type={'primary'} disabled withDisabledLock={true}>Primary disabled</Button>
                 </div>
 
 
@@ -31,7 +31,7 @@ export function Styleguide() {
                 </div>
                 
                 <div className={'bg-slate-50 p-2'}>
-                    <Button onClick={() => {}} type={'secondary'} disabled>Secondary disabled</Button>
+                    <Button onClick={() => {}} type={'secondary'} disabled withDisabledLock={true}>Secondary disabled</Button>
                 </div>
 
 
