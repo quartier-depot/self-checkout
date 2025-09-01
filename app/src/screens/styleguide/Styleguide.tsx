@@ -76,7 +76,7 @@ export function Styleguide() {
 
                 <div className={'bg-slate-50 p-2'}>
                     <h1>Progress</h1>
-                    <Progress percentage={25} estimatedTime={10000}/>
+                    <Progress percentage={25} maxPercentage={75} estimatedTime={10000}/>
                 </div>
 
             </div>
