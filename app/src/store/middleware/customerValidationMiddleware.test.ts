@@ -61,6 +61,21 @@ describe('customerValidationMiddleware', () => {
     expect(mockAppInsights.trackException).toHaveBeenCalled();
   });
 
+  it('should ignore duplicate OPT-OUT memberIds', () => {
+    const customers: Customer[] = [
+      buildCustomer(1, 'OPT-OUT'),
+      buildCustomer(2, 'OPT-OUT'), // Duplicate memberId 'OPT-OUT'
+      buildCustomer(3, '123'), // avoids not customer contains a member_id error
+    ];
+
+    const action = buildAction(customers);
+
+    middleware(mockStore)(mockNext)(action);
+
+    expect(mockNext).toHaveBeenCalledWith(action);
+    expect(mockAppInsights.trackException).not.toHaveBeenCalled();
+  });
+
   it('should not track when there are no duplicate memberIds', () => {
     const customers: Customer[] = [
       buildCustomer(1, '123'),
@@ -72,7 +87,7 @@ describe('customerValidationMiddleware', () => {
     middleware(mockStore)(mockNext)(action);
 
     expect(mockNext).toHaveBeenCalledWith(action);
-    expect(mockAppInsights.trackEvent).not.toHaveBeenCalled();
+    expect(mockAppInsights.trackException).not.toHaveBeenCalled();
   });
 
   it('should detect and track no memberId', () => {

@@ -21,7 +21,9 @@ export const customerValidationMiddleware: Middleware = () => (next) => (action:
 
     // Check for duplicate memberIds
     const memberIdMap = new Map<string, Customer[]>();
-    customers.forEach(customer => {
+    customers
+      .filter(customer => customer.member_id && customer.member_id !== 'OPT-OUT')
+      .forEach(customer => {
       if (customer.member_id) {
         if (!memberIdMap.has(customer.member_id)) {
           memberIdMap.set(customer.member_id, []);
