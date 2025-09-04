@@ -10,6 +10,9 @@ interface Configuration {
     connectionString: string;
     availabilityInterval: number;
   };
+  abo: {
+    documentId: string,
+  }
   inactivityTimeout: number;
   inactivityConfirmationTimeout: number;
 }
@@ -20,6 +23,9 @@ interface ConfigurationState {
 
 const initialState: ConfigurationState = {
   configuration: {
+    abo: {
+      documentId: ''
+    },
     inactivityConfirmationTimeout: 30 * 1000,
     inactivityTimeout: 60 * 1000,
   }

@@ -36,6 +36,9 @@ function AppContent() {
                         connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING,
                         availabilityInterval: import.meta.env.VITE_APPlICATIONINSIGHTS_AVAILABILITY_INTERVAL,
                     },
+                    abo: {
+                        documentId: import.meta.env.VITE_ABO_DOCUMENT_ID,
+                    },
                     inactivityTimeout: import.meta.env.VITE_INACTIVITY_TIMEOUT,
                     inactivityConfirmationTimeout: import.meta.env.VITE_INACTIVITY_CONFIRMATION_TIMEOUT,
                 }

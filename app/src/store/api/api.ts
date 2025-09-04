@@ -42,7 +42,7 @@ interface Order {
 
 export const api = createApi({
   reducerPath: 'woocommerceApi',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: '/wp-json/wc/v3/',
     prepareHeaders: (headers, { getState }) => {
       headers.set('Content-Type', 'application/json');
@@ -68,8 +68,8 @@ export const api = createApi({
           params: {
             status: 'publish',
             per_page: maximumItemsPerPage,
-            page: 1
-          }
+            page: 1,
+          },
         });
 
         if (initial.error) {
@@ -93,9 +93,9 @@ export const api = createApi({
                 params: {
                   status: 'publish',
                   per_page: maximumItemsPerPage,
-                  page: i + 1
-                }
-              })
+                  page: i + 1,
+                },
+              }),
             );
           }
 
@@ -114,11 +114,17 @@ export const api = createApi({
             .filter(product => product && product.catalog_visibility === 'visible')
             .map(dto => Product.createFromWooCommerceProduct(dto))
             .sort((a, b) => {
-              if (!a.artikel_id && !b.artikel_id) return 0;
-              if (!a.artikel_id) return 1;
-              if (!b.artikel_id) return -1;
+              if (!a.artikel_id && !b.artikel_id) {
+                return 0;
+              }
+              if (!a.artikel_id) {
+                return 1;
+              }
+              if (!b.artikel_id) {
+                return -1;
+              }
               return a.artikel_id.localeCompare(b.artikel_id);
-            })
+            }),
         };
       },
       providesTags: ['Products'],
@@ -136,8 +142,8 @@ export const api = createApi({
           params: {
             role: 'all',
             per_page: maximumItemsPerPage,
-            page: 1
-          }
+            page: 1,
+          },
         });
 
         if (initial.error) {
@@ -161,9 +167,9 @@ export const api = createApi({
                 params: {
                   role: 'all',
                   per_page: maximumItemsPerPage,
-                  page: i + 1
-                }
-              })
+                  page: i + 1,
+                },
+              }),
             );
           }
 
@@ -189,14 +195,14 @@ export const api = createApi({
               console.error(`Error creating Customer instance at index ${index}:`, error, 'Customer data:', customer);
               throw new Error(`Failed to create Customer instance at index ${index}`);
             }
-          })
+          }),
         };
       },
       providesTags: ['Customers'],
     }),
 
     // Wallet
-    getWalletBalance: builder.query<{ balance: number , currency: string }, string>({
+    getWalletBalance: builder.query<{ balance: number, currency: string }, string>({
       query: (customerEmail) => ({
         url: 'wallet/balance',
         params: { email: customerEmail },
@@ -212,9 +218,7 @@ export const api = createApi({
       }),
       transformResponse: (response: { response: string; id: number }): PayWithWalletResponse => {
         return {
-          response: response.response,
-          isError: response.response !== 'success',
-          transactionId: response.id
+          transactionId: response.id,
         };
       },
       invalidatesTags: ['Wallet'],
@@ -238,7 +242,7 @@ export const api = createApi({
             product_id: item.product.id,
             quantity: item.quantity,
           })),
-        }
+        },
       }),
       transformResponse: (response: any): CreateOrderResponse => {
         return {
@@ -246,7 +250,7 @@ export const api = createApi({
           orderTotal: parseFloat(response.total),
           status: response.status
         };
-      }
+      },
     }),
 
     updateOrder: builder.mutation<OrderUpdateResponse, OrderUpdate>({
@@ -268,10 +272,11 @@ export const api = createApi({
     getCustomerOrders: builder.query<Order[], number>({
       query: (customerId) => ({
         url: 'orders',
-        params: { 
+        params: {
           customer: customerId,
           per_page: 20,
-          status: 'completed' },
+          status: 'completed',
+        },
       }),
       transformResponse: (response: unknown): Order[] => {
         return response as Order[];
@@ -284,68 +289,85 @@ export const api = createApi({
 export const aboApi = createApi({
   reducerPath: 'aboApi',
   baseQuery: fetchBaseQuery({
-    // https://developers.google.com/workspace/sheets/api/reference/rest
     baseUrl: '/docs-google-com/spreadsheets/d/',
-    responseHandler: 'text'
+    responseHandler: 'text',
   }),
   tagTypes: ['Abo'],
   endpoints: (builder) => ({
     getAbo: builder.query<Abo, void>({
-      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBaseQuery) {
-        
-        // TODO: this references copy of the document, make configurable
-        const documentId = "1yZolqnTz02fJXRl_KISmxzR7j4D-3nb7vgxHFli_yig";
+      async queryFn(_arg, queryApi, _extraOptions, fetchWithBaseQuery) {
+
+        const state = queryApi.getState() as RootState;
+        const configuration = state.configuration.configuration;
+        const documentId = configuration?.abo?.documentId;
+        if (!documentId) {
+          throw new Error('Missing configuration: abo.documentId');
+        }
+
         const matrixPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv`);
+        const basisPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv&gid=0`);
 
-        const abo = new Abo();
-        
-        if (matrixPromise.data) {
-          const parsedMatrix = Papa.parse<any>(matrixPromise.data.toString(), {skipFirstNLines: 1, header: true})
 
-          const regex = /^.* \((?<articleId>[A-Z][0-9]{2})\)$/
-          parsedMatrix.data.forEach((row: any, index: number)=> {
-            if (index === 0) {
-              abo.description = row["Name"];
-            }
-            else {
-              const total = row["Alles"];
-              if (total !== "0") {
-                const customerId = row["Id"];
+
+        const descriptionToArticleId = new Map();
+        if (basisPromise.data && matrixPromise.data) {
+          const abo = new Abo();
+          
+          const parsedBasis = Papa.parse<any>(basisPromise.data.toString());
+          const descriptionColumn = 0;
+          const articleIdColumn = 53;
+          parsedBasis.data
+            .filter(row => row[descriptionColumn] && row[articleIdColumn])
+            .forEach(row => descriptionToArticleId.set(row[descriptionColumn], row[articleIdColumn])
+          );
+          
+          const parsedMatrix = Papa.parse<any>(matrixPromise.data.toString(), { skipFirstNLines: 1, header: true });
+          abo.description = parsedMatrix.data[0]['Name'];
+          parsedMatrix.data.forEach((row: any, index: number) => {
+            if (index > 0) {
+              const total = row['Alles'];
+              if (total !== '0') {
+                const customerId = row['User Id'];
                 if (customerId) {
-                  const articleHeaders = Object.keys(row).filter((name: string) => regex.test(name));
-                  articleHeaders.forEach((articleHeader: string) => {
-                    const regexResult = regex.exec(articleHeader);
-                    const articleId = regexResult?.groups?.articleId;
-                    const quantity = row[articleHeader];
-                    if (quantity && articleId) {
-                      abo.addOrder(customerId, articleId, quantity);
+                  const articleDescriptions = Object.keys(row);
+                  articleDescriptions.forEach((description: string) => {
+                    const articleId = descriptionToArticleId.get(description);
+                    if (articleId) {
+                      const quantity = row[description];
+                      if (quantity) {
+                        abo.addOrder(customerId, articleId, quantity);
+                      }
                     }
-                  })
+                  });
                 }
               }
             }
-          })
+          });
+          return { data: abo };
+        } else {
+          return {
+            error: {
+              status: 'FETCH_ERROR',
+              error: 'Failed to fetch Abo data from Google Sheets'
+            }
+          };
         }
-        
-        console.log(abo);
-        
-        return { data: abo };
       },
       providesTags: ['Abo'],
     }),
   }),
-})
+});
 
 export const {
   useGetProductsQuery,
-  useGetCustomersQuery,   
+  useGetCustomersQuery,
   useGetWalletBalanceQuery,
   usePayWithWalletMutation,
   useCreateOrderMutation,
   useUpdateOrderMutation,
   useGetCustomerOrdersQuery,
-} = api; 
+} = api;
 
 export const {
-  useGetAboQuery
+  useGetAboQuery,
 } = aboApi;
