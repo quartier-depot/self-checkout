@@ -1,6 +1,7 @@
 import { getMetaData } from '../helper/getMetaData';
 import { semicolonSeparatedList } from '../helper/semicolonSeparatedList';
 import { Unit, UNIT_MAPPING } from './Unit.ts';
+import {decode} from 'html-entities';
 
 export const NO_BARCODE_VALUE = 'KEIN BARCODE';
 
@@ -46,18 +47,18 @@ export class Product {
       return UNIT_MAPPING[unit.toLowerCase()] ?? Unit.NoUnit;
     }
     
-    const freitext = getMetaData('freitext', dto);
+    const freitext = decode(getMetaData('freitext', dto));
     const barcodes = semicolonSeparatedList(getMetaData('barcode', dto));
     const isBulkItem = determineBulkItem(freitext);
     const unit = determineUnit(freitext);
     
     const data: ProductData = {
       id: dto.id,
-      name: dto.name,
+      name: decode(dto.name),
       slug: dto.slug,
       price: parseFloat(dto.price),
       artikel_id: getMetaData('artikel-id', dto),
-      gestell: getMetaData('gestell', dto),
+      gestell: decode(getMetaData('gestell', dto)),
       barcodes,
       isBulkItem,
       unit

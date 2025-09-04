@@ -1,3 +1,5 @@
+import { decode } from 'html-entities';
+
 export class Customer {
   id: number;
   email: string;
@@ -11,8 +13,8 @@ export class Customer {
   constructor(dto: any) {
     this.id = dto.id;
     this.email = dto.email;
-    this.first_name = dto.first_name;
-    this.last_name = dto.last_name;
+    this.first_name = decode(dto.first_name);
+    this.last_name = decode(dto.last_name);
     this.username = dto.username;
     this.member_id = dto.acf?.member_id;
     this.shipping = new Shipping(dto.shipping);
@@ -31,11 +33,11 @@ class Shipping {
   country: string;
 
   constructor(dto: any) {
-    this.first_name = dto.first_name;
-    this.last_name = dto.last_name;
-    this.company = dto.company;
-    this.address_1 = dto.address_1;
-    this.address_2 = dto.address_2;
+    this.first_name = decode(dto.first_name);
+    this.last_name = decode(dto.last_name);
+    this.company = decode(dto.company);
+    this.address_1 = decode(dto.address_1);
+    this.address_2 = decode(dto.address_2);
     this.city = dto.city;
     this.country = dto.country;
     this.postcode = dto.postcode;
@@ -56,11 +58,11 @@ class Billing {
   phone: string;
 
   constructor(dto: any) {
-    this.first_name = dto.first_name;
-    this.last_name = dto.last_name;
-    this.company = dto.company;
-    this.address_1 = dto.address_1;
-    this.address_2 = dto.address_2;
+    this.first_name = decode(dto.first_name);
+    this.last_name = decode(dto.last_name);
+    this.company = decode(dto.company);
+    this.address_1 = decode(dto.address_1);
+    this.address_2 = decode(dto.address_2);
     this.city = dto.city;
     this.postcode = dto.postcode;
     this.country = dto.country;
