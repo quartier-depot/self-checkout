@@ -29,6 +29,7 @@ export function ConfirmationDialog(props: Props) {
                         <div>Transaktionsnummer:</div>
                         <span className="text-right">{props.transactionId}</span>
                     </div>
+                    <div className={'h-6'} />
                     <Button type="primary" onClick={props.onClose}>Schliessen</Button>
                 </div>
             </Dialog>
