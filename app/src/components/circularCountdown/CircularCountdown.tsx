@@ -11,7 +11,7 @@ export function CircularCountdown({
     duration,
     size = 100,
     strokeWidth = 8,
-    color = "#E5E7EB" // Tailwind gray-200
+    color = "oklch(0.554 0.046 257.417)" // Tailwind slate-500
 }: CircularCountdownProps) {
     const [progress, setProgress] = useState(0);
     
@@ -45,7 +45,7 @@ export function CircularCountdown({
                 cx={size / 2}
                 cy={size / 2}
                 r={radius}
-                stroke="oklch(50.8% 0.118 165.612)" // tailwind emerald-700
+                stroke="rgb(54, 160, 137)" // depot emerald-600
                 strokeWidth={strokeWidth}
                 fill="none"
             />

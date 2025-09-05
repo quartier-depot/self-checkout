@@ -36,7 +36,7 @@ export function Progress(props: ProgressProps) {
     return (
             <div className="flex w-full h-10 bg-slate-500 rounded-full overflow-hidden "
                  role="progressbar">
-                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-emerald-400 text-xs text-black text-center whitespace-nowrap transition duration-500 "
+                <div className="flex flex-col justify-center rounded-full overflow-hidden bg-emerald-600 text-xs text-black text-center whitespace-nowrap transition duration-500 "
                      style={{width: `${currentPercentage}%`}}>{formatInt(currentPercentage)}%</div>
             </div>
     )

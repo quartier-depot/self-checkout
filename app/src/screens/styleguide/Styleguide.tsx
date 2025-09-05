@@ -1,5 +1,6 @@
 import { Button } from "../../components/button/Button";
 import { Progress } from '../../components/progress/Progress.tsx';
+import { CircularCountdown } from '../../components/circularCountdown/CircularCountdown.tsx';
 const add = new Audio('/assets/sounds/add.mp3');
 const remove = new Audio('/assets/sounds/remove.mp3');
 const alert = new Audio('/assets/sounds/alert.mp3');
@@ -61,6 +62,11 @@ export function Styleguide() {
                 <div className={'bg-slate-50 p-2'}>
                     <h1>Progress</h1>
                     <Progress percentage={25} maxPercentage={75} estimatedTime={10000}/>
+                </div>
+
+                <div className={'bg-slate-50 p-2'}>
+                    <h1>Circular Countdown</h1>
+                    <CircularCountdown duration={10000} />
                 </div>
 
             </div>

@@ -59,7 +59,7 @@ export function Cart() {
                     <div
                         onClick={() => setShowCartDialog(true)}
                         className={
-                            'text-center absolute bg-emerald-700 text-white w-5 h-5 text-xs p-0 leading-5 rounded-full -right-2 top-3 cursor-pointer'
+                            'text-center absolute bg-emerald-800 text-white w-5 h-5 text-xs p-0 leading-5 rounded-full -right-2 top-3 cursor-pointer'
                         }
                     >
                         {cart.quantity}
