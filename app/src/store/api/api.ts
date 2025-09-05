@@ -306,9 +306,7 @@ export const aboApi = createApi({
 
         const matrixPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv`);
         const basisPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv&gid=0`);
-
-
-
+        
         const descriptionToArticleId = new Map();
         if (basisPromise.data && matrixPromise.data) {
           const abo = new Abo();
@@ -322,12 +320,12 @@ export const aboApi = createApi({
           );
           
           const parsedMatrix = Papa.parse<any>(matrixPromise.data.toString(), { skipFirstNLines: 1, header: true });
-          abo.description = parsedMatrix.data[0]['Name'];
+          abo.description = parsedMatrix.data[0]["Name"] || parsedMatrix.data[0][""];
           parsedMatrix.data.forEach((row: any, index: number) => {
             if (index > 0) {
               const total = row['Alles'];
               if (total !== '0') {
-                const customerId = row['User Id'];
+                const customerId = row['User ID'];
                 if (customerId) {
                   const articleDescriptions = Object.keys(row);
                   articleDescriptions.forEach((description: string) => {
@@ -342,9 +340,10 @@ export const aboApi = createApi({
                 }
               }
             }
-          });
+          });          
           return { data: abo };
         } else {
+          console.log("no abo data");
           return {
             error: {
               status: 'FETCH_ERROR',
