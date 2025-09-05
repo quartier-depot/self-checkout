@@ -100,7 +100,7 @@ export function Payment() {
         }
 
         setShowPaymentDialog(true);
-        setMaxPercentage(60);
+        setMaxPercentage(39);
 
         let paymentLog = '';
 
@@ -119,8 +119,8 @@ export function Payment() {
 
             paymentLog += `\nCreating order OK:`;
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
-            setCurrentPercentage(60);
-            setMaxPercentage(65);
+            setCurrentPercentage(40);
+            setMaxPercentage(59);
             paymentLog += `\n  Order ID: ${orderId}`;
             paymentLog += `\n  Order total: ${orderTotal}`;
             paymentLog += `\n  Status: ${createOrderStatus}`;
@@ -144,8 +144,8 @@ export function Payment() {
 
             paymentLog += '\nPaying with wallet OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
-            setCurrentPercentage(65);
-            setMaxPercentage(95);
+            setCurrentPercentage(60);
+            setMaxPercentage(79);
             paymentLog += `\n  Transaction ID: ${walletTransactionId}`;
 
             startStep = performance.now();
@@ -164,7 +164,7 @@ export function Payment() {
 
             paymentLog += '\nUpdating order OK:';
             paymentLog += `\n  Duration: ${performance.now() - startStep}ms`;
-            setCurrentPercentage(95);
+            setCurrentPercentage(80);
             setMaxPercentage(99);
             paymentLog += `\n  Status: ${updateOrderStatus}`;
             paymentLog += `\nRefetching wallet balance...`;
@@ -236,7 +236,7 @@ export function Payment() {
                     </Button>
                 </div>
 
-                {showPaymentDialog && <PaymentDialog percentage={currentPercentage} maxPercentage={maxPercentage} estimatedTime={20000}/>}
+                {showPaymentDialog && <PaymentDialog percentage={currentPercentage} maxPercentage={maxPercentage} estimatedTime={6000}/>}
 
                 {showConfirmationDialog && <ConfirmationDialog total={total} newBalance={newBalance} orderId={orderId}
                                                                transactionId={transactionId}
