@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product as ProductType } from '../api/products/Product.ts';
-import { startNewSession } from './appSlice';
+import { startNewSession } from './sessionSlice';
 import { RootState } from '../store';
 import { aboApi, api } from '../api/api';
 

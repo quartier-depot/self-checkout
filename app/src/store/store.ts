@@ -4,7 +4,7 @@ import configurationReducer from './slices/configurationSlice';
 import cartReducer from './slices/cartSlice';
 import customerReducer from './slices/customerSlice';
 import displayReducer from './slices/displaySlice.ts';
-import orderReducer from './slices/appSlice';
+import sessionReducer from './slices/sessionSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
 import { aboApi, api } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
@@ -21,7 +21,7 @@ const store = configureStore({
     configuration: configurationReducer,
     customer: customerReducer,
     display: displayReducer,
-    order: orderReducer,
+    session: sessionReducer,
     [api.reducerPath]: api.reducer,
     [aboApi.reducerPath]: aboApi.reducer,
   },

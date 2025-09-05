@@ -54,7 +54,7 @@ export function Abo() {
 
     return (
             <>
-                <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive}
+                <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive} withDisabledLock={!customer}
                         className={classNames({ 'animate-pulse': isLoading })}>
                     {title}
                 </Button>

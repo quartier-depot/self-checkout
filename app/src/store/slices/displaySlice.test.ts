@@ -7,7 +7,7 @@ import displayReducer, {
   setSearchTerm,
   setViewMode
 } from './displaySlice.ts';
-import { startNewSession } from './appSlice';
+import { startNewSession } from './sessionSlice';
 import { Product } from '../api/products/Product.ts';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';

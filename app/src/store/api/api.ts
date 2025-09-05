@@ -218,7 +218,9 @@ export const api = createApi({
       }),
       transformResponse: (response: { response: string; id: number }): PayWithWalletResponse => {
         return {
-          transactionId: response.id,
+          response: response.response,
+          isError: response.response !== 'success',
+          transactionId: response.id
         };
       },
       invalidatesTags: ['Wallet'],
