@@ -59,8 +59,8 @@ app.get('/api/configuration', (_, res) => {
     applicationInsights: config.applicationInsights,
     inactivityTimeout: config.inactivityTimeout,
     inactivityConfirmationTimeout: config.inactivityConfirmationTimeout,
-    api: {
-      documentId: config.apiDocumentId,
+    abo: {
+      documentId: config.aboDocumentId,
     }
   })
 });
