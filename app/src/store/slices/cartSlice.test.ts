@@ -165,7 +165,7 @@ function expectEmptyCart(actual: { cart: { items: { product: Product; quantity: 
 const product: Product = new Product({
   price: 42.24,
   id: 42,
-  artikel_id: 'product',
+  articleId: 'product',
   name: 'name',
   slug: 'slug',
   barcodes: ['barcode'],

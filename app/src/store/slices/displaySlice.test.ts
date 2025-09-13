@@ -82,7 +82,7 @@ describe('displaySlice', () => {
     const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => (new Product({
       id: i + 1,
       name: `Product ${i + 1}`,
-      artikel_id: `A${i + 1}`,
+      articleId: `A${i + 1}`,
       category: String.fromCharCode(65 + i), // A, B, C, etc.
       barcodes: [],
       slug: `product-${i + 1}`,

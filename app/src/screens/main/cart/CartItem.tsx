@@ -15,7 +15,7 @@ export function CartItem({ item, onClick }: ItemProps) {
                 </td>
                 <td className={'text-right pr-3'}>{item.quantity}</td>
                 <td className={`truncate`}>
-                    {item.product.name} ({item.product.artikel_id?.substring(0, 3)})
+                    {item.product.name} ({item.product.articleId?.substring(0, 3)})
                 </td>
                 <td className={'text-right'}>{formatPrice(item.product.price * item.quantity)}</td>
             </tr>

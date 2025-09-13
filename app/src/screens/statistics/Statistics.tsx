@@ -114,7 +114,7 @@ export const Statistics: React.FC = () => {
                                 <div className={'grid gap-2'}>
                                     {hasValidBarcode.map(product => (
                                         <div key={product.id} className={'p-2 bg-slate-100 rounded'}>
-                                            <div><span className={'font-medium'}>{product.artikel_id}</span> {product.name} {product.barcodes.join(', ')}</div>
+                                            <div><span className={'font-medium'}>{product.articleId}</span> {product.name} {product.barcodes.join(', ')}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -139,7 +139,7 @@ export const Statistics: React.FC = () => {
                                 <div className={'grid gap-2'}>
                                     {noBarcode.map(product => (
                                         <div key={product.id} className={'p-2 bg-slate-100 rounded'}>
-                                            <div><span className={'font-medium'}>{product.artikel_id}</span> {product.name}</div>
+                                            <div><span className={'font-medium'}>{product.articleId}</span> {product.name}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -164,7 +164,7 @@ export const Statistics: React.FC = () => {
                                 <div className={'grid gap-2'}>
                                     {unknownProducts.map(product => (
                                         <div key={product.id} className={'p-2 bg-slate-100 rounded'}>
-                                            <div><span className={'font-medium'}>{product.artikel_id}</span> {product.name}</div>
+                                            <div><span className={'font-medium'}>{product.articleId}</span> {product.name}</div>
                                         </div>
                                     ))}
                                 </div>

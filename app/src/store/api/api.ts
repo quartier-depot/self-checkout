@@ -114,16 +114,16 @@ export const api = createApi({
             .filter(product => product && product.catalog_visibility === 'visible')
             .map(dto => Product.createFromWooCommerceProduct(dto))
             .sort((a, b) => {
-              if (!a.artikel_id && !b.artikel_id) {
+              if (!a.articleId && !b.articleId) {
                 return 0;
               }
-              if (!a.artikel_id) {
+              if (!a.articleId) {
                 return 1;
               }
-              if (!b.artikel_id) {
+              if (!b.articleId) {
                 return -1;
               }
-              return a.artikel_id.localeCompare(b.artikel_id);
+              return a.articleId.localeCompare(b.articleId);
             }),
         };
       },

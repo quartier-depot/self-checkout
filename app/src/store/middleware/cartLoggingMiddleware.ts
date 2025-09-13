@@ -10,11 +10,11 @@ export const initializeCartLoggingMiddleware = (insights: any) => {
 export const cartLoggingMiddleware: Middleware = () => (next) => (action) => {
   if (appInsights && changeCartQuantity.match(action)) {
     const { product, quantity, source } = action.payload;
-    console.log('track event', product.artikel_id, product.name, quantity, source);
+    console.log('track event', product.articleId, product.name, quantity, source);
     appInsights.appInsights.trackEvent(
       { name: 'change-cart-quantity' },
       {
-        productId: product.artikel_id,
+        productId: product.articleId,
         name: product.name.substring(0, 30),
         hasBarcodes: product.hasBarcodes,
         quantity: Math.abs(quantity),

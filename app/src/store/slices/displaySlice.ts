@@ -61,7 +61,7 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
     case 'search':
       if (!searchTerm) return [];
       return products.filter(product =>
-        product.artikel_id?.endsWith(searchTerm)
+        product.articleId?.endsWith(searchTerm)
       ).map(product => createProductDisplayItem(product, 1));
 
     case 'browse':
@@ -110,7 +110,7 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
       
       if (abo?.orders[customerId]) {
         const items = abo.orders[customerId];
-        return items.map(item => createProductDisplayItem(products.find(product => product.artikel_id == item.articleId)!, item.quantity));
+        return items.map(item => createProductDisplayItem(products.find(product => product.articleId == item.articleId)!, item.quantity));
       } else {
         return [];
       }

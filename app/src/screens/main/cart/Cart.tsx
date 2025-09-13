@@ -49,7 +49,7 @@ export function Cart() {
     }
 
     function reportError(item: ItemType): void {
-        applicationInsights.getAppInsights().trackEvent({ name: 'product-error' }, { location: 'cart', product: item.product.artikel_id });
+        applicationInsights.getAppInsights().trackEvent({ name: 'product-error' }, { location: 'cart', product: item.product.articleId });
     }
 
     return (

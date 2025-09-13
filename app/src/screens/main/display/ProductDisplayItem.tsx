@@ -22,7 +22,7 @@ export function ProductDisplayItem({ product, quantity }: ProductDisplayItemProp
                     onClick={() => dispatch(changeCartQuantity({ product: product, quantity: quantity, source: viewMode }))}
             >
                 <h2 className={'text-2xl font-bold '}>
-                    {product.artikel_id}
+                    {product.articleId}
                 </h2>
                 <p className={'grow truncate mr-1 relative'}>{product.name}</p>
                 <p className={'nowrap text-l'}>{formatPrice(product.price)}</p>

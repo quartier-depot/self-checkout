@@ -136,7 +136,7 @@ describe('productValidationMiddleware', () => {
 function buildProduct(id: number, barcodes: string[] = []): Product {
   return new Product({
     id: id,
-    artikel_id: `A${id}`,
+    articleId: `A${id}`,
     barcodes: barcodes,
     name: `Product ${id}`,
     slug: `product-${id}`
