@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import KeyboardBarcodeScanner from '../../../external/@point-of-sale/keyboard-barcode-scanner/main';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { setCustomer } from '../../../store/slices/customerSlice';
@@ -9,6 +9,7 @@ import { useGetProductsQuery, useGetCustomersQuery } from '../../../store/api/ap
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { Button } from '../../../components/button/Button';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
+import { Barcode as ProductBarcode } from '../../../store/api/products/Barcode.ts';
 
 interface BarcodeEvent {
     value: string;
@@ -26,6 +27,8 @@ export function Barcode() {
     const [showNoCustomerFound, setShowNoCustomerFound] = useState(false);
     const [barcode, setBarcode] = useState('');
     const session = useAppSelector(state => state.session.session);
+    const productByBarcode = useMemo<Map<string, Product>>(createProductByBarcodeMap, [products]);
+    const productsWithWeightEncoding = useMemo<Map<ProductBarcode, Product>>(createProductsWithWeightEncodingMap, [products]);
     
     useEffect(() => {
         if (session.initialState) {
@@ -51,7 +54,32 @@ export function Barcode() {
             };
         }
     }, [isProductsSuccess, isCustomersSuccess]);
-
+    
+    function createProductByBarcodeMap(): Map<string, Product> {
+        const map = new Map();
+        if (products && products.length) {
+            products.forEach((product) => {
+                product.barcodes.forEach((barcode) => {
+                    map.set(barcode.code, product);
+                })
+            })
+        }
+        return map;
+    }
+    
+    function createProductsWithWeightEncodingMap(): Map<ProductBarcode, Product> {
+        const map = new Map();
+        if (products && products.length) {
+            products.forEach((product) => {
+                product.barcodes.filter(barcode => barcode.isWeightEncoded)
+                        .forEach((barcode) => {
+                    map.set(barcode, product);
+                })
+            })
+        }
+        return map;
+    }
+    
     function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[]) {
         if (!(e.value)) {
             return;
@@ -92,15 +120,25 @@ export function Barcode() {
             return;
         }
 
-        let product: Product | undefined;
-        if (e.value.startsWith('https://')) {
+        let product: Product | undefined = productByBarcode.get(e.value);
+        let quantity = 1;
+        
+        if (!product && ProductBarcode.isUrl(e.value)) {
             product = products.find((product) => e.value.endsWith(product.id.toString()));
-        } else {
-            product = products.find((product) => product.hasMatchingBarcode(e.value));
         }
 
+        if (!product) {
+            for (const [barcode, weightEncodedProduct] of productsWithWeightEncoding) {
+                if (barcode.matches(e.value)) {
+                    product = weightEncodedProduct;
+                    quantity = barcode.getQuantity(e.value);
+                    break;
+                }
+            }
+        }
+        
         if (product) {
-            dispatch(changeCartQuantity({ product, quantity: 1, source: 'scan' }));
+            dispatch(changeCartQuantity({ product, quantity: quantity, source: 'scan' }));
         } else {
             console.log('No product found with barcode ' + e.value);
             alertSound.play();

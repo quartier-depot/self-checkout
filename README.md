@@ -2,6 +2,15 @@
 
 A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](https://www.quartier-depot.ch/).
 
+## Features
+
+* Scan by product code
+* Supports multiple barcodes per product
+* Support weight encoded barcodes
+* Search by category or article Id
+* Search by past orders (favorites)
+* Pay with wallet
+
 ## Backend prerequisites
 
 * Wordpress 

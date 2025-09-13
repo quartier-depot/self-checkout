@@ -2,6 +2,7 @@ import { getMetaData } from '../helper/getMetaData';
 import { semicolonSeparatedList } from '../helper/semicolonSeparatedList';
 import { Unit, UNIT_MAPPING } from './Unit.ts';
 import {decode} from 'html-entities';
+import { Barcode } from './Barcode.ts';
 
 export const NO_BARCODE_VALUE = 'KEIN BARCODE';
 
@@ -13,7 +14,7 @@ type ProductData = Partial<{
   slug: string;
   price: number;
   articleId: string;
-  barcodes: string[];
+  barcodes: Barcode[];
   category: string;
   isBulkItem: boolean;
   unit: Unit;
@@ -26,7 +27,7 @@ export class Product {
   slug: string;
   price: number;
   articleId: string;
-  barcodes: string[];
+  barcodes: Barcode[];
   category: string;
   isBulkItem: boolean;
   hasBarcodes: boolean;
@@ -48,7 +49,7 @@ export class Product {
     }
     
     const freitext = decode(getMetaData('freitext', dto));
-    const barcodes = semicolonSeparatedList(getMetaData('barcode', dto));
+    const barcodes = semicolonSeparatedList(getMetaData('barcode', dto)).map(code => new Barcode(code));
     const isBulkItem = determineBulkItem(freitext);
     const unit = determineUnit(freitext);
     
@@ -75,13 +76,13 @@ export class Product {
     this.price = data.price ?? 0;
     this.articleId = data.articleId ?? '';
     this.barcodes = data.barcodes ?? [];
-    this.hasBarcodes = this.barcodes.length > 0 && !this.barcodes.includes(NO_BARCODE_VALUE);
+    this.hasBarcodes = this.barcodes.length > 0 && !this.hasMatchingBarcode(NO_BARCODE_VALUE);
     this.category = data.category ?? '';
     this.isBulkItem = data.isBulkItem ?? false;
     this.unit = data.unit ?? Unit.NoUnit;
   }
   
-  hasMatchingBarcode(barcode: string): boolean {
-    return this.barcodes.includes(barcode);
+  hasMatchingBarcode(code: string): boolean {
+    return this.barcodes.some(barcode => barcode.code === code);
   }
 }
