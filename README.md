@@ -9,7 +9,8 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 * Support weight encoded barcodes
 * Search by category or article Id
 * Search by past orders (favorites)
-* Pay with wallet
+* Search by abo orders
+* Pay with virtual wallet
 
 ## Backend prerequisites
 
