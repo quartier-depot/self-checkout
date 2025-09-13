@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
 import { productValidationMiddleware, initializeProductValidationMiddleware } from './productValidationMiddleware';
 import { Product } from '../api/products/Product.ts';
+import { Barcode } from '../api/products/Barcode.ts';
 
 describe('productValidationMiddleware', () => {
   let mockAppInsights: { 
@@ -137,7 +138,7 @@ function buildProduct(id: number, barcodes: string[] = []): Product {
   return new Product({
     id: id,
     articleId: `A${id}`,
-    barcodes: barcodes,
+    barcodes: barcodes.map(code => new Barcode(code)),
     name: `Product ${id}`,
     slug: `product-${id}`
   });
