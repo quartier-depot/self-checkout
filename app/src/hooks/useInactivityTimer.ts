@@ -44,10 +44,14 @@ export function useInactivityTimer() {
 
   useEffect(() => {
     let inactivityTimer: NodeJS.Timeout;
+    let activities = 0;
     let activityLogged = false;
     
     const resetInactivityTimer = () => {
-      if (!activityLogged) {
+      activities++;
+      
+      // ignore the first five
+      if (!activityLogged && activities > 5) {
         dispatch(logActivity());
         activityLogged = true;
       }
