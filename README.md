@@ -12,7 +12,9 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 * Search by abo orders
 * Pay with virtual wallet
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/EAuKzgOIUrg?si=cOerNGSmIBp0SsdE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+### Watch on YouTube
+
+[![in action](https://img.youtube.com/vi/EAuKzgOIUrg/0.jpg)](https://www.youtube.com/watch?v=EAuKzgOIUrg)
 
 ## Backend prerequisites
 
