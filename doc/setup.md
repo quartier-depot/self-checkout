@@ -74,28 +74,29 @@
 20. `sudo loginctl enable-linger admin` (allow services to run without admin being logged in)
 21. `sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 admin` (onfigure subuid and subgid mappings for the admin user if not already set)
 22. `sudo mkdir -p /home/admin/.config/systemd/user/`
-23. Create `/home/admin/nightly-maintenance.sh` (see below)
-24. `sudo chmod 700 /usr/local/sbin/nightly-maintenance.sh`
-25. `sudo visudo -f /etc/sudoers.d/nightly-maintenance`
+23. Create a personal access token with read access to packages in [GitHub](https://github.com/settings/tokens)
+24. Create `/home/admin/nightly-maintenance.sh` (see below)
+25. `sudo chmod 700 /home/admin/nightly-maintenance.sh`
+26. `sudo visudo -f /etc/sudoers.d/nightly-maintenance`
     * // Allow admin user to run specific commands without password
     * admin ALL=(ALL) NOPASSWD: /usr/bin/snap refresh
     * admin ALL=(ALL) NOPASSWD: /usr/sbin/reboot
     * admin ALL=(ALL) NOPASSWD: /usr/bin/pkill
-26. `sudo chmod 440 /etc/sudoers.d/nightly-maintenance`
-27. Create `/home/admin/.config/systemd/user/nightly-maintenance.timer` (see below)
-28. `sudo chmod 644 /home/admin/.config/systemd/user/nightly-maintenance.timer`
-29. Create `/home/admin/.config/systemd/user/nightly-maintenance.service` (see below)
-30. `sudo chmod 644 /home/admin/.config/systemd/user/nightly-maintenance.service`
-31. Create `/etc/logrotate.d/nightly-maintenance` (see below)
-32. Create `/home/admin/.config/systemd/user/quartier-depot-self-checkout-container.service` (see below)
-33. `sudo chmod 644 /etc/systemd/system/quartier-depot-self-checkout-container.service`
-34. `systemctl --user daemon-reload`
-35. `systemctl --user enable nightly-maintenance.timer`
-36. `systemctl --user start nightly-maintenance.timer`
-37. `systemctl --user enable quartier-depot-self-checkout-container`
-38. `systemctl --user start quartier-depot-self-checkout-container`
-39. Create `/home/admin/self-checkout.env` (see template)
-40. `sudo chmod 600 /home/admin/self-checkout.env`
+27. `sudo chmod 440 /etc/sudoers.d/nightly-maintenance`
+28. Create `/home/admin/.config/systemd/user/nightly-maintenance.timer` (see below)
+29. `sudo chmod 644 /home/admin/.config/systemd/user/nightly-maintenance.timer`
+30. Create `/home/admin/.config/systemd/user/nightly-maintenance.service` (see below)
+31. `sudo chmod 644 /home/admin/.config/systemd/user/nightly-maintenance.service`
+32. Create `/etc/logrotate.d/nightly-maintenance` (see below)
+33. Create `/home/admin/.config/systemd/user/quartier-depot-self-checkout-container.service` (see below)
+34. `sudo chmod 644 /etc/systemd/system/quartier-depot-self-checkout-container.service`
+35. `systemctl --user daemon-reload`
+36. `systemctl --user enable nightly-maintenance.timer`
+37. `systemctl --user start nightly-maintenance.timer`
+38. `systemctl --user enable quartier-depot-self-checkout-container`
+39. `systemctl --user start quartier-depot-self-checkout-container`
+40. Create `/home/admin/self-checkout.env` (see template)
+41. `sudo chmod 600 /home/admin/self-checkout.env`
 
 ### Kasse 
 
@@ -107,7 +108,7 @@
 6. Set keyboard-layout to English (for the scanner to read barcodes correctly)
 7. Start `/etc/opt/elo-mt-usb/cpl` and configure beep-on-touch sound (275, 20)
 
-### /usr/local/sbin/nightly-maintenance.sh
+### /home/admin/nightly-maintenance.sh
 
 ```bash
 #!/bin/bash
