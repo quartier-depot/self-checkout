@@ -3,7 +3,8 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import configurationReducer from './slices/configurationSlice';
 import cartReducer from './slices/cartSlice';
 import customerReducer from './slices/customerSlice';
-import displayReducer from './slices/displaySlice.ts';
+import displayReducer from './slices/displaySlice';
+import paymentReducer from './slices/paymentSlice';
 import sessionReducer from './slices/sessionSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
 import { aboApi, api } from './api/api';
@@ -22,6 +23,7 @@ const store = configureStore({
     customer: customerReducer,
     display: displayReducer,
     session: sessionReducer,
+    payment: paymentReducer,
     [api.reducerPath]: api.reducer,
     [aboApi.reducerPath]: aboApi.reducer,
   },
