@@ -39,6 +39,11 @@ interface Order {
   line_items: OrderLineItem[];
 }
 
+export interface WalletBalance {
+  balance: number;
+  currency: string;
+}
+
 
 export const api = createApi({
   reducerPath: 'woocommerceApi',
@@ -202,7 +207,7 @@ export const api = createApi({
     }),
 
     // Wallet
-    getWalletBalance: builder.query<{ balance: number, currency: string }, string>({
+    getWalletBalance: builder.query<WalletBalance, string>({
       query: (customerEmail) => ({
         url: 'wallet/balance',
         params: { email: customerEmail },
