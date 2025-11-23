@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import paymentReducer, { PaymentState, PaymentStates, selectPaymentMethod, startPayment } from './paymentSlice';
+import paymentReducer, { PaymentState, PaymentStates, selectPaymentMethod, startPayment, topUpWallet, payWithWallet, payWithPayrexx, showSuccess, showFailure, cancel } from './paymentSlice';
 import { Product } from '../api/products/Product.ts';
 import { Barcode } from '../api/products/Barcode.ts';
 import { WalletBalance } from '../api/api.ts';
@@ -16,7 +16,7 @@ describe('paymentSlice', () => {
     };
     expect(() => paymentReducer(initialState, startPayment(action))).toThrowError();
   });
-  
+
   describe.each([['NoPayment'], ['SelectMember']])('when in %s', (currentState: string) => {
     test('and wallet balance is insufficient, startPayment moves to SelectMember state', () => {
       const initialState: PaymentState = {
@@ -57,8 +57,75 @@ describe('paymentSlice', () => {
     const initialState: PaymentState = {
       state: 'SelectPaymentMethod',
     };
-    expect(paymentReducer(initialState, selectPaymentMethod())).toEqual({
+    expect(paymentReducer(initialState, topUpWallet())).toEqual({
       state: 'TopUpWallet',
+    });
+  });
+
+  test('when in SelectPaymentMethod, payWithWallet moves to ProcessingWalletPayment', () => {
+    const initialState: PaymentState = {
+      state: 'SelectPaymentMethod',
+    };
+    expect(paymentReducer(initialState, payWithWallet())).toEqual({
+      state: 'ProcessingWalletPayment',
+    });
+  });
+
+  test('when in SelectPaymentMethod, payWithPayrexx moves to ProcessingPayrexxPayment', () => {
+    const initialState: PaymentState = {
+      state: 'SelectPaymentMethod',
+    };
+    expect(paymentReducer(initialState, payWithPayrexx())).toEqual({
+      state: 'ProcessingPayrexxPayment',
+    });
+  });
+
+  describe.each([['ProcessingWalletPayment'], ['ProcessingPayrexxPayment']])('when in %s', (currentState: string) => {
+    test('showSuccess moves to Success', () => {
+      const initialState: PaymentState = {
+        state: currentState as unknown as PaymentStates,
+      };
+      expect(paymentReducer(initialState, showSuccess())).toEqual({
+        state: 'Success',
+      });
+    });
+
+    test('showFailure moves to Failure', () => {
+      const initialState: PaymentState = {
+        state: currentState as unknown as PaymentStates,
+      };
+      expect(paymentReducer(initialState, showFailure())).toEqual({
+        state: 'Failure',
+      });
+    });
+  });
+
+  test('when in CreatingOrder, showFailure moves to Failure', () => {
+    const initialState: PaymentState = {
+      state: 'CreatingOrder',
+    };
+    expect(paymentReducer(initialState, showFailure())).toEqual({
+      state: 'Failure',
+    });
+  });
+
+  test('when in TopUpWallet, showFailure moves to Failure', () => {
+    const initialState: PaymentState = {
+      state: 'TopUpWallet',
+    };
+    expect(paymentReducer(initialState, showFailure())).toEqual({
+      state: 'Failure',
+    });
+  });
+
+  describe.each([['SelectMember'], ['SelectPaymentMethod'], ['TopUpWallet']])('when in %s', (currentState: string) => {
+    test('cancel moves to NoPayment', () => {
+      const initialState: PaymentState = {
+        state: currentState as unknown as PaymentStates,
+      };
+      expect(paymentReducer(initialState, cancel())).toEqual({
+        state: 'NoPayment',
+      });
     });
   });
 
@@ -87,4 +154,4 @@ const product: Product = new Product({
   slug: 'slug',
   barcodes: [new Barcode('barcode')],
   category: 'category',
-}); 
+});
