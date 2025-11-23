@@ -1,6 +1,6 @@
 import { useGetProductsQuery, useGetCustomersQuery } from '../../store/api/api';
 import { Cart } from './cart/Cart';
-import { Payment } from './payment/Payment';
+import { Payment2 } from './payment/Payment2';
 import { Loading } from '../../components/modal/loading/Loading';
 import { Customer } from './customer/Customer';
 import { Barcode } from './barcode/Barcode';
@@ -26,7 +26,7 @@ export function Main() {
                         <Customer className={'bg-slate-50 p-3 ml-3 mb-3 mt-0 mr-0'} />
                         <div className={'bg-slate-50 ml-3 mb-0 mt-0 mr-0 p-2 grow flex flex-col overflow-hidden'}>
                             <Cart />
-                            <Payment />
+                            <Payment2 />
                         </div>
                     </div>
                 </div>
