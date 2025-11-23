@@ -24,6 +24,7 @@ const paymentSlice = createSlice({
   reducers: {
     startPayment: (state, action: PayloadAction<StartPaymentPayload>) => {
       assertStateIn(state, ['NoPayment', 'SelectMember']);
+      assertCartNotEmpty(action.payload.cart);
       if (action.payload.walletBalance.balance < action.payload.cart.price){
         state.state = 'SelectMember';
       } else {
@@ -62,6 +63,12 @@ const paymentSlice = createSlice({
 function assertStateIn(state: PaymentState, expectedStates: PaymentStates[]) {
   if (!expectedStates.includes(state.state)) {
     throw new Error(`Expected state to be in ${expectedStates} but was ${state.state}`);
+  }
+}
+
+function assertCartNotEmpty(cart: Cart) {
+  if (cart.price <= 0) {
+    throw new Error(`Expected cart to be not empty`);
   }
 }
 

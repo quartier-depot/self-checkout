@@ -17,6 +17,17 @@ describe('paymentSlice', () => {
     expect(() => paymentReducer(initialState, startPayment(action))).toThrowError();
   });
 
+  test('when in NoPayment and cart is empty, startPayment throws', () => {
+    const initialState: PaymentState = {
+      state: 'CreatingOrder',
+    };
+    const action = {
+      cart: { price: 0, quantity: 0, items: [] },
+      walletBalance: buildWalletBalance(),
+    };
+    expect(() => paymentReducer(initialState, startPayment(action))).toThrowError();
+  });
+
   describe.each([['NoPayment'], ['SelectMember']])('when in %s', (currentState: string) => {
     test('and wallet balance is insufficient, startPayment moves to SelectMember state', () => {
       const initialState: PaymentState = {
