@@ -10,7 +10,7 @@ import paymentReducer, {
   showSuccess,
   showFailure,
   cancel,
-  createOrder, PaymentRoles,
+  createOrder, PaymentRoles, setOrder, setPaymentRole, setTransactionId,
 } from './paymentSlice';
 import { Product } from '../api/products/Product.ts';
 import { Barcode } from '../api/products/Barcode.ts';
@@ -19,17 +19,10 @@ import { Cart } from '../api/cart/Cart.ts';
 import { Customer } from '../api/customers/Customer.ts';
 
 describe('paymentSlice', () => {
-  test.skip('when in CreatingOrder, startPayment throws', () => {
-    const initialState: PaymentState = {
-      state: 'CreatingOrder',
-    };
-    expect(() => paymentReducer(initialState, selectPaymentRole())).toThrowError();
-  });
-
   describe('when in NoPayment', () => {
     test('selectPaymentRole moves to SelectPaymentRole state', () => {
       const initialState: PaymentState = {
-        state: 'NoPayment'
+        state: 'NoPayment',
       };
 
       expect(paymentReducer(initialState, selectPaymentRole())).toEqual({
@@ -37,43 +30,63 @@ describe('paymentSlice', () => {
         paymentRole: undefined,
       });
     });
-    test('createOrder moves to CreatingOrder state with given role', () => {
+    test('createOrder moves to CreatingOrder', () => {
       const initialState: PaymentState = {
-        state: 'NoPayment'
+        state: 'NoPayment',
+      };
+      expect(paymentReducer(initialState, createOrder())).toEqual({
+        state: 'CreatingOrder',
+      });
+    });
+    test('setOrderId sets the orderId and orderTotal', () => {
+      const initialState: PaymentState = {
+        state: 'NoPayment',
       };
       const action = {
-        paymentRole: PaymentRoles.customer
+        orderId: 'orderId',
+        orderTotal: 42,
       };
-      expect(paymentReducer(initialState, createOrder(action))).toEqual({
-        state: 'CreatingOrder',
-        paymentRole: PaymentRoles.customer
+      expect(paymentReducer(initialState, setOrder(action))).toEqual({
+        orderId: 'orderId',
+        orderTotal: 42,
+        state: 'NoPayment',
+      });
+    });
+    test('setPaymentRole sets the payment role', () => {
+      const initialState: PaymentState = {
+        state: 'NoPayment',
+      };
+      const action = {
+        paymentRole: PaymentRoles.guest,
+      };
+      expect(paymentReducer(initialState, setPaymentRole(action))).toEqual({
+        paymentRole: PaymentRoles.guest,
+        state: 'NoPayment',
       });
     });
   });
 
   describe('when in SelectPaymentRole', () => {
-    test('and guest is chosen, createOrder moves to CreatingOrder state with guest role', () => {
+    test('selectPaymentRole moves to SelectPaymentRole state', () => {
       const initialState: PaymentState = {
-        state: 'SelectPaymentRole'
+        state: 'NoPayment',
       };
-      const action = {
-        paymentRole: PaymentRoles.guest
-      };
-      expect(paymentReducer(initialState, createOrder(action))).toEqual({
-        state: 'CreatingOrder',
-        paymentRole: PaymentRoles.guest
+
+      expect(paymentReducer(initialState, selectPaymentRole())).toEqual({
+        state: 'SelectPaymentRole',
+        paymentRole: undefined,
       });
     });
-    test('and customer is identified, createOrder moves to CreatingOrder state with customer role', () => {
+    test('setPaymentRole sets the payment role', () => {
       const initialState: PaymentState = {
-        state: 'SelectPaymentRole'
+        state: 'NoPayment',
       };
       const action = {
-        paymentRole: PaymentRoles.customer
+        paymentRole: PaymentRoles.guest,
       };
-      expect(paymentReducer(initialState, createOrder(action))).toEqual({
-        state: 'CreatingOrder',
-        paymentRole: PaymentRoles.customer
+      expect(paymentReducer(initialState, setPaymentRole(action))).toEqual({
+        paymentRole: PaymentRoles.guest,
+        state: 'NoPayment',
       });
     });
   });
@@ -82,10 +95,8 @@ describe('paymentSlice', () => {
     const initialState: PaymentState = {
       state: 'CreatingOrder',
     };
-    expect(paymentReducer(initialState, selectPaymentMethod({orderId: "orderId", orderTotal: 42}))).toEqual({
+    expect(paymentReducer(initialState, selectPaymentMethod())).toEqual({
       state: 'SelectPaymentMethod',
-      orderId: "orderId",
-      orderTotal: 42,
     });
   });
 
@@ -117,6 +128,15 @@ describe('paymentSlice', () => {
   });
 
   describe.each([['ProcessingWalletPayment'], ['ProcessingPayrexxPayment']])('when in %s', (currentState: string) => {
+    test('setTransactionId moves to Success', () => {
+      const initialState: PaymentState = {
+        state: currentState as unknown as PaymentStates,
+      };
+      expect(paymentReducer(initialState, setTransactionId({ transactionId: 42 }))).toEqual({
+        state: currentState as unknown as PaymentStates,
+        transactionId: 42,
+      });
+    });
     test('showSuccess moves to Success', () => {
       const initialState: PaymentState = {
         state: currentState as unknown as PaymentStates,
@@ -125,7 +145,6 @@ describe('paymentSlice', () => {
         state: 'Success',
       });
     });
-
     test('showFailure moves to Failure', () => {
       const initialState: PaymentState = {
         state: currentState as unknown as PaymentStates,
@@ -199,7 +218,6 @@ function buildCustomer(): Customer {
     },
   };
 }
-
 
 
 function buildWalletBalance(balance: number = 100): WalletBalance {

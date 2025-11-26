@@ -1,10 +1,19 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../../../components/button/Button';
-import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { cancel, createOrder, PaymentRoles } from '../../../../store/slices/paymentSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import {
+    cancel,
+    payWithWallet as payWithWalletAction,
+    PaymentRoles, showSuccess, setTransactionId
+} from '../../../../store/slices/paymentSlice.ts';
+import {
+    useGetWalletBalanceQuery,
+    usePayWithWalletMutation,
+    useUpdateOrderMutation
+} from '../../../../store/api/api.ts';
+import { formatPrice } from '../../../../format/formatPrice';
 import { useEffect } from 'react';
-import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
-import { formatPrice } from '../../../../format/formatPrice.ts';
+import { Spinner } from '../../../../components/spinner/Spinner';
 
 
 export function SelectPaymentMethodDialog() {
@@ -13,23 +22,65 @@ export function SelectPaymentMethodDialog() {
     const customer = useAppSelector(state => state.customer.customer);
     const cart = useAppSelector(state => state.cart.cart);
     const {
-        data: walletBalance
+        data: walletBalance,
+        refetch: refetchWalletBalance,
+        isFetching: isRefetchingBalance
     } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
-
+    const [payWithWallet] = usePayWithWalletMutation();
+    const [updateOrder] = useUpdateOrderMutation();
+    
     useEffect(() => {
-        if (customer) {
-            dispatch(createOrder({ paymentRole: PaymentRoles.customer }));
+        if (!walletBalance || walletBalance.balance >= cart.price) {
+            return;
         }
-    }, [customer, dispatch]);
 
-    function handlePayWithWallet() {
-        dispatch(createOrder({ paymentRole: PaymentRoles.guest }));
+        const intervalId = setInterval(() => {
+            refetchWalletBalance();
+        }, 5000);
+
+        return () => clearInterval(intervalId);
+    }, [walletBalance, cart.price, refetchWalletBalance]);
+    
+
+    async function handlePayWithWallet() {
+        if (!payment.orderId ) {
+            throw new Error('Missing order ID');
+        }
+        if (!customer ) {
+            throw new Error('Missing customer');
+        }
+        if (!payment.orderTotal) {
+            throw new Error('Missing orderTotal');
+        }
+
+        dispatch(payWithWalletAction());
+        
+        const { isError: isPayWithWalletError, transactionId: walletTransactionId } = await payWithWallet({
+            customer: customer,
+            amount: payment.orderTotal,
+            note: `For self-checkout-order payment #${payment.orderId}`
+        }).unwrap();
+
+        if (isPayWithWalletError) {
+            throw new Error('Error paying with wallet');
+        }
+        
+        dispatch(setTransactionId({transactionId: walletTransactionId}))
+        
+        await updateOrder({
+            id: payment.orderId,
+            payment_method: 'wallet',
+            transaction_id: walletTransactionId.toString(),
+            status: 'completed'
+        }).unwrap();
+
+        dispatch(showSuccess());
     }    
     
     function handlePayWithTwint() {
-        dispatch(createOrder({ paymentRole: PaymentRoles.guest }));
+        // dispatch(createOrder({ paymentRole: PaymentRoles.guest }));
     }
 
     function handleCancel() {
@@ -57,9 +108,12 @@ export function SelectPaymentMethodDialog() {
 
                     {payment.paymentRole === PaymentRoles.customer && customer && walletBalance && walletBalance.balance > cart.price && (<>
                                 <div className={'p-4 border-r border-gray-300'}>
-                                    <h2 className={'font-semibold'}>Mit Guthaben bezahlen</h2>
+                                    <h2 className={'font-semibold'}>
+                                        Mit Guthaben bezahlen
+                                    </h2>
                                     <p className={'py-8 list-decimal'}>
-                                        Dein Guthaben beträgt <b>{formatPrice(walletBalance)}</b>.
+                                        Dein Guthaben beträgt <b>{formatPrice(walletBalance.balance)}</b>.<br />
+                                        Ein Klick und alles ist bezahlt.
                                     </p>
                                     <div className={'flex justify-center justify-left items-center'}>
                                         <div className="w-72">
@@ -73,10 +127,13 @@ export function SelectPaymentMethodDialog() {
                     
                     {payment.paymentRole === PaymentRoles.customer && customer && walletBalance && walletBalance.balance <= cart.price && (<>
                                 <div className={'p-4 border-r border-gray-300'}>
-                                    <h2 className={'font-semibold'}>Mit Guthaben bezahlen</h2>
+                                    <h2 className={'font-semibold'}>
+                                        Mit Guthaben bezahlen
+                                        {isRefetchingBalance && <Spinner className={'ml-2 h-4 w-4 inline-block'}/>}
+                                    </h2>
                                     <p className={'py-8 list-decimal'}>
-                                        Dein Guthaben von <b>{formatPrice(walletBalance)}</b> reicht nicht für deinen Einkauf.
-                                        Öffne folgenden QR-Code mit dem Smartphone und lade das Virtuelle Konto auf.
+                                        Dein Guthaben ({formatPrice(walletBalance?.balance)}) reicht für deinen Einkauf nicht aus.
+                                        Öffne folgenden QR-Code mit dem Smartphone und lade dein Virtuelles Konto auf.
                                     </p>
                                     <div className={'flex justify-center justify-left items-center'}>
                                         <QRCodeSVG value="https://webshop.quartier-depot.ch/mein-konto/virtuelles-konto/add/" className='h-72 w-72' />

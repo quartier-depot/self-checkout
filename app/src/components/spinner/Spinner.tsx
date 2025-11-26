@@ -1,11 +1,10 @@
 type SpinnerProps = {
     className?: string;
-    text: string;
 }
 
-export function Spinner({ className, text }: SpinnerProps) {
+export function Spinner({ className }: SpinnerProps) {
     return (
-        <div role="status">
+        <span role="status">
             <svg
                 aria-hidden="true"
                 viewBox="0 0 100 101"
@@ -22,7 +21,6 @@ export function Spinner({ className, text }: SpinnerProps) {
                     fill="currentFill"
                 />
             </svg>
-            <span className="sr-only">{text}</span>
-        </div>
+        </span>
     );
 } 
