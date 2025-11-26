@@ -52,7 +52,7 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/payrexx/, ''),
           configure: (proxy, _options) => {
             proxy.on('proxyReq', (proxyReq, req, _res) => {
-              proxyReq.setHeader('X-API-KEY', env.VITE_PAYREXX_API_KEY);
+              proxyReq.setHeader('X-API-KEYd', env.VITE_PAYREXX_API_KEY);
               const separator = req?.url?.includes('?') ? '&' : '?';
               proxyReq.path += `${separator}instance=${env.VITE_PAYREXX_INSTANCE}`;
             });
