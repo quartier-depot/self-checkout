@@ -46,6 +46,18 @@ export default defineConfig(({ mode }) => {
           followRedirects: true,
           rewrite: (path) => path.replace(/^\/docs-google-com/, '')
         },
+        '/payrexx': {
+          target: 'https://api.payrexx.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/payrexx/, ''),
+          configure: (proxy, _options) => {
+            proxy.on('proxyReq', (proxyReq, req, _res) => {
+              proxyReq.setHeader('X-API-KEY', env.VITE_PAYREXX_API_KEY);
+              const separator = req?.url?.includes('?') ? '&' : '?';
+              proxyReq.path += `${separator}instance=${env.VITE_PAYREXX_INSTANCE}`;
+            });
+          },
+        }
       },
     },
   };

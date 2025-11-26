@@ -20,6 +20,8 @@ config.applicationInsights.availabilityInterval = process.env.APPLICATIONINSIGHT
 config.inactivityTimeout = process.env.INACTIVITY_TIMEOUT || process.env.VITE_INACTIVITY_TIMEOUT || 180000;
 config.inactivityConfirmationTimeout = process.env.INACTIVITY_CONFIRMATION_TIMEOUT || process.env.INACTIVITY_CONFIRMATION_TIMEOUT || 30000;
 config.aboDocumentId = process.env.ABO_DOCUMENT_ID || process.env.VITE_ABO_DOCUMENT_ID;
+config.payrexxInstance = process.env.PAYREXX_INSTANCE || process.env.VITE_PAYREXX_INSTANCE;
+config.payrexxApiKey = process.env.PAYREXX_API_KEY || process.env.VITE_PAYREXX_API_KEY;
 
 // express
 const express = require('express');
@@ -51,6 +53,22 @@ app.use('/docs-google-com', createProxyMiddleware({
   changeOrigin: true,
   followRedirects: true,
   rewrite: (path) => path.replace(/^\/docs-google-com/, ''),
+}));
+
+// Proxy Payrexx API calls
+app.use('/payrexx', createProxyMiddleware({
+  target: 'https://api.payrexx.com',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/payrexx': ''
+  },
+  on: {
+    proxyReq: (proxyReq, req) => {
+      proxyReq.setHeader('X-API-KEY', config.payrexxApiKey );
+      const separator = req.url.includes('?') ? '&' : '?';
+      proxyReq.path += `${separator}instance=${config.payrexxInstance}`;
+    }
+  }
 }));
 
 // Configuration
