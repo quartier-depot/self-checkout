@@ -12,7 +12,7 @@ import paymentReducer, {
   cancel,
   createOrder, PaymentRoles, setOrder, setPaymentRole, setTransactionId,
 } from './paymentSlice';
-import { Product } from '../api/products/Product.ts';
+import { createProduct, Product } from '../api/products/Product.ts';
 import { Barcode } from '../api/products/Barcode.ts';
 import { WalletBalance } from '../api/api.ts';
 import { Cart } from '../api/cart/Cart.ts';
@@ -235,7 +235,7 @@ function buildCart(): Cart {
   };
 }
 
-const product: Product = new Product({
+const product: Product = createProduct({
   price: 42.24,
   id: 42,
   articleId: 'product',

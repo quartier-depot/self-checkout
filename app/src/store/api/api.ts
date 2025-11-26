@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { Product } from './products/Product';
-import { Customer } from './customers/Customer';
+import { createProduct, Product } from './products/Product';
+import { createCustomer, Customer } from './customers/Customer';
 import { Cart } from './cart/Cart';
 import { RootState } from '../store';
-import { Abo } from './abo/Abo.ts';
+import { Abo, createAbo, addOrder } from './abo/Abo';
 import Papa from 'papaparse';
 
 export interface OrderUpdate {
@@ -138,7 +138,7 @@ export const api = createApi({
         return {
           data: allProducts
             .filter(product => product && product.catalog_visibility === 'visible')
-            .map(dto => Product.createFromWooCommerceProduct(dto))
+            .map(dto => createProduct(dto))
             .sort((a, b) => {
               if (!a.articleId && !b.articleId) {
                 return 0;
@@ -216,7 +216,7 @@ export const api = createApi({
         return {
           data: allCustomers.map((customer, index) => {
             try {
-              return new Customer(customer);
+              return createCustomer(customer);
             } catch (error) {
               console.error(`Error creating Customer instance at index ${index}:`, error, 'Customer data:', customer);
               throw new Error(`Failed to create Customer instance at index ${index}`);
@@ -350,7 +350,7 @@ export const aboApi = createApi({
 
         const descriptionToArticleId = new Map();
         if (basisPromise.data && matrixPromise.data) {
-          const abo = new Abo();
+          const abo = createAbo();
 
           const parsedBasis = Papa.parse<any>(basisPromise.data.toString());
           const descriptionColumn = 0;
@@ -374,7 +374,7 @@ export const aboApi = createApi({
                     if (articleId) {
                       const quantity = row[description];
                       if (quantity) {
-                        abo.addOrder(customerId, articleId, quantity);
+                        addOrder(abo,customerId, articleId, quantity);
                       }
                     }
                   });

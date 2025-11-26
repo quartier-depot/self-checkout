@@ -23,11 +23,11 @@ export const productValidationMiddleware: Middleware = () => (next) => (action: 
     const barcodeMap = new Map<string, Product[]>();
     products.forEach(product => {
       product.barcodes.forEach(barcode => {
-        if (barcode.code !== NO_BARCODE_VALUE) {
-          if (!barcodeMap.has(barcode.code)) {
-            barcodeMap.set(barcode.code, []);
+        if (barcode !== NO_BARCODE_VALUE) {
+          if (!barcodeMap.has(barcode)) {
+            barcodeMap.set(barcode, []);
           }
-          barcodeMap.get(barcode.code)!.push(product);
+          barcodeMap.get(barcode)!.push(product);
         }
       });
     });

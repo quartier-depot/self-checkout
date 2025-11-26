@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import cartReducer, { changeCartQuantity, setCartQuantity } from './cartSlice';
-import { Product } from '../api/products/Product.ts';
-import { Barcode } from '../api/products/Barcode.ts';
+import { createProduct, Product } from '../api/products/Product.ts';
+import { Barcode } from '../api/products/Barcode';
 
 describe('cartSlice', () => {
   test('when cart is empty, on change cart quantity by +1 sets product once', () => {
@@ -163,7 +163,7 @@ function expectEmptyCart(actual: { cart: { items: { product: Product; quantity: 
   expect(actual.cart.quantity).toBe(0);
 }
 
-const product: Product = new Product({
+const product: Product = createProduct({
   price: 42.24,
   id: 42,
   articleId: 'product',
