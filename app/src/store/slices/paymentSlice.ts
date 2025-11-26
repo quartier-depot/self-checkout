@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { startNewSession } from './sessionSlice.ts';
 
 export type PaymentStates =  'NoPayment' | 'SelectPaymentRole' | 'CreatingOrder' | 'SelectPaymentMethod' | 'TopUpWallet' | 'ProcessingWalletPayment' | 'ProcessingPayrexxPayment' | 'Success' | 'Failure' | 'CancellingPayment';
 
@@ -9,6 +10,7 @@ export interface PaymentState {
   paymentRole?: PaymentRoles;
   orderId?: string;
   orderTotal?: number;
+  transactionId?: number;
 }
 
 const initialState: PaymentState = {
@@ -17,13 +19,17 @@ const initialState: PaymentState = {
 };
 
 
-interface CreateOrderPayload {
+interface SetPaymentRolePayload {
   paymentRole: PaymentRoles
 }
 
-interface SelectPaymentMethod {
-  orderId: string;
-  orderTotal: number;
+interface SetOrderPayload {
+  orderId: string | undefined;
+  orderTotal: number | undefined;
+}
+
+interface SetTransactionIdPayload {
+  transactionId: number | undefined;
 }
 
 const paymentSlice = createSlice({
@@ -35,16 +41,25 @@ const paymentSlice = createSlice({
       state.state = 'SelectPaymentRole';
       state.paymentRole = undefined;
     },
-    createOrder: (state, action: PayloadAction<CreateOrderPayload>) => {
+    setPaymentRole: (state, action: PayloadAction<SetPaymentRolePayload>) => {
+      assertStateIn(state, ['NoPayment', 'SelectPaymentRole']);
+      state.paymentRole = action.payload.paymentRole;
+    } ,
+    createOrder: (state) => {
       assertStateIn(state, ['SelectPaymentRole']);
       state.state = 'CreatingOrder';
-      state.paymentRole = action.payload.paymentRole;
     },
-    selectPaymentMethod: (state, action: PayloadAction<SelectPaymentMethod>) => {
-      assertStateIn(state, ['CreatingOrder']);
-      state.state = 'SelectPaymentMethod';
+    setOrder: (state, action: PayloadAction<SetOrderPayload>) => {
+      assertStateIn(state, ['NoPayment']);
       state.orderId = action.payload.orderId;
       state.orderTotal = action.payload.orderTotal;
+    } ,
+    setTransactionId: (state, action: PayloadAction<SetTransactionIdPayload>) => {
+      state.transactionId = action.payload.transactionId;
+    } ,    
+    selectPaymentMethod: (state) => {
+      assertStateIn(state, ['CreatingOrder']);
+      state.state = 'SelectPaymentMethod';
     } ,
     topUpWallet: (state) => {
       assertStateIn(state, ['SelectPaymentMethod']);
@@ -71,7 +86,16 @@ const paymentSlice = createSlice({
     ,noPayment: (state) => {
       state.state = 'NoPayment';
     }
-  }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(startNewSession, (state) => {
+      state.state = 'NoPayment';
+      state.orderId = undefined;
+      state.transactionId = undefined;
+      state.orderTotal = undefined;
+      state.paymentRole = undefined;
+    });
+  },
 });
 
 function assertStateIn(state: PaymentState, expectedStates: PaymentStates[]) {
@@ -81,5 +105,5 @@ function assertStateIn(state: PaymentState, expectedStates: PaymentStates[]) {
 }
 
 
-export const { selectPaymentRole, createOrder, selectPaymentMethod, topUpWallet, payWithWallet, payWithPayrexx, showSuccess, showFailure, cancel, noPayment} = paymentSlice.actions;
+export const { selectPaymentRole, setOrder, setPaymentRole, setTransactionId, createOrder, selectPaymentMethod, topUpWallet, payWithWallet, payWithPayrexx, showSuccess, showFailure, cancel, noPayment} = paymentSlice.actions;
 export default paymentSlice.reducer; 

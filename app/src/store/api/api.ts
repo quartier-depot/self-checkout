@@ -13,6 +13,10 @@ export interface OrderUpdate {
   status: string;
 }
 
+export interface OrderDelete {
+  orderId: string
+}
+
 interface OrderUpdateResponse {
   orderId: string;
   orderTotal: number;
@@ -22,6 +26,10 @@ interface OrderUpdateResponse {
 interface CreateOrderResponse {
   orderId: string;
   orderTotal: number;
+  status: string;
+}
+
+interface DeleteOrderResponse {
   status: string;
 }
 
@@ -276,6 +284,19 @@ export const api = createApi({
       }
     }),
 
+    deleteOrder: builder.mutation<DeleteOrderResponse, OrderDelete>({
+      query: (update) => ({
+        url: `orders/${update.orderId}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Orders'],
+      transformResponse: (response: any): DeleteOrderResponse => {
+        return {
+          status: response.status,
+        };
+      }
+    }),
+
     getCustomerOrders: builder.query<Order[], number>({
       query: (customerId) => ({
         url: 'orders',
@@ -371,6 +392,7 @@ export const {
   usePayWithWalletMutation,
   useCreateOrderMutation,
   useUpdateOrderMutation,
+  useDeleteOrderMutation,
   useGetCustomerOrdersQuery,
 } = api;
 

@@ -1,55 +1,52 @@
 import { Dialog } from '../../../../components/modal/dialog/Dialog.tsx';
-import { PaymentStates } from '../../../../store/slices/paymentSlice.ts';
+import { PaymentState } from '../../../../store/slices/paymentSlice.ts';
 import { useAppSelector } from '../../../../store/store.ts';
 import { SelectMemberDialog } from '../selectMemberDialog/SelectMemberDialog.tsx';
 import { CancellingPaymentDialog } from '../canellingPaymentDialog/CancellingPaymentDialog.tsx';
 import { SelectPaymentMethodDialog } from '../selectPaymentMethodDialog/SelectPaymentMethodDialog.tsx';
-import { CreatingOrderDialog } from '../creatingOrderDialog/CreatingOrderDialog.tsx';
+import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
+import { ConfirmationDialog2 } from '../confirmationDialog/ConfirmationDialog2.tsx';
+import { formatPrice } from '../../../../format/formatPrice.ts';
+import { Cart } from '../../../../store/api/cart/Cart.ts';
 
 export function PaymentDialog2() {
-    const paymentState: PaymentStates = useAppSelector(state => state.payment.state);
+    const payment: PaymentState = useAppSelector(state => state.payment);
+    const cart: Cart = useAppSelector(state => state.cart.cart);
     
-    let title = 'Bezahlvorgang';
-    let component = <p>aoin</p>;
+    let title = 'Bezahlen '+formatPrice(cart.price);
+    let component = <p></p>;
     
-    switch (paymentState) {
+    switch (payment.state) {
         case 'SelectPaymentRole':
-            title = 'Bezahlen...';
             component = <SelectMemberDialog />
             break;
             
         case 'CreatingOrder':
-            title = 'Bezahlvorgang vorbereiten... (CreatingOrder)';
-            component = <CreatingOrderDialog />;
+            title = 'Bezahlen vorbereiten...';
+            component = <PaymentSpinnerDialog />;
             break;
             
         case 'SelectPaymentMethod':
-            title = 'Bezahlvorgang';
             component = <SelectPaymentMethodDialog />;
             break;
-            
-            
-        case 'TopUpWallet':
-            title = 'Kontostand aufladen';
-            break;
-            
-        case 'ProcessingWalletPayment': 
-            break;
-            
-        case 'ProcessingPayrexxPayment': 
+
+        case 'ProcessingPayrexxPayment':
+        case 'ProcessingWalletPayment':
+            component = <PaymentSpinnerDialog />;
             break;
             
         case 'CancellingPayment':
-            title = 'Bezahlvorgang abbrechen...';
+            title = 'Bezahlen abbrechen...';
             component = <CancellingPaymentDialog />;
             break;
             
         case 'Success': 
-            title = 'Einkauf erfolgreich';
+            title = 'Bezahlen erfolgreich';
+            component = <ConfirmationDialog2 />
             break;
             
         case 'Failure':
-            title = 'Bezahlvorgang fehlgeschlagen';
+            title = 'Bezahlen fehlgeschlagen';
             break;
     }
 

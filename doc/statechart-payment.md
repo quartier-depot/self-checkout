@@ -1,33 +1,27 @@
 ```mermaid
 
 stateDiagram
-    state CreatingOrder <<join>>
+    state CreatingOrder <<fork>>
     
-    [*] --> SelectPaymentRole: selectPaymentRole()
-    SelectPaymentRole --> CreatingOrder: createOrder()
     [*] --> CreatingOrder: createOrder()
-
-    SelectPaymentRole --> CancellingOrder: cancel()
-        
-    CreatingOrder --> SelectPaymentMethod: selectPaymentMethod()
-    CreatingOrder --> Failure: showFailure()
-
-    SelectPaymentMethod --> TopUpWallet: topUpWallet()
+    
+    CreatingOrder --> SelectPaymentRole
+    CreatingOrder --> SelectPaymentMethod
+    CreatingOrder --> Failure
+    
+    SelectPaymentRole --> [*]: cancel()
+    SelectPaymentRole --> SelectPaymentMethod
+    
+    SelectPaymentMethod --> SelectPaymentMethod: topUpWallet()
     SelectPaymentMethod --> ProcessingWalletPayment: payWithWallet()
     SelectPaymentMethod --> ProcessingPayrexxPayment: payWithPayrexx()
-    SelectPaymentMethod --> CancellingOrder: cancel()
+    SelectPaymentMethod --> [*]: cancel()
 
-    ProcessingWalletPayment --> Success: showSuccess()
-    ProcessingWalletPayment --> Failure: showFailure()
+    ProcessingWalletPayment --> Success
+    ProcessingWalletPayment --> Failure
 
-    ProcessingPayrexxPayment --> Success: showSuccess()
-    ProcessingPayrexxPayment --> Failure: showFailure()
-
-    TopUpWallet --> ProcessingWalletPayment
-    TopUpWallet --> Failure
-    TopUpWallet --> CancellingOrder: cancel()
-
-    CancellingOrder --> [*]
+    ProcessingPayrexxPayment --> Success
+    ProcessingPayrexxPayment --> Failure
     
     Failure --> [*]
     Success --> [*]
