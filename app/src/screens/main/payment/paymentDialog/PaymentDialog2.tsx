@@ -8,6 +8,7 @@ import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDial
 import { ConfirmationDialog2 } from '../confirmationDialog/ConfirmationDialog2.tsx';
 import { formatPrice } from '../../../../format/formatPrice.ts';
 import { Cart } from '../../../../store/api/cart/Cart.ts';
+import { ProcessingPayrexxPayment } from '../processingPayrexxPayment/ProcessingPayrexxPayment.tsx';
 
 export function PaymentDialog2() {
     const payment: PaymentState = useAppSelector(state => state.payment);
@@ -31,8 +32,7 @@ export function PaymentDialog2() {
             break;
 
         case 'ProcessingPayrexxPayment':
-        case 'ProcessingWalletPayment':
-            component = <PaymentSpinnerDialog />;
+            component = <ProcessingPayrexxPayment />;
             break;
             
         case 'CancellingPayment':

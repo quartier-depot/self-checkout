@@ -13,12 +13,9 @@ stateDiagram
     SelectPaymentRole --> SelectPaymentMethod
     
     SelectPaymentMethod --> SelectPaymentMethod: topUpWallet()
-    SelectPaymentMethod --> ProcessingWalletPayment: payWithWallet()
+    SelectPaymentMethod --> Success: payWithWallet()
     SelectPaymentMethod --> ProcessingPayrexxPayment: payWithPayrexx()
     SelectPaymentMethod --> [*]: cancel()
-
-    ProcessingWalletPayment --> Success
-    ProcessingWalletPayment --> Failure
 
     ProcessingPayrexxPayment --> Success
     ProcessingPayrexxPayment --> Failure

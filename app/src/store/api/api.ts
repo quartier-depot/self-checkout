@@ -6,6 +6,8 @@ import { RootState } from '../store';
 import { Abo, createAbo, addOrder } from './abo/Abo';
 import Papa from 'papaparse';
 
+export type OrderStatus = 'pending' | 'processing' | 'on-hold' | 'completed' | 'cancelled' | 'refunded' | 'failed' | 'trash';
+
 export interface OrderUpdate {
   id: string;
   payment_method: string;
@@ -17,20 +19,19 @@ export interface OrderDelete {
   orderId: string;
 }
 
-interface OrderUpdateResponse {
-  orderId: string;
-  orderTotal: number;
-  status: string;
-}
-
 interface CreateOrderResponse {
   orderId: string;
   orderTotal: number;
-  status: string;
+  orderStatus: OrderStatus;
 }
 
-interface DeleteOrderResponse {
-  status: string;
+interface OrderUpdateResponse extends CreateOrderResponse {
+}
+
+interface GetOrderResponse extends CreateOrderResponse {
+}
+
+interface DeleteOrderResponse extends CreateOrderResponse {
 }
 
 interface PayWithWalletResponse {
@@ -276,7 +277,7 @@ export const api = createApi({
         return {
           orderId: response.id,
           orderTotal: parseFloat(response.total),
-          status: response.status,
+          orderStatus: response.status,
         };
       },
     }),
@@ -292,7 +293,7 @@ export const api = createApi({
         return {
           orderId: response.id,
           orderTotal: parseFloat(response.total),
-          status: response.status,
+          orderStatus: response.status,
         };
       },
     }),
@@ -305,7 +306,22 @@ export const api = createApi({
       invalidatesTags: ['Orders'],
       transformResponse: (response: any): DeleteOrderResponse => {
         return {
-          status: response.status,
+          orderId: response.id,
+          orderTotal: parseFloat(response.total),
+          orderStatus: response.status,
+        };
+      },
+    }),
+
+    getOrder: builder.query<GetOrderResponse, string>({
+      query: (orderId) => ({
+        url: `orders/${orderId}`
+      }),
+      transformResponse: (response: any): GetOrderResponse => {
+        return {
+          orderId: response.id,
+          orderTotal: parseFloat(response.total),
+          orderStatus: response.status,
         };
       },
     }),
@@ -374,7 +390,7 @@ export const aboApi = createApi({
                     if (articleId) {
                       const quantity = row[description];
                       if (quantity) {
-                        addOrder(abo,customerId, articleId, quantity);
+                        addOrder(abo, customerId, articleId, quantity);
                       }
                     }
                   });
@@ -412,36 +428,36 @@ export const payrexxApi = createApi({
       },
     }),
     createGateway: builder.mutation<CreateGatewayResponse, CreateGateway>({
-          query: (request) => {
-            const params = new URLSearchParams();
-            params.append('amount', (request.orderTotal * 10).toString());
-            params.append('currency', "CHF");
-            params.append('referenceId', request.orderId);
-            params.append('fields[forename][value]', request.customer.first_name);
-            params.append('fields[surname][value]', request.customer.last_name);
-            params.append('fields[email][value]', request.customer.email);
-            params.append('language', "DE");
-            params.append('successRedirectUrl', 'http://localhost:3000');
-            params.append('failedRedirectUrl', 'http://localhost:3000');
-            
-            return {
-              url: `Gateway`,
-              method: 'POST',
-              body: params.toString(),
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-              },
-            };
+      query: (request) => {
+        const params = new URLSearchParams();
+        params.append('amount', (request.orderTotal * 100).toString());
+        params.append('currency', 'CHF');
+        params.append('referenceId', request.orderId);
+        params.append('fields[forename][value]', request.customer.first_name);
+        params.append('fields[surname][value]', request.customer.last_name);
+        params.append('fields[email][value]', request.customer.email);
+        params.append('language', 'DE');
+        params.append('successRedirectUrl', 'http://localhost:3000');
+        params.append('failedRedirectUrl', 'http://localhost:3000');
+
+        return {
+          url: `Gateway`,
+          method: 'POST',
+          body: params.toString(),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-          transformResponse: (response: any): CreateGatewayResponse => {
-            return {
-              status: response.status,
-              message: response.message,
-              orderId: response.data?.referenceId, 
-              link: response.data?.link
-            };
-          },
-        }),
+        };
+      },
+      transformResponse: (response: any): CreateGatewayResponse => {
+        return {
+          status: response.status,
+          message: response.message,
+          orderId: response.data[0]?.referenceId,
+          link: response.data[0]?.link,
+        };
+      },
+    }),
   }),
 });
 
@@ -453,6 +469,7 @@ export const {
   useCreateOrderMutation,
   useUpdateOrderMutation,
   useDeleteOrderMutation,
+  useGetOrderQuery,
   useGetCustomerOrdersQuery,
 } = api;
 

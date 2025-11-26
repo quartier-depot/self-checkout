@@ -35,7 +35,7 @@ const persistConfig = {
   key: 'root',
   version:1,
   storage,
-  // blacklist: [api.reducerPath, aboApi.reducerPath, payrexxApi.reducerPath]
+  blacklist: [api.reducerPath, aboApi.reducerPath, payrexxApi.reducerPath]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
