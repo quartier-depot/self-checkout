@@ -52,6 +52,19 @@ export interface WalletBalance {
   currency: string;
 }
 
+interface CreateGateway {
+  orderTotal: number,
+  customer: Customer,
+  orderId: string
+}
+
+interface CreateGatewayResponse {
+  status: string;
+  message?: string;
+  orderId?: string;
+  link?: string;
+}
+
 
 export const api = createApi({
   reducerPath: 'woocommerceApi',
@@ -398,6 +411,37 @@ export const payrexxApi = createApi({
         return response?.status === 'success';
       },
     }),
+    createGateway: builder.mutation<CreateGatewayResponse, CreateGateway>({
+          query: (request) => {
+            const params = new URLSearchParams();
+            params.append('amount', (request.orderTotal * 10).toString());
+            params.append('currency', "CHF");
+            params.append('referenceId', request.orderId);
+            params.append('fields[forename][value]', request.customer.first_name);
+            params.append('fields[surname][value]', request.customer.last_name);
+            params.append('fields[email][value]', request.customer.email);
+            params.append('language', "DE");
+            params.append('successRedirectUrl', 'http://localhost:3000');
+            params.append('failedRedirectUrl', 'http://localhost:3000');
+            
+            return {
+              url: `Gateway`,
+              method: 'POST',
+              body: params.toString(),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            };
+          },
+          transformResponse: (response: any): CreateGatewayResponse => {
+            return {
+              status: response.status,
+              message: response.message,
+              orderId: response.data?.referenceId, 
+              link: response.data?.link
+            };
+          },
+        }),
   }),
 });
 
@@ -418,4 +462,5 @@ export const {
 
 export const {
   useCheckSignatureQuery,
+  useCreateGatewayMutation,
 } = payrexxApi;

@@ -4,10 +4,10 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import {
     cancel,
     payWithWallet as payWithWalletAction,
-    PaymentRoles, showSuccess, setTransactionId
+    PaymentRoles, showSuccess, setTransactionId, payWithPayrexx
 } from '../../../../store/slices/paymentSlice.ts';
 import {
-    useCheckSignatureQuery,
+    useCheckSignatureQuery, useCreateGatewayMutation,
     useGetWalletBalanceQuery,
     usePayWithWalletMutation,
     useUpdateOrderMutation
@@ -31,7 +31,8 @@ export function SelectPaymentMethodDialog() {
     });
     const [payWithWallet] = usePayWithWalletMutation();
     const [updateOrder] = useUpdateOrderMutation();
-    const { data: payrexxAvailable } = useCheckSignatureQuery();
+    const [createGateway] = useCreateGatewayMutation();
+    const { data: payrexxAvailable, refetch: refetchPayrexx } = useCheckSignatureQuery();
 
     useEffect(() => {
         if (!walletBalance || walletBalance.balance >= cart.price) {
@@ -47,21 +48,12 @@ export function SelectPaymentMethodDialog() {
 
 
     async function handlePayWithWallet() {
-        if (!payment.orderId) {
-            throw new Error('Missing order ID');
-        }
-        if (!customer) {
-            throw new Error('Missing customer');
-        }
-        if (!payment.orderTotal) {
-            throw new Error('Missing orderTotal');
-        }
-
+        assertOrder();
         dispatch(payWithWalletAction());
 
         const { isError: isPayWithWalletError, transactionId: walletTransactionId } = await payWithWallet({
-            customer: customer,
-            amount: payment.orderTotal,
+            customer: customer!,
+            amount: payment.orderTotal!,
             note: `For self-checkout-order payment #${payment.orderId}`
         }).unwrap();
 
@@ -72,7 +64,7 @@ export function SelectPaymentMethodDialog() {
         dispatch(setTransactionId({ transactionId: walletTransactionId }));
 
         await updateOrder({
-            id: payment.orderId,
+            id: payment.orderId!,
             payment_method: 'wallet',
             transaction_id: walletTransactionId.toString(),
             status: 'completed'
@@ -81,8 +73,37 @@ export function SelectPaymentMethodDialog() {
         dispatch(showSuccess());
     }
 
-    function handlePayWithTwint() {
-        // dispatch(createOrder({ paymentRole: PaymentRoles.guest }));
+    async function handlePayWithPayrexx() {
+        assertOrder();
+        dispatch(payWithPayrexx());
+        
+        const gateway = await createGateway({
+            customer: customer!,
+            orderId: payment.orderId!,
+            orderTotal: payment.orderTotal!
+        }).unwrap();
+
+        if (gateway.status !== 'success') {
+            throw new Error('Error creating gateway. Status is ' + gateway.status);
+        }
+        
+        if (!gateway.link) {
+            throw new Error('Missing gateway link in successful response.');
+        }
+        
+        window.location.replace(gateway?.link);
+    }
+
+    function assertOrder() {
+        if (!payment.orderId) {
+            throw new Error('Missing order ID');
+        }
+        if (!customer) {
+            throw new Error('Missing customer');
+        }
+        if (!payment.orderTotal) {
+            throw new Error('Missing orderTotal');
+        }
     }
 
     function handleCancel() {
@@ -156,7 +177,7 @@ export function SelectPaymentMethodDialog() {
                             </p>
                             <div className={'flex justify-center justify-left items-center'}>
                                 <div className="w-72">
-                                    <Button type="primary" onClick={handlePayWithTwint}>Mit Twint bezahlen</Button>
+                                    <Button type="primary" onClick={handlePayWithPayrexx}>Mit Twint bezahlen</Button>
                                 </div>
                             </div>
                         </div>
@@ -164,15 +185,14 @@ export function SelectPaymentMethodDialog() {
 
                     {!payrexxAvailable && (<>
                         <div className={'p-4'}>
-                            <h2 className={'font-semibold'}>Mit Twint bezahlen</h2>
+                            <h2 className={'font-semibold'}>Mit Twint bezahlen {payrexxAvailable?.toString()}</h2>
                             <p className={'py-8 list-decimal'}>
                                 Bezahlung mit Twint steht momentan nicht zur Verfügung.<br />
                                 Bitte verwende dein Guthaben oder probiere es später noch einmal.
                             </p>
                             <div className={'flex justify-center justify-left items-center'}>
                                 <div className="w-72">
-                                    <Button type="primary" onClick={() => {
-                                    }} disabled={true}>Mit Twint bezahlen</Button>
+                                    <Button type="primary" onClick={refetchPayrexx} disabled={true}>Mit Twint bezahlen</Button>
                                 </div>
                             </div>
                         </div>
