@@ -1,4 +1,4 @@
-import { useGetWalletBalanceQuery } from '../../../store/api/api';
+import {  useGetWalletBalanceQuery } from '../../../store/api/api';
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';
@@ -25,7 +25,8 @@ export function Customer({ className }: CustomerProps) {
         if (loggedIn) {
             setShowResetDialog(!showMemberDialog);
         } else {
-            setShowMemberDialog(!showMemberDialog);
+            // setShowMemberDialog(!showMemberDialog);
+            
         }
     }
 

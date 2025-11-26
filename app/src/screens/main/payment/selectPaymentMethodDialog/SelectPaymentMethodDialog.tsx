@@ -7,6 +7,7 @@ import {
     PaymentRoles, showSuccess, setTransactionId
 } from '../../../../store/slices/paymentSlice.ts';
 import {
+    useCheckSignatureQuery,
     useGetWalletBalanceQuery,
     usePayWithWalletMutation,
     useUpdateOrderMutation
@@ -30,7 +31,8 @@ export function SelectPaymentMethodDialog() {
     });
     const [payWithWallet] = usePayWithWalletMutation();
     const [updateOrder] = useUpdateOrderMutation();
-    
+    const { data: payrexxAvailable } = useCheckSignatureQuery();
+
     useEffect(() => {
         if (!walletBalance || walletBalance.balance >= cart.price) {
             return;
@@ -42,13 +44,13 @@ export function SelectPaymentMethodDialog() {
 
         return () => clearInterval(intervalId);
     }, [walletBalance, cart.price, refetchWalletBalance]);
-    
+
 
     async function handlePayWithWallet() {
-        if (!payment.orderId ) {
+        if (!payment.orderId) {
             throw new Error('Missing order ID');
         }
-        if (!customer ) {
+        if (!customer) {
             throw new Error('Missing customer');
         }
         if (!payment.orderTotal) {
@@ -56,7 +58,7 @@ export function SelectPaymentMethodDialog() {
         }
 
         dispatch(payWithWalletAction());
-        
+
         const { isError: isPayWithWalletError, transactionId: walletTransactionId } = await payWithWallet({
             customer: customer,
             amount: payment.orderTotal,
@@ -66,9 +68,9 @@ export function SelectPaymentMethodDialog() {
         if (isPayWithWalletError) {
             throw new Error('Error paying with wallet');
         }
-        
-        dispatch(setTransactionId({transactionId: walletTransactionId}))
-        
+
+        dispatch(setTransactionId({ transactionId: walletTransactionId }));
+
         await updateOrder({
             id: payment.orderId,
             payment_method: 'wallet',
@@ -77,8 +79,8 @@ export function SelectPaymentMethodDialog() {
         }).unwrap();
 
         dispatch(showSuccess());
-    }    
-    
+    }
+
     function handlePayWithTwint() {
         // dispatch(createOrder({ paymentRole: PaymentRoles.guest }));
     }
@@ -124,44 +126,62 @@ export function SelectPaymentMethodDialog() {
                                 </div>
                             </>
                     )}
-                    
+
                     {payment.paymentRole === PaymentRoles.customer && customer && walletBalance && walletBalance.balance <= cart.price && (<>
                                 <div className={'p-4 border-r border-gray-300'}>
                                     <h2 className={'font-semibold'}>
                                         Mit Guthaben bezahlen
-                                        {isRefetchingBalance && <Spinner className={'ml-2 h-4 w-4 inline-block'}/>}
+                                        {isRefetchingBalance && <Spinner className={'ml-2 h-4 w-4 inline-block'} />}
                                     </h2>
                                     <p className={'py-8 list-decimal'}>
-                                        Dein Guthaben ({formatPrice(walletBalance?.balance)}) reicht für deinen Einkauf nicht aus.
+                                        Dein Guthaben ({formatPrice(walletBalance?.balance)}) reicht für deinen Einkauf
+                                        nicht aus.
                                         Öffne folgenden QR-Code mit dem Smartphone und lade dein Virtuelles Konto auf.
                                     </p>
                                     <div className={'flex justify-center justify-left items-center'}>
-                                        <QRCodeSVG value="https://webshop.quartier-depot.ch/mein-konto/virtuelles-konto/add/" className='h-72 w-72' />
+                                        <QRCodeSVG
+                                                value="https://webshop.quartier-depot.ch/mein-konto/virtuelles-konto/add/"
+                                                className="h-72 w-72" />
                                     </div>
                                 </div>
                             </>
                     )}
-                    
-                    <div className={'p-4'}>
-                        <h2 className={'font-semibold'}>Mit Twint bezahlen</h2>
-                        <p className={'py-8 list-decimal'}>
-                            Bezahle mit Twint.<br />
-                            Du benötigst dazu dein Smartphone.
-                        </p>
-                        <div className={'flex justify-center justify-left items-center'}>
-                            <div className="w-72">
-                                <Button type="primary" onClick={handlePayWithTwint}>Mit Twint bezahlen</Button>
+
+                    {payrexxAvailable && (<>
+                        <div className={'p-4'}>
+                            <h2 className={'font-semibold'}>Mit Twint bezahlen</h2>
+                            <p className={'py-8 list-decimal'}>
+                                Bezahle mit Twint.<br />
+                                Du benötigst dazu dein Smartphone.
+                            </p>
+                            <div className={'flex justify-center justify-left items-center'}>
+                                <div className="w-72">
+                                    <Button type="primary" onClick={handlePayWithTwint}>Mit Twint bezahlen</Button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    ;
+                    </>)}
+
+                    {!payrexxAvailable && (<>
+                        <div className={'p-4'}>
+                            <h2 className={'font-semibold'}>Mit Twint bezahlen</h2>
+                            <p className={'py-8 list-decimal'}>
+                                Bezahlung mit Twint steht momentan nicht zur Verfügung.<br />
+                                Bitte verwende dein Guthaben oder probiere es später noch einmal.
+                            </p>
+                            <div className={'flex justify-center justify-left items-center'}>
+                                <div className="w-72">
+                                    <Button type="primary" onClick={() => {
+                                    }} disabled={true}>Mit Twint bezahlen</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </>)}
+                    
                 </div>
                 <div className={'p-4'}>
                     <Button type="secondary" onClick={handleCancel}>Abbrechen</Button>
                 </div>
-                ;
             </>
-
-    )
-            ;
+    );
 } 

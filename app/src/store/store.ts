@@ -7,7 +7,7 @@ import displayReducer from './slices/displaySlice';
 import paymentReducer from './slices/paymentSlice';
 import sessionReducer from './slices/sessionSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
-import { aboApi, api } from './api/api';
+import { aboApi, api, payrexxApi } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
 import { cartLoggingMiddleware } from './middleware/cartLoggingMiddleware';
 import { bulkItemMiddleware } from './middleware/bulkItemMiddleware.ts';
@@ -26,6 +26,7 @@ const store = configureStore({
     payment: paymentReducer,
     [api.reducerPath]: api.reducer,
     [aboApi.reducerPath]: aboApi.reducer,
+    [payrexxApi.reducerPath]: payrexxApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -33,6 +34,7 @@ const store = configureStore({
     })
       .concat(api.middleware)
       .concat(aboApi.middleware)
+      .concat(payrexxApi.middleware)
       .concat(soundMiddleware)
       .concat(cartLoggingMiddleware)
       .concat(productValidationMiddleware)

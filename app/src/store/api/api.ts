@@ -14,7 +14,7 @@ export interface OrderUpdate {
 }
 
 export interface OrderDelete {
-  orderId: string
+  orderId: string;
 }
 
 interface OrderUpdateResponse {
@@ -233,7 +233,7 @@ export const api = createApi({
         return {
           response: response.response,
           isError: response.response !== 'success',
-          transactionId: response.id
+          transactionId: response.id,
         };
       },
       invalidatesTags: ['Wallet'],
@@ -263,7 +263,7 @@ export const api = createApi({
         return {
           orderId: response.id,
           orderTotal: parseFloat(response.total),
-          status: response.status
+          status: response.status,
         };
       },
     }),
@@ -281,20 +281,20 @@ export const api = createApi({
           orderTotal: parseFloat(response.total),
           status: response.status,
         };
-      }
+      },
     }),
 
     deleteOrder: builder.mutation<DeleteOrderResponse, OrderDelete>({
       query: (update) => ({
         url: `orders/${update.orderId}`,
-        method: 'DELETE'
+        method: 'DELETE',
       }),
       invalidatesTags: ['Orders'],
       transformResponse: (response: any): DeleteOrderResponse => {
         return {
           status: response.status,
         };
-      }
+      },
     }),
 
     getCustomerOrders: builder.query<Order[], number>({
@@ -334,21 +334,21 @@ export const aboApi = createApi({
 
         const matrixPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv`);
         const basisPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv&gid=0`);
-        
+
         const descriptionToArticleId = new Map();
         if (basisPromise.data && matrixPromise.data) {
           const abo = new Abo();
-          
+
           const parsedBasis = Papa.parse<any>(basisPromise.data.toString());
           const descriptionColumn = 0;
           const articleIdColumn = 53;
           parsedBasis.data
             .filter(row => row[descriptionColumn] && row[articleIdColumn])
-            .forEach(row => descriptionToArticleId.set(row[descriptionColumn], row[articleIdColumn])
-          );
-          
+            .forEach(row => descriptionToArticleId.set(row[descriptionColumn], row[articleIdColumn]),
+            );
+
           const parsedMatrix = Papa.parse<any>(matrixPromise.data.toString(), { skipFirstNLines: 1, header: true });
-          abo.description = parsedMatrix.data[0]["Name"] || parsedMatrix.data[0][""];
+          abo.description = parsedMatrix.data[0]['Name'] || parsedMatrix.data[0][''];
           parsedMatrix.data.forEach((row: any, index: number) => {
             if (index > 0) {
               const total = row['Alles'];
@@ -368,19 +368,35 @@ export const aboApi = createApi({
                 }
               }
             }
-          });          
+          });
           return { data: abo };
         } else {
-          console.log("no abo data");
+          console.log('no abo data');
           return {
             error: {
               status: 'FETCH_ERROR',
-              error: 'Failed to fetch Abo data from Google Sheets'
-            }
+              error: 'Failed to fetch Abo data from Google Sheets',
+            },
           };
         }
       },
       providesTags: ['Abo'],
+    }),
+  }),
+});
+
+export const payrexxApi = createApi({
+  reducerPath: 'payrexxApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/payrexx/v1.13/',
+  }),
+  tagTypes: ['Payrexx'],
+  endpoints: (builder) => ({
+    checkSignature: builder.query<boolean, void>({
+      query: () => `SignatureCheck`,
+      transformResponse: (response: any): boolean => {
+        return response?.status === 'success';
+      },
     }),
   }),
 });
@@ -399,3 +415,7 @@ export const {
 export const {
   useGetAboQuery,
 } = aboApi;
+
+export const {
+  useCheckSignatureQuery,
+} = payrexxApi;
