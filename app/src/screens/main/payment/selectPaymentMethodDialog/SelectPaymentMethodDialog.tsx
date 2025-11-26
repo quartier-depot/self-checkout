@@ -88,7 +88,7 @@ export function SelectPaymentMethodDialog() {
         }
         
         if (!gateway.link) {
-            throw new Error('Missing gateway link in successful response.');
+            throw new Error('Missing gateway link in successful response: '+gateway.link);
         }
         
         window.location.replace(gateway?.link);
