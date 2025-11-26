@@ -1,4 +1,4 @@
- import './App.css';
+import './App.css';
 import { AppInsightsContext, AppInsightsErrorBoundary, ReactPlugin } from '@microsoft/applicationinsights-react-js';
 import { Main } from './screens/main/Main';
 import { useEffect, useRef, useState } from 'react';
@@ -7,13 +7,14 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
 import { Statistics } from './screens/statistics/Statistics';
 import { Provider } from 'react-redux';
-import store from './store/store';
-import { useAppDispatch, useAppSelector } from './store/store';
+import store, { useAppDispatch, useAppSelector } from './store/store';
 import { setConfiguration } from './store/slices/configurationSlice';
 import { initializeCartLoggingMiddleware } from './store/middleware/cartLoggingMiddleware';
 import { Error as ErrorScreen } from './screens/main/error/Error';
- import { initializeProductValidationMiddleware } from './store/middleware/productValidationMiddleware.ts';
- import { initializeCustomerValidationMiddleware } from './store/middleware/customerValidationMiddleware.ts';
+import { initializeProductValidationMiddleware } from './store/middleware/productValidationMiddleware.ts';
+import { initializeCustomerValidationMiddleware } from './store/middleware/customerValidationMiddleware.ts';
+import { PersistGate } from 'redux-persist/integration/react'
+import { Loading } from './components/modal/loading/Loading.tsx';
 
 function AppContent() {
     const dispatch = useAppDispatch();
@@ -34,14 +35,14 @@ function AppContent() {
                     },
                     applicationInsights: {
                         connectionString: import.meta.env.VITE_APPLICATIONINSIGHTS_CONNECTION_STRING,
-                        availabilityInterval: import.meta.env.VITE_APPlICATIONINSIGHTS_AVAILABILITY_INTERVAL,
+                        availabilityInterval: import.meta.env.VITE_APPlICATIONINSIGHTS_AVAILABILITY_INTERVAL
                     },
                     abo: {
-                        documentId: import.meta.env.VITE_ABO_DOCUMENT_ID,
+                        documentId: import.meta.env.VITE_ABO_DOCUMENT_ID
                     },
                     inactivityTimeout: import.meta.env.VITE_INACTIVITY_TIMEOUT,
-                    inactivityConfirmationTimeout: import.meta.env.VITE_INACTIVITY_CONFIRMATION_TIMEOUT,
-                }
+                    inactivityConfirmationTimeout: import.meta.env.VITE_INACTIVITY_CONFIRMATION_TIMEOUT
+                };
             } else {
                 // using express webserver
                 const url = '/api/configuration';
@@ -68,7 +69,7 @@ function AppContent() {
 
             initializeCartLoggingMiddleware(appInsights);
             initializeProductValidationMiddleware(appInsights);
-            initializeCustomerValidationMiddleware(appInsights)
+            initializeCustomerValidationMiddleware(appInsights);
             setReactPlugin(reactPlugin);
         }
 
@@ -82,8 +83,8 @@ function AppContent() {
             } catch (error) {
                 console.error('Failed to send availability ping:', error);
             }
-        }
-        
+        };
+
         if (configuration?.applicationInsights?.availabilityInterval) {
             if (availabilityIntervalRef.current) {
                 clearInterval(availabilityIntervalRef.current);
@@ -106,25 +107,27 @@ function AppContent() {
     }
 
     return (
-        <AppInsightsContext.Provider value={reactPlugin}>
-            <AppInsightsErrorBoundary onError={() => <ErrorScreen />} appInsights={reactPlugin}>
-                <Routes>
-                    <Route path="/" element={<Main />} />
-                    <Route path="styleguide" element={<Styleguide />} />
-                    <Route path="statistics" element={<Statistics />} />
-                    <Route path="error" element={<ErrorScreen />} />
-                </Routes>
-            </AppInsightsErrorBoundary>
-        </AppInsightsContext.Provider>
+            <AppInsightsContext.Provider value={reactPlugin}>
+                <AppInsightsErrorBoundary onError={() => <ErrorScreen />} appInsights={reactPlugin}>
+                    <Routes>
+                        <Route path="/" element={<Main />} />
+                        <Route path="styleguide" element={<Styleguide />} />
+                        <Route path="statistics" element={<Statistics />} />
+                        <Route path="error" element={<ErrorScreen />} />
+                    </Routes>
+                </AppInsightsErrorBoundary>
+            </AppInsightsContext.Provider>
     );
 }
 
 export default function App() {
     return (
-        <Provider store={store}>
-            <BrowserRouter>
-                <AppContent />
-            </BrowserRouter>
-        </Provider>
+            <Provider store={store.store}>
+                <PersistGate loading={<Loading text='' />} persistor={store.persistor}>
+                    <BrowserRouter>
+                        <AppContent />
+                    </BrowserRouter>
+                </PersistGate>
+            </Provider>
     );
 }

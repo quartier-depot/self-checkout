@@ -1,7 +1,7 @@
 import { Dialog } from '../Dialog';
 import { Button } from '../../../button/Button';
 import { startNewSession } from '../../../../store/slices/sessionSlice';
-import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import store, { useAppDispatch, useAppSelector } from '../../../../store/store';
 
 type ResetDialogProps = {
     onClose: () => void;
@@ -17,7 +17,8 @@ export function ResetDialog({ onClose }: ResetDialogProps) {
         onClose();
     }
 
-    function restartApplication() {
+    async function restartApplication() {
+        await store.persistor.purge();
         window.location.reload();
     }
     

@@ -29,29 +29,29 @@ describe('Barcode', () => {
 
   describe('matches', () => {
     it('should match equal strings', () => {
-      const actual = new Barcode('0123456789').matches('0123456789');
+      const actual = Barcode.matches('0123456789', '0123456789');
       expect(actual).toBe(true);
     });
 
     it('should match non-equal strings', () => {
-      const actual = new Barcode('0123456789').matches('9876543210');
+      const actual = Barcode.matches('0123456789', '9876543210');
       expect(actual).toBe(false);
     });
 
     it('should match weight encoded barcodes', () => {
-      const actual = new Barcode('2981930wwwwwc').matches('2981930004000');
+      const actual = Barcode.matches('2981930wwwwwc', '2981930004000');
       expect(actual).toBe(true);
     });
   });
 
   describe('getQuantity', () => {
     it('should return 1 for non weight encoded barcodes', () => {
-      const actual = new Barcode('0123456789').getQuantity('0123456789');
+      const actual = Barcode.getQuantity('0123456789', '0123456789');
       expect(actual).toBe(1);
     });
 
     it('should return encoded weight', () => {
-      const actual = new Barcode('2981930wwwwwc').getQuantity('2981930004000');
+      const actual =  Barcode.getQuantity('2981930wwwwwc', '2981930004000');
       expect(actual).toBe(400);
     });
   });

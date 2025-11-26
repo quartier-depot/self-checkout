@@ -1,13 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
-import { productValidationMiddleware, initializeProductValidationMiddleware } from './productValidationMiddleware';
+import { initializeProductValidationMiddleware, productValidationMiddleware } from './productValidationMiddleware';
 import { Product } from '../api/products/Product.ts';
-import { Barcode } from '../api/products/Barcode.ts';
+import { Unit } from '../api/products/Unit.ts';
 
 describe('productValidationMiddleware', () => {
-  let mockAppInsights: { 
-    trackEvent: ReturnType<typeof vi.fn>, 
-    trackException: ReturnType<typeof vi.fn> };
+  let mockAppInsights: {
+    trackEvent: ReturnType<typeof vi.fn>,
+    trackException: ReturnType<typeof vi.fn>
+  };
   let mockNext: ReturnType<typeof vi.fn>;
   let mockStore: MiddlewareAPI;
   let middleware: Middleware;
@@ -16,7 +17,7 @@ describe('productValidationMiddleware', () => {
     // Create mock for AppInsights
     mockAppInsights = {
       trackEvent: vi.fn(),
-      trackException: vi.fn()
+      trackException: vi.fn(),
     };
 
     // Initialize the middleware with mock AppInsights
@@ -49,8 +50,8 @@ describe('productValidationMiddleware', () => {
 
   it('should detect and track duplicate barcodes', () => {
     const products: Product[] = [
-        buildProduct(1, ['123', '456']),
-        buildProduct(2, ['123', '789']), // Duplicate barcode '123'
+      buildProduct(1, ['123', '456']),
+      buildProduct(2, ['123', '789']), // Duplicate barcode '123'
     ];
 
     const action = buildAction(products);
@@ -78,7 +79,7 @@ describe('productValidationMiddleware', () => {
     ];
 
     const action = buildAction(products);
-    
+
     middleware(mockStore)(mockNext)(action);
 
     expect(mockNext).toHaveBeenCalledWith(action);
@@ -94,7 +95,7 @@ describe('productValidationMiddleware', () => {
     const action = buildAction(products);
 
     middleware(mockStore)(mockNext)(action);
-    
+
     expect(mockNext).toHaveBeenCalledWith(action);
     expect(mockAppInsights.trackException).toHaveBeenCalled();
   });
@@ -109,7 +110,7 @@ describe('productValidationMiddleware', () => {
     ];
 
     const action = buildAction(products);
-    
+
     middleware(mockStore)(mockNext)(action);
 
     // Should not throw and should pass through the action
@@ -135,13 +136,18 @@ describe('productValidationMiddleware', () => {
 });
 
 function buildProduct(id: number, barcodes: string[] = []): Product {
-  return new Product({
+  return {
     id: id,
     articleId: `A${id}`,
-    barcodes: barcodes.map(code => new Barcode(code)),
+    barcodes: barcodes,
     name: `Product ${id}`,
-    slug: `product-${id}`
-  });
+    slug: `product-${id}`,
+    category: '',
+    hasBarcodes: false,
+    isBulkItem: false,
+    price: 0,
+    unit: Unit.NoUnit,
+  };
 }
 
 function buildAction(products: Product[]) {

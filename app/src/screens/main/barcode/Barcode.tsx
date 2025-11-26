@@ -28,7 +28,7 @@ export function Barcode() {
     const [barcode, setBarcode] = useState('');
     const session = useAppSelector(state => state.session.session);
     const productByBarcode = useMemo<Map<string, Product>>(createProductByBarcodeMap, [products]);
-    const productsWithWeightEncoding = useMemo<Map<ProductBarcode, Product>>(createProductsWithWeightEncodingMap, [products]);
+    const productsWithWeightEncoding = useMemo<Map<string, Product>>(createProductsWithWeightEncodingMap, [products]);
     
     useEffect(() => {
         if (session.initialState) {
@@ -60,18 +60,18 @@ export function Barcode() {
         if (products && products.length) {
             products.forEach((product) => {
                 product.barcodes.forEach((barcode) => {
-                    map.set(barcode.code, product);
+                    map.set(barcode, product);
                 })
             })
         }
         return map;
     }
     
-    function createProductsWithWeightEncodingMap(): Map<ProductBarcode, Product> {
+    function createProductsWithWeightEncodingMap(): Map<string, Product> {
         const map = new Map();
         if (products && products.length) {
             products.forEach((product) => {
-                product.barcodes.filter(barcode => barcode.isWeightEncoded)
+                product.barcodes.filter(barcode => ProductBarcode.isWeightEncoded(barcode))
                         .forEach((barcode) => {
                     map.set(barcode, product);
                 })
@@ -129,9 +129,9 @@ export function Barcode() {
 
         if (!product) {
             for (const [barcode, weightEncodedProduct] of productsWithWeightEncoding) {
-                if (barcode.matches(e.value)) {
+                if (ProductBarcode.matches(barcode, e.value)) {
                     product = weightEncodedProduct;
-                    quantity = barcode.getQuantity(e.value);
+                    quantity = ProductBarcode.getQuantity(barcode, e.value);
                     break;
                 }
             }

@@ -5,10 +5,11 @@ import displayReducer, {
   selectFilteredDisplayItems,
   setCategory,
   setSearchTerm,
-  setViewMode
+  setViewMode,
 } from './displaySlice.ts';
 import { startNewSession } from './sessionSlice';
 import { Product } from '../api/products/Product.ts';
+import { Unit } from '../api/products/Unit.ts';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';
 
@@ -79,15 +80,20 @@ describe('displaySlice', () => {
   });
 
   describe('selectFilteredDisplayItems', () => {
-    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => (new Product({
-      id: i + 1,
-      name: `Product ${i + 1}`,
-      articleId: `A${i + 1}`,
-      category: String.fromCharCode(65 + i), // A, B, C, etc.
-      barcodes: [],
-      slug: `product-${i + 1}`,
-      price: (i + 1) * 10,
-    })));
+    const mockProducts: Product[] = Array.from({ length: 15 }, (_, i) => {
+      return {
+        id: i + 1,
+        name: `Product ${i + 1}`,
+        articleId: `A${i + 1}`,
+        category: String.fromCharCode(65 + i), // A, B, C, etc.
+        barcodes: [],
+        slug: `product-${i + 1}`,
+        price: (i + 1) * 10,
+        isBulkItem: false,
+        unit: Unit.NoUnit,
+        hasBarcodes: false,
+      }
+    });
 
     it('should return undefined when viewMode is empty', () => {
       const state = {
