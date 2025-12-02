@@ -16,7 +16,6 @@ import { formatPrice } from '../../../../format/formatPrice';
 import { useEffect } from 'react';
 import { Spinner } from '../../../../components/spinner/Spinner';
 
-
 export function SelectPaymentMethodDialog() {
     const dispatch = useAppDispatch();
     const payment = useAppSelector(state => state.payment);
@@ -97,9 +96,6 @@ export function SelectPaymentMethodDialog() {
     function assertOrder() {
         if (!payment.orderId) {
             throw new Error('Missing order ID');
-        }
-        if (!customer) {
-            throw new Error('Missing customer');
         }
         if (!payment.orderTotal) {
             throw new Error('Missing orderTotal');

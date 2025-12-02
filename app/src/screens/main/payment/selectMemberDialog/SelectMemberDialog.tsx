@@ -1,9 +1,8 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { cancel, createOrder } from '../../../../store/slices/paymentSlice.ts';
+import { cancel, selectPaymentMethod } from '../../../../store/slices/paymentSlice.ts';
 import { useEffect } from 'react';
-
 
 export function SelectMemberDialog() {
     const dispatch = useAppDispatch();
@@ -11,12 +10,12 @@ export function SelectMemberDialog() {
 
     useEffect(() => {
         if (customer) {
-            dispatch(createOrder());
+            dispatch(selectPaymentMethod());
         }
     }, [customer, dispatch]);
 
     function handleAsGuest() {
-        dispatch(createOrder());
+        dispatch(selectPaymentMethod());
     }
 
     function handleCancel() {

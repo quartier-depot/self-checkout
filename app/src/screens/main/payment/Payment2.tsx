@@ -22,7 +22,7 @@ export function Payment2() {
     const [createOrder ] = useCreateOrderMutation();
     
     async function handleStartPayment() {
-        if (cart.price <= 0 || !customer) {
+        if (cart.price <= 0) {
             return;
         }
 
