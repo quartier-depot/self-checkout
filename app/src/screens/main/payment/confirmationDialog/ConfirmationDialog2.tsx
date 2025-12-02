@@ -5,7 +5,8 @@ import { PaymentState } from '../../../../store/slices/paymentSlice.ts';
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
 import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
 import { startNewSession } from '../../../../store/slices/sessionSlice.ts';
-
+import { useEffect } from 'react';
+const confirm = new Audio('/assets/sounds/confirm.mp3');
 
 export function ConfirmationDialog2() {
     const dispatch = useAppDispatch();
@@ -16,11 +17,16 @@ export function ConfirmationDialog2() {
     } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
-    
+
+    useEffect(() => {
+        // noinspection JSIgnoredPromiseFromCall
+        confirm.play();
+    });
+
     function handleClose() {
         dispatch(startNewSession());
     }
-    
+
     return (
             <>
                 <div className={'flex-1 grid grid-cols-2 grid-rows-1 gap-4 overflow-y-auto'} onClick={handleClose}>
@@ -29,8 +35,10 @@ export function ConfirmationDialog2() {
                         <div className={'grid grid-cols-2 gap-2 my-4'}>
                             <div>Betrag:</div>
                             <span className="text-right">{formatPrice(payment.orderTotal)}</span>
-                            <div>Neuer Kontostand:</div>
-                            <span className="text-right">{formatPrice(walletBalance?.balance)}</span>
+                            {walletBalance?.balance && (<>
+                                        <div>Neuer Kontostand:</div>
+                                        <span className="text-right">{formatPrice(walletBalance?.balance)}</span>
+                            </>)}
                             <div>Bestellnummer:</div>
                             <span className="text-right">{payment.orderId}</span>
                             <div>Transaktionsnummer:</div>
