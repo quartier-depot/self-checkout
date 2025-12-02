@@ -29,6 +29,7 @@ interface OrderUpdateResponse extends CreateOrderResponse {
 }
 
 interface GetOrderResponse extends CreateOrderResponse {
+  transactionId: string;
 }
 
 interface DeleteOrderResponse extends CreateOrderResponse {
@@ -322,6 +323,7 @@ export const api = createApi({
           orderId: response.id,
           orderTotal: parseFloat(response.total),
           orderStatus: response.status,
+          transactionId: response.transaction_id
         };
       },
     }),

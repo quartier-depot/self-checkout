@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
 import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
 import { useGetOrderQuery } from '../../../../store/api/api.ts';
 import { useEffect } from 'react';
-import { showSuccess } from '../../../../store/slices/paymentSlice.ts';
+import { setTransactionId, showSuccess } from '../../../../store/slices/paymentSlice.ts';
 
 export function ProcessingPayrexxPayment() {
     const dispatch = useAppDispatch();
@@ -11,6 +11,7 @@ export function ProcessingPayrexxPayment() {
 
     useEffect(() => {
         if (order.isSuccess && order.data.orderStatus === 'completed') {
+            dispatch(setTransactionId({ transactionId: order.data.transactionId }));
             dispatch(showSuccess());
             return;
         }
