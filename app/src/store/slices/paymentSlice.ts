@@ -10,7 +10,7 @@ export interface PaymentState {
   paymentRole?: PaymentRoles;
   orderId?: string;
   orderTotal?: number;
-  transactionId?: number;
+  transactionId?: number | string;
 }
 
 const initialState: PaymentState = {
@@ -29,7 +29,7 @@ interface SetOrderPayload {
 }
 
 interface SetTransactionIdPayload {
-  transactionId: number | undefined;
+  transactionId: string | number | undefined;
 }
 
 const paymentSlice = createSlice({
