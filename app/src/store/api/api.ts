@@ -56,7 +56,7 @@ export interface WalletBalance {
 
 interface CreateGateway {
   orderTotal: number,
-  customer: Customer,
+  customer?: Customer,
   orderId: string
 }
 
@@ -255,16 +255,16 @@ export const api = createApi({
     }),
 
     // Orders
-    createOrder: builder.mutation<CreateOrderResponse, { customer: Customer; cart: Cart }>({
+    createOrder: builder.mutation<CreateOrderResponse, { customer?: Customer; cart: Cart }>({
       query: ({ customer, cart }) => ({
         url: 'orders',
         method: 'POST',
         body: {
           // Note: use processing instead of pending to trigger the same email notification as in the webshop
           status: 'processing',
-          customer_id: customer.id,
-          billing: customer.billing,
-          shipping: customer.shipping,
+          customer_id: customer?.id,
+          billing: customer?.billing,
+          shipping: customer?.shipping,
           payment_method: 'wallet',
           payment_method_title: 'Virtuelles Konto',
           created_via: 'pos-rest-api',
@@ -441,9 +441,9 @@ export const payrexxApi = createApi({
         params.append('amount', (request.orderTotal * 100).toString());
         params.append('currency', 'CHF');
         params.append('referenceId', request.orderId);
-        params.append('fields[forename][value]', request.customer.first_name);
-        params.append('fields[surname][value]', request.customer.last_name);
-        params.append('fields[email][value]', request.customer.email);
+        params.append('fields[forename][value]', request.customer?.first_name || "");
+        params.append('fields[surname][value]', request.customer?.last_name || "Gast");
+        params.append('fields[email][value]', request.customer?.email || "");
         params.append('language', 'DE');
         params.append('successRedirectUrl', config.payrexx.redirectUrl);
         params.append('failedRedirectUrl', config.payrexx.redirectUrl);
