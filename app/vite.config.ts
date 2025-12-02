@@ -112,7 +112,7 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/docs-google-com/, '')
         },
         '/payrexx': {
-          target: 'https://api.payrexx.com',
+          target: env.VITE_PAYREXX_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/payrexx/, ''),
           configure: (proxy, _options) => {

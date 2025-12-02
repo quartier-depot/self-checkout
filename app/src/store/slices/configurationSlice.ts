@@ -12,6 +12,9 @@ interface Configuration {
   };
   abo: {
     documentId: string,
+  },
+  payrexx: {
+    redirectUrl: string,
   }
   inactivityTimeout: number;
   inactivityConfirmationTimeout: number;
@@ -25,6 +28,9 @@ const initialState: ConfigurationState = {
   configuration: {
     abo: {
       documentId: ''
+    },
+    payrexx: {
+      redirectUrl: 'http://localhost:3000',
     },
     inactivityConfirmationTimeout: 30 * 1000,
     inactivityTimeout: 60 * 1000,

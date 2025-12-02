@@ -40,6 +40,9 @@ function AppContent() {
                     abo: {
                         documentId: import.meta.env.VITE_ABO_DOCUMENT_ID
                     },
+                    payrexx: {
+                        redirectUrl: import.meta.env.VITE_PAYREXX_REDIRECT_URL,
+                    },
                     inactivityTimeout: import.meta.env.VITE_INACTIVITY_TIMEOUT,
                     inactivityConfirmationTimeout: import.meta.env.VITE_INACTIVITY_CONFIRMATION_TIMEOUT
                 };
