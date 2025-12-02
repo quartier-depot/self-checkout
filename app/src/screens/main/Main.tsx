@@ -1,4 +1,4 @@
-import { useGetProductsQuery, useGetCustomersQuery } from '../../store/api/api';
+import { useGetProductsQuery, useGetCustomersQuery, useCheckSignatureQuery } from '../../store/api/api';
 import { Cart } from './cart/Cart';
 import { Payment2 } from './payment/Payment2';
 import { Loading } from '../../components/modal/loading/Loading';
@@ -11,8 +11,9 @@ import { Display } from './display/Display.tsx';
 export function Main() {
     const { isSuccess: isProductsSuccess, isFetching: isProductsFetching } = useGetProductsQuery();
     const { isSuccess: isCustomersSuccess, isFetching: isCustomersFetching } = useGetCustomersQuery();
+    const { isSuccess: isCheckSignatureSuccess, isFetching: isCheckSignatureFetching } = useCheckSignatureQuery();
 
-    const loadingData = isProductsFetching || isCustomersFetching || !isProductsSuccess || !isCustomersSuccess;
+    const loadingData = isProductsFetching || isCustomersFetching || isCheckSignatureFetching || !isProductsSuccess || !isCustomersSuccess || !isCheckSignatureSuccess;
 
     const { showInactivityDialog, resetTimer } = useInactivityTimer();
 
