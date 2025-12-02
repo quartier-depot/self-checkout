@@ -428,7 +428,13 @@ export const payrexxApi = createApi({
       },
     }),
     createGateway: builder.mutation<CreateGatewayResponse, CreateGateway>({
-      query: (request) => {
+      async queryFn(request, { getState }, _extraOptions, fetchWithBaseQuery) {
+        const state = getState() as RootState;
+        const config = state.configuration.configuration;
+        if (!(config?.payrexx.redirectUrl)) {
+          throw new Error("Payrexx redirect url not configured.")
+        }
+
         const params = new URLSearchParams();
         params.append('amount', (request.orderTotal * 100).toString());
         params.append('currency', 'CHF');
@@ -437,24 +443,30 @@ export const payrexxApi = createApi({
         params.append('fields[surname][value]', request.customer.last_name);
         params.append('fields[email][value]', request.customer.email);
         params.append('language', 'DE');
-        params.append('successRedirectUrl', 'http://localhost:3000');
-        params.append('failedRedirectUrl', 'http://localhost:3000');
+        params.append('successRedirectUrl', config.payrexx.redirectUrl);
+        params.append('failedRedirectUrl', config.payrexx.redirectUrl);
 
-        return {
-          url: `Gateway`,
+        const result = await fetchWithBaseQuery({
+          url: 'Gateway',
           method: 'POST',
           body: params.toString(),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
-        };
-      },
-      transformResponse: (response: any): CreateGatewayResponse => {
+        });
+
+        if (result.error) {
+          return { error: result.error };
+        }
+
+        const response = result.data as any;
         return {
-          status: response.status,
-          message: response.message,
-          orderId: response.data[0]?.referenceId,
-          link: response.data[0]?.link,
+          data: {
+            status: response.status,
+            message: response.message,
+            orderId: response.data[0]?.referenceId,
+            link: response.data[0]?.link,
+          },
         };
       },
     }),

@@ -20,6 +20,8 @@ config.applicationInsights.availabilityInterval = process.env.APPLICATIONINSIGHT
 config.inactivityTimeout = process.env.INACTIVITY_TIMEOUT || process.env.VITE_INACTIVITY_TIMEOUT || 180000;
 config.inactivityConfirmationTimeout = process.env.INACTIVITY_CONFIRMATION_TIMEOUT || process.env.INACTIVITY_CONFIRMATION_TIMEOUT || 30000;
 config.aboDocumentId = process.env.ABO_DOCUMENT_ID || process.env.VITE_ABO_DOCUMENT_ID;
+config.payrexxUrl = process.env.PAYREXX_URL || process.env.VITE_PAYREXX_URL;
+config.payrexxRedirectUrl = process.env.PAYREXX_REDIRECT_URL || process.env.VITE_PAYREXX_REDIRECT_URL;
 config.payrexxInstance = process.env.PAYREXX_INSTANCE || process.env.VITE_PAYREXX_INSTANCE;
 config.payrexxApiKey = process.env.PAYREXX_API_KEY || process.env.VITE_PAYREXX_API_KEY;
 
@@ -57,7 +59,7 @@ app.use('/docs-google-com', createProxyMiddleware({
 
 // Proxy Payrexx API calls
 app.use('/payrexx', createProxyMiddleware({
-  target: 'https://api.payrexx.com',
+  target: config.payrexxUrl,
   changeOrigin: true,
   pathRewrite: {
     '^/payrexx': ''
@@ -79,6 +81,9 @@ app.get('/api/configuration', (_, res) => {
     inactivityConfirmationTimeout: config.inactivityConfirmationTimeout,
     abo: {
       documentId: config.aboDocumentId,
+    },
+    payrexx: {
+      redirectUrl: config.payrexxRedirectUrl,
     }
   })
 });
