@@ -12,7 +12,7 @@ export function Loading({ text }: LoadingProps) {
                 <div className="text-center mb-12 text-lg text-slate-400">
                     {text}
                 </div>
-                    <Spinner className="w-48 h-48" text={text} />
+                    <Spinner className="w-48 h-48" />
             </div>
         </Modal>
     );
