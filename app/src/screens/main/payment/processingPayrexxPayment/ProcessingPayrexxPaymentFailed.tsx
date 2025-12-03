@@ -1,7 +1,7 @@
 import { Button } from '../../../../components/button/Button.tsx';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../../../../store/store.ts';
-import { cancel } from '../../../../store/slices/paymentSlice.ts';
+import { cancel } from '../../../../store/slices/sessionSlice.ts';
 import cartXIcon from '../../../../assets/cart-x.svg';
 import { useSearchParams } from 'react-router';
 

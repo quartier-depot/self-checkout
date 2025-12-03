@@ -5,7 +5,7 @@ import {
     cancel,
     payWithWallet as payWithWalletAction,
     PaymentRoles, showSuccess, setTransactionId, payWithPayrexx, showFailure
-} from '../../../../store/slices/paymentSlice.ts';
+} from '../../../../store/slices/sessionSlice.ts';
 import {
     useCheckSignatureQuery, useCreateGatewayMutation,
     useGetWalletBalanceQuery,
@@ -20,7 +20,7 @@ import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 export function SelectPaymentMethodDialog() {
     const dispatch = useAppDispatch();
     const applicationInsights = useAppInsightsContext();
-    const payment = useAppSelector(state => state.payment);
+    const payment = useAppSelector(state => state.session.session.payment);
     const customer = useAppSelector(state => state.customer.customer);
     const cart = useAppSelector(state => state.cart.cart);
     const {
@@ -137,6 +137,8 @@ export function SelectPaymentMethodDialog() {
                             <h2 className={'font-semibold'}>Mit Guthaben bezahlen</h2>
                             <p className={'py-8 list-decimal'}>
                                 Als Gast steht dir diese Zahlmöglichkeit nicht zur Verfügung.
+                                <br />
+                                <br />
                             </p>
                             <div className={'flex justify-center justify-left items-center'}>
                                 <div className="w-72">
