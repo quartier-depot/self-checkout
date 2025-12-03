@@ -10,6 +10,7 @@ import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { Button } from '../../../components/button/Button';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { Barcode as ProductBarcode } from '../../../store/api/products/Barcode.ts';
+import { PaymentStates } from '../../../store/slices/sessionSlice.ts';
 
 interface BarcodeEvent {
     value: string;
@@ -27,6 +28,7 @@ export function Barcode() {
     const [showNoCustomerFound, setShowNoCustomerFound] = useState(false);
     const [barcode, setBarcode] = useState('');
     const session = useAppSelector(state => state.session.session);
+    const paymentState = useAppSelector(state => state.session.session.payment.state);
     const productByBarcode = useMemo<Map<string, Product>>(createProductByBarcodeMap, [products]);
     const productsWithWeightEncoding = useMemo<Map<string, Product>>(createProductsWithWeightEncodingMap, [products]);
     
@@ -47,13 +49,13 @@ export function Barcode() {
                 console.log(`Disconnected from barcode scanner(s) in keyboard emulation mode.`);
             });
             keyboardScanner.connect();
-            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products));
+            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products, paymentState));
 
             return () => {
                 keyboardScanner.disconnect();
             };
         }
-    }, [isProductsSuccess, isCustomersSuccess]);
+    }, [isProductsSuccess, isCustomersSuccess, paymentState]);
     
     function createProductByBarcodeMap(): Map<string, Product> {
         const map = new Map();
@@ -80,14 +82,14 @@ export function Barcode() {
         return map;
     }
     
-    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[]) {
+    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[], paymentState: PaymentStates) {
         if (!(e.value)) {
             return;
         }
         if (isMemberBarcode(e.value)) {
             memberInput(e.value, customers);
         } else {
-            barcodeInput(e, products);
+            barcodeInput(e, products, paymentState);
         }
     }
 
@@ -114,7 +116,13 @@ export function Barcode() {
         }
     }
 
-    function barcodeInput(e: BarcodeEvent, products: Product[]) {
+    function barcodeInput(e: BarcodeEvent, products: Product[], paymentState: PaymentStates) {
+        if (paymentState !== 'NoPayment') {
+            console.log('Product barcode not processed payment is in state ' + session.payment.state);
+            alertSound.play();
+            return;
+        }
+        
         if (!products || products.length === 0) {
             console.log('Product barcode not processed because productsQuery.data is ' + products);
             return;
