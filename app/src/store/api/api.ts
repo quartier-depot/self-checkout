@@ -446,7 +446,7 @@ export const payrexxApi = createApi({
         params.append('fields[email][value]', request.customer?.email || "");
         params.append('language', 'DE');
         params.append('successRedirectUrl', config.payrexx.redirectUrl);
-        params.append('failedRedirectUrl', config.payrexx.redirectUrl);
+        params.append('failedRedirectUrl', `${config.payrexx.redirectUrl}?payrexx=failure`);
 
         const result = await fetchWithBaseQuery({
           url: 'Gateway',
