@@ -2,7 +2,7 @@ import { Dialog } from '../../../../components/modal/dialog/Dialog.tsx';
 import cartXIcon from '../../../../assets/cart-x.svg';
 import { Button } from '../../../../components/button/Button.tsx';
 import { useEffect } from 'react';
-
+const alert = new Audio('/assets/sounds/alert.mp3');
 
 type ErrorDialogProps = {
     onClose: () => void;
@@ -17,6 +17,11 @@ export function ErrorDialog({ onClose, log }: ErrorDialogProps) {
 
         return () => clearTimeout(timer);
     }, [onClose]);
+    
+    useEffect(() => {
+        // noinspection JSIgnoredPromiseFromCall
+        alert.play();
+    })
     
     return  <Dialog onBackdropClick={onClose} title="Es ist ein Fehler aufgetreten">
         <p className={'text-center mt-4'}>

@@ -3,11 +3,13 @@ import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDial
 import { noPayment, PaymentState, setOrder } from '../../../../store/slices/paymentSlice';
 import { useEffect } from 'react';
 import { useDeleteOrderMutation } from '../../../../store/api/api';
+import cartXIcon from '../../../../assets/cart-x.svg';
 
 export function CancellingPaymentDialog() {
     const dispatch = useAppDispatch();
     const payment: PaymentState = useAppSelector(state => state.payment);
     const [deleteOrder] = useDeleteOrderMutation();
+    cartXIcon
     
     useEffect(() => {
         async function deleteOrderFunction() {
