@@ -68,6 +68,7 @@ export function SelectPaymentMethodDialog() {
             await updateOrder({
                 id: payment.orderId!,
                 payment_method: 'wallet',
+                payment_method_title: 'Virtuelles Konto',
                 transaction_id: walletTransactionId.toString(),
                 status: 'completed'
             }).unwrap();

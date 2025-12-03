@@ -11,8 +11,9 @@ export type OrderStatus = 'pending' | 'processing' | 'on-hold' | 'completed' | '
 export interface OrderUpdate {
   id: string;
   payment_method: string;
+  payment_method_title: string,
   transaction_id: string;
-  status: string;
+  status: string,
 }
 
 export interface OrderDelete {
@@ -265,8 +266,6 @@ export const api = createApi({
           customer_id: customer?.id,
           billing: customer?.billing,
           shipping: customer?.shipping,
-          payment_method: 'wallet',
-          payment_method_title: 'Virtuelles Konto',
           created_via: 'pos-rest-api',
           line_items: cart.items.map(item => ({
             product_id: item.product.id,
