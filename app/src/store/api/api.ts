@@ -441,7 +441,7 @@ export const payrexxApi = createApi({
         var amount = (request.orderTotal * 100).toString();
         params.append('amount', amount);
         params.append('currency', 'CHF');
-        params.append('referenceId', request.orderId);
+        params.append('referenceId', `self-checkout-${request.orderId}`);
         params.append('fields[forename][value]', request.customer?.first_name || "");
         params.append('fields[surname][value]', request.customer?.last_name || "Gast");
         params.append('fields[email][value]', request.customer?.email || "");
