@@ -444,6 +444,7 @@ export const payrexxApi = createApi({
         params.append('fields[forename][value]', request.customer?.first_name || "");
         params.append('fields[surname][value]', request.customer?.last_name || "Gast");
         params.append('fields[email][value]', request.customer?.email || "");
+        params.append('pm[0]', 'twint');
         params.append('language', 'DE');
         params.append('successRedirectUrl', config.payrexx.redirectUrl);
         params.append('failedRedirectUrl', `${config.payrexx.redirectUrl}?payrexx=failure`);
