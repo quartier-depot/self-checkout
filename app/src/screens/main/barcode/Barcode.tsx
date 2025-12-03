@@ -10,7 +10,6 @@ import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { Button } from '../../../components/button/Button';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { Barcode as ProductBarcode } from '../../../store/api/products/Barcode.ts';
-import { PaymentStates } from '../../../store/slices/sessionSlice.ts';
 
 interface BarcodeEvent {
     value: string;
@@ -28,7 +27,7 @@ export function Barcode() {
     const [showNoCustomerFound, setShowNoCustomerFound] = useState(false);
     const [barcode, setBarcode] = useState('');
     const session = useAppSelector(state => state.session.session);
-    const paymentState = useAppSelector(state => state.session.session.payment.state);
+    const isProductScanningAllowed = useAppSelector(state => state.session.session.payment.state) === 'NoPayment';
     const productByBarcode = useMemo<Map<string, Product>>(createProductByBarcodeMap, [products]);
     const productsWithWeightEncoding = useMemo<Map<string, Product>>(createProductsWithWeightEncodingMap, [products]);
     
@@ -48,14 +47,16 @@ export function Barcode() {
             keyboardScanner.addEventListener('disconnected', () => {
                 console.log(`Disconnected from barcode scanner(s) in keyboard emulation mode.`);
             });
+            // noinspection JSIgnoredPromiseFromCall
             keyboardScanner.connect();
-            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products, paymentState));
+            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products, isProductScanningAllowed));
 
             return () => {
+                // noinspection JSIgnoredPromiseFromCall
                 keyboardScanner.disconnect();
             };
         }
-    }, [isProductsSuccess, isCustomersSuccess, paymentState]);
+    }, [isProductsSuccess, isCustomersSuccess, isProductScanningAllowed]);
     
     function createProductByBarcodeMap(): Map<string, Product> {
         const map = new Map();
@@ -82,14 +83,14 @@ export function Barcode() {
         return map;
     }
     
-    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[], paymentState: PaymentStates) {
+    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[], isProductScanningAllowed: boolean) {
         if (!(e.value)) {
             return;
         }
         if (isMemberBarcode(e.value)) {
             memberInput(e.value, customers);
         } else {
-            barcodeInput(e, products, paymentState);
+            barcodeInput(e, products, isProductScanningAllowed);
         }
     }
 
@@ -109,6 +110,7 @@ export function Barcode() {
             dispatch(setCustomer(customer));
         } else {
             console.log('No customer found with memberId ' + barcode);
+            // noinspection JSIgnoredPromiseFromCall
             alertSound.play();
             appInsights.getAppInsights().trackEvent({ name: 'customer-not-found' }, { barcode: barcode });
             setBarcode(barcode);
@@ -116,9 +118,10 @@ export function Barcode() {
         }
     }
 
-    function barcodeInput(e: BarcodeEvent, products: Product[], paymentState: PaymentStates) {
-        if (paymentState !== 'NoPayment') {
-            console.log('Product barcode not processed payment is in state ' + session.payment.state);
+    function barcodeInput(e: BarcodeEvent, products: Product[], isProductScanningAllowed: boolean) {
+        if (!isProductScanningAllowed) {
+            console.log('Product barcode not processed product scanning is not allowed at the moment');
+            // noinspection JSIgnoredPromiseFromCall
             alertSound.play();
             return;
         }
@@ -149,6 +152,7 @@ export function Barcode() {
             dispatch(changeCartQuantity({ product, quantity: quantity, source: 'scan' }));
         } else {
             console.log('No product found with barcode ' + e.value);
+            // noinspection JSIgnoredPromiseFromCall
             alertSound.play();
             appInsights.getAppInsights().trackEvent({ name: 'product-not-found' }, { barcode: e.value });
             setBarcode(e.value);
