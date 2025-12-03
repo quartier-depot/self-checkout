@@ -32,7 +32,7 @@ export function Main() {
                     </div>
                 </div>
 
-                {loadingData && <Loading text={'Initialisierung'} />}
+                {loadingData && <Loading text={''} />}
                 {showInactivityDialog && <InactivityDialog onConfirm={resetTimer} />}
                 <Barcode />
             </>

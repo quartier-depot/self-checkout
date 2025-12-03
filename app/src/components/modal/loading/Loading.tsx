@@ -1,5 +1,5 @@
-import { Modal } from '../Modal';
 import { Spinner } from '../../spinner/Spinner';
+import { Dialog } from '../dialog/Dialog.tsx';
 
 type LoadingProps = {
     text: string;
@@ -7,13 +7,10 @@ type LoadingProps = {
 
 export function Loading({ text }: LoadingProps) {
     return (
-        <Modal>
-            <div className="flex flex-col">
-                <div className="text-center mb-12 text-lg text-slate-400">
-                    {text}
-                </div>
-                    <Spinner className="w-48 h-48" />
+        <Dialog title={text} onBackdropClick={() => {}} className={'size-7/8'}>
+            <div className={'w-full h-full flex justify-center items-center'}>
+                <Spinner className={'w-72 h-72'} />
             </div>
-        </Modal>
+        </Dialog>
     );
 }
