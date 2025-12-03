@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
 import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
-import {  useGetOrderQuery } from '../../../../store/api/api.ts';
+import { useGetOrderQuery } from '../../../../store/api/api.ts';
 import { useEffect, useState } from 'react';
 import { setTransactionId, showSuccess } from '../../../../store/slices/sessionSlice.ts';
 import { useSearchParams } from 'react-router';
