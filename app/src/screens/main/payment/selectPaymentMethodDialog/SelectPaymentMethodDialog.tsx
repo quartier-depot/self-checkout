@@ -149,6 +149,25 @@ export function SelectPaymentMethodDialog() {
                         </div>
                     </>)}
 
+                    {((payment.paymentRole === PaymentRoles.customer) && (!customer || !walletBalance)) && (<>
+                                <div className={'p-4 border-r border-gray-300'}>
+                                    <h2 className={'font-semibold'}>
+                                        Mit Guthaben bezahlen
+                                    </h2>
+                                    <p className={'py-8 list-decimal'}>
+                                        <br />
+                                        <br />
+                                    </p>
+                                    <div className={'flex justify-center justify-left items-center'}>
+                                        <div className="w-72">
+                                            <Button type="primary" onClick={() => {}} disabled>Mit Guthaben
+                                                bezahlen</Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                    )}
+
                     {payment.paymentRole === PaymentRoles.customer && customer && walletBalance && walletBalance.balance > cart.price && (<>
                                 <div className={'p-4 border-r border-gray-300'}>
                                     <h2 className={'font-semibold'}>
