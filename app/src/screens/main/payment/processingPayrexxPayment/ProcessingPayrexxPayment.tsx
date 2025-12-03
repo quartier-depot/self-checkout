@@ -14,7 +14,7 @@ export function ProcessingPayrexxPayment() {
     const [paymentFailed, setPaymentFailed] = useState(false);
 
     useEffect(() => {
-        if (searchParams.get('payrexx') === 'failed') {
+        if (searchParams.get('payrexx') === 'failure') {
             setPaymentFailed(true);
         }
         if (order.isSuccess && order.data.orderStatus === 'completed') {
