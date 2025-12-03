@@ -438,7 +438,8 @@ export const payrexxApi = createApi({
         }
 
         const params = new URLSearchParams();
-        params.append('amount', (request.orderTotal * 100).toString());
+        var amount = (request.orderTotal * 100).toString();
+        params.append('amount', amount);
         params.append('currency', 'CHF');
         params.append('referenceId', request.orderId);
         params.append('fields[forename][value]', request.customer?.first_name || "");
@@ -448,6 +449,8 @@ export const payrexxApi = createApi({
         params.append('language', 'DE');
         params.append('successRedirectUrl', config.payrexx.redirectUrl);
         params.append('failedRedirectUrl', `${config.payrexx.redirectUrl}?payrexx=failure`);
+        params.append('basket[0][name]', `Bestellung ${request.orderId}`);
+        params.append('basket[0][amount]', amount);
 
         const result = await fetchWithBaseQuery({
           url: 'Gateway',
