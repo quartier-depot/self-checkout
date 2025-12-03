@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import {
     cancel,
     payWithWallet as payWithWalletAction,
-    PaymentRoles, showSuccess, setTransactionId, payWithPayrexx
+    PaymentRoles, showSuccess, setTransactionId, payWithPayrexx, showFailure
 } from '../../../../store/slices/paymentSlice.ts';
 import {
     useCheckSignatureQuery, useCreateGatewayMutation,
@@ -15,9 +15,11 @@ import {
 import { formatPrice } from '../../../../format/formatPrice';
 import { useEffect } from 'react';
 import { Spinner } from '../../../../components/spinner/Spinner';
+import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 
 export function SelectPaymentMethodDialog() {
     const dispatch = useAppDispatch();
+    const applicationInsights = useAppInsightsContext();
     const payment = useAppSelector(state => state.payment);
     const customer = useAppSelector(state => state.customer.customer);
     const cart = useAppSelector(state => state.cart.cart);
@@ -47,50 +49,70 @@ export function SelectPaymentMethodDialog() {
 
 
     async function handlePayWithWallet() {
-        assertOrder();
-        dispatch(payWithWalletAction());
+        try {
+            assertOrder();
+            dispatch(payWithWalletAction());
 
-        const { isError: isPayWithWalletError, transactionId: walletTransactionId } = await payWithWallet({
-            customer: customer!,
-            amount: payment.orderTotal!,
-            note: `For self-checkout-order payment #${payment.orderId}`
-        }).unwrap();
+            const { isError: isPayWithWalletError, transactionId: walletTransactionId } = await payWithWallet({
+                customer: customer!,
+                amount: payment.orderTotal!,
+                note: `For self-checkout-order payment #${payment.orderId}`
+            }).unwrap();
 
-        if (isPayWithWalletError) {
-            throw new Error('Error paying with wallet');
+            if (isPayWithWalletError) {
+                throw new Error('Error paying with wallet');
+            }
+
+            dispatch(setTransactionId({ transactionId: walletTransactionId }));
+
+            await updateOrder({
+                id: payment.orderId!,
+                payment_method: 'wallet',
+                transaction_id: walletTransactionId.toString(),
+                status: 'completed'
+            }).unwrap();
+
+            dispatch(showSuccess());
+        } catch (error: any) {
+            dispatch(showFailure());
+            applicationInsights.getAppInsights().trackException({
+                exception: error as Error,
+                properties: {
+                    ...payment
+                }
+            });
         }
-
-        dispatch(setTransactionId({ transactionId: walletTransactionId }));
-
-        await updateOrder({
-            id: payment.orderId!,
-            payment_method: 'wallet',
-            transaction_id: walletTransactionId.toString(),
-            status: 'completed'
-        }).unwrap();
-
-        dispatch(showSuccess());
     }
 
     async function handlePayWithPayrexx() {
-        assertOrder();
-        dispatch(payWithPayrexx());
-        
-        const gateway = await createGateway({
-            customer: customer!,
-            orderId: payment.orderId!,
-            orderTotal: payment.orderTotal!
-        }).unwrap();
+        try {
+            assertOrder();
+            dispatch(payWithPayrexx());
 
-        if (gateway.status !== 'success') {
-            throw new Error('Error creating gateway. Status is ' + gateway.status);
+            const gateway = await createGateway({
+                customer: customer!,
+                orderId: payment.orderId!,
+                orderTotal: payment.orderTotal!
+            }).unwrap();
+
+            if (gateway.status !== 'success') {
+                throw new Error('Error creating gateway. Status is ' + gateway.status);
+            }
+
+            if (!gateway.link) {
+                throw new Error('Missing gateway link in successful response: ' + gateway.link);
+            }
+
+            window.location.replace(gateway?.link);
+        } catch (error: any) {
+            dispatch(showFailure());
+            applicationInsights.getAppInsights().trackException({
+                exception: error as Error,
+                properties: {
+                    ...payment
+                }
+            });
         }
-        
-        if (!gateway.link) {
-            throw new Error('Missing gateway link in successful response: '+gateway.link);
-        }
-        
-        window.location.replace(gateway?.link);
     }
 
     function assertOrder() {
@@ -151,9 +173,11 @@ export function SelectPaymentMethodDialog() {
                                         {isRefetchingBalance && <Spinner className={'ml-2 h-4 w-4 inline-block'} />}
                                     </h2>
                                     <p className={'py-8 list-decimal'}>
-                                        Dein Guthaben ({formatPrice(walletBalance?.balance)}) reicht für deinen Einkauf
+                                        Dein Guthaben ({formatPrice(walletBalance?.balance)}) reicht für deinen
+                                        Einkauf
                                         nicht aus.
-                                        Öffne folgenden QR-Code mit dem Smartphone und lade dein Virtuelles Konto auf.
+                                        Öffne folgenden QR-Code mit dem Smartphone und lade dein Virtuelles Konto
+                                        auf.
                                     </p>
                                     <div className={'flex justify-center justify-left items-center'}>
                                         <QRCodeSVG
@@ -173,7 +197,8 @@ export function SelectPaymentMethodDialog() {
                             </p>
                             <div className={'flex justify-center justify-left items-center'}>
                                 <div className="w-72">
-                                    <Button type="primary" onClick={handlePayWithPayrexx}>Mit Twint bezahlen</Button>
+                                    <Button type="primary" onClick={handlePayWithPayrexx}>Mit Twint
+                                        bezahlen</Button>
                                 </div>
                             </div>
                         </div>
@@ -188,12 +213,13 @@ export function SelectPaymentMethodDialog() {
                             </p>
                             <div className={'flex justify-center justify-left items-center'}>
                                 <div className="w-72">
-                                    <Button type="primary" onClick={refetchPayrexx} disabled={true}>Mit Twint bezahlen</Button>
+                                    <Button type="primary" onClick={refetchPayrexx} disabled={true}>Mit Twint
+                                        bezahlen</Button>
                                 </div>
                             </div>
                         </div>
                     </>)}
-                    
+
                 </div>
                 <div className={'p-4'}>
                     <Button type="secondary" onClick={handleCancel}>Abbrechen</Button>
