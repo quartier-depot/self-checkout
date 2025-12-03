@@ -9,7 +9,7 @@ import {
     createOrder as setCreateOrder,
     setOrder,
     setPaymentRole, showFailure, PaymentState
-} from '../../../store/slices/paymentSlice';
+} from '../../../store/slices/sessionSlice';
 import { useCreateOrderMutation } from '../../../store/api/api.ts';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 
@@ -19,7 +19,7 @@ export function Payment() {
     const applicationInsights = useAppInsightsContext();
     const cart = useAppSelector(state => state.cart.cart);
     const customer = useAppSelector(state => state.customer.customer);
-    const payment: PaymentState = useAppSelector(state => state.payment);
+    const payment: PaymentState = useAppSelector(state => state.session.session.payment);
     const [createOrder ] = useCreateOrderMutation();
     
     async function handleStartPayment() {

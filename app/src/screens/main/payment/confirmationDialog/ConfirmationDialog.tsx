@@ -1,7 +1,7 @@
 import { formatPrice } from '../../../../format/formatPrice';
 import { Button } from '../../../../components/button/Button';
 import cartCheckIcon from '../../../../assets/cart-check.svg';
-import { PaymentState } from '../../../../store/slices/paymentSlice.ts';
+import { PaymentState } from '../../../../store/slices/sessionSlice.ts';
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
 import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
 import { startNewSession } from '../../../../store/slices/sessionSlice.ts';
@@ -11,7 +11,7 @@ const confirm = new Audio('/assets/sounds/confirm.mp3');
 
 export function ConfirmationDialog() {
     const dispatch = useAppDispatch();
-    const payment: PaymentState = useAppSelector(state => state.payment);
+    const payment: PaymentState = useAppSelector(state => state.session.session.payment);
     const customer = useAppSelector(state => state.customer.customer);
     const {
         data: walletBalance

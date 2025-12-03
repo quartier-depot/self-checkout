@@ -1,5 +1,5 @@
 import { Dialog } from '../../../../components/modal/dialog/Dialog.tsx';
-import { PaymentState } from '../../../../store/slices/paymentSlice.ts';
+import { PaymentState } from '../../../../store/slices/sessionSlice.ts';
 import { useAppSelector } from '../../../../store/store.ts';
 import { SelectMemberDialog } from '../selectMemberDialog/SelectMemberDialog.tsx';
 import { SelectPaymentMethodDialog } from '../selectPaymentMethodDialog/SelectPaymentMethodDialog.tsx';
@@ -12,7 +12,7 @@ import { ErrorDialog } from '../errorDialog/ErrorDialog.tsx';
 import { CancellingPaymentDialog } from '../cancellingPaymentDialog/CancellingPaymentDialog.tsx';
 
 export function PaymentDialog() {
-    const payment: PaymentState = useAppSelector(state => state.payment);
+    const payment: PaymentState = useAppSelector(state => state.session.session.payment);
     const cart: Cart = useAppSelector(state => state.cart.cart);
     
     let title = 'Bezahlen '+formatPrice(cart.price);

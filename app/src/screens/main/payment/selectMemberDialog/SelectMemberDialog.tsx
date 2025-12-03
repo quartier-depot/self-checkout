@@ -1,7 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { cancel, PaymentRoles, selectPaymentMethod, setPaymentRole } from '../../../../store/slices/paymentSlice.ts';
+import { cancel, PaymentRoles, selectPaymentMethod, setPaymentRole } from '../../../../store/slices/sessionSlice.ts';
 import { useEffect } from 'react';
 
 export function SelectMemberDialog() {

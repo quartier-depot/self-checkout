@@ -2,7 +2,6 @@ import { getMetaData } from '../helper/getMetaData';
 import { semicolonSeparatedList } from '../helper/semicolonSeparatedList';
 import { Unit, UNIT_MAPPING } from './Unit.ts';
 import { decode } from 'html-entities';
-import { Barcode } from './Barcode.ts';
 
 export const NO_BARCODE_VALUE = 'KEIN BARCODE';
 

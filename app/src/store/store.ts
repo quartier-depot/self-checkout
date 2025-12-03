@@ -4,7 +4,6 @@ import configurationReducer from './slices/configurationSlice';
 import cartReducer from './slices/cartSlice';
 import customerReducer from './slices/customerSlice';
 import displayReducer from './slices/displaySlice';
-import paymentReducer from './slices/paymentSlice';
 import sessionReducer from './slices/sessionSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
 import { aboApi, api, payrexxApi } from './api/api';
@@ -25,7 +24,6 @@ const rootReducer = combineReducers({
   customer: customerReducer,
   display: displayReducer,
   session: sessionReducer,
-  payment: paymentReducer,
   [api.reducerPath]: api.reducer,
   [aboApi.reducerPath]: aboApi.reducer,
   [payrexxApi.reducerPath]: payrexxApi.reducer,

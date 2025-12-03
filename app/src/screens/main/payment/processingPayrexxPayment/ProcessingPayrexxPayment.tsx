@@ -2,13 +2,13 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
 import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
 import {  useGetOrderQuery } from '../../../../store/api/api.ts';
 import { useEffect, useState } from 'react';
-import { setTransactionId, showSuccess } from '../../../../store/slices/paymentSlice.ts';
+import { setTransactionId, showSuccess } from '../../../../store/slices/sessionSlice.ts';
 import { useSearchParams } from 'react-router';
 import { ProcessingPaymentFailed } from './ProcessingPayrexxPaymentFailed.tsx';
 
 export function ProcessingPayrexxPayment() {
     const dispatch = useAppDispatch();
-    const payment = useAppSelector(state => state.payment);
+    const payment = useAppSelector(state => state.session.session.payment);
     const order = useGetOrderQuery(payment.orderId || "200", { pollingInterval: 3000});
     const [searchParams, _] = useSearchParams();
     const [paymentFailed, setPaymentFailed] = useState(false);
