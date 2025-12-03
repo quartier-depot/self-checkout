@@ -1,7 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '../../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { cancel, selectPaymentMethod } from '../../../../store/slices/paymentSlice.ts';
+import { cancel, PaymentRoles, selectPaymentMethod, setPaymentRole } from '../../../../store/slices/paymentSlice.ts';
 import { useEffect } from 'react';
 
 export function SelectMemberDialog() {
@@ -10,11 +10,13 @@ export function SelectMemberDialog() {
 
     useEffect(() => {
         if (customer) {
+            dispatch(setPaymentRole({paymentRole: PaymentRoles.customer}));
             dispatch(selectPaymentMethod());
         }
     }, [customer, dispatch]);
 
     function handleAsGuest() {
+        dispatch(setPaymentRole({paymentRole: PaymentRoles.guest}));
         dispatch(selectPaymentMethod());
     }
 
