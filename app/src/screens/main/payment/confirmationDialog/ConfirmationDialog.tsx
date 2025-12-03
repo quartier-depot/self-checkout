@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
 import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
 import { startNewSession } from '../../../../store/slices/sessionSlice.ts';
 import { useEffect } from 'react';
+import { useAutoClose } from '../../../../hooks/useAutoClose.ts';
 const confirm = new Audio('/assets/sounds/confirm.mp3');
 
 export function ConfirmationDialog() {
@@ -17,6 +18,8 @@ export function ConfirmationDialog() {
     } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
+
+    useAutoClose(handleClose);
 
     useEffect(() => {
         // noinspection JSIgnoredPromiseFromCall

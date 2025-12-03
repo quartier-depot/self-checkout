@@ -1,7 +1,8 @@
 import { Dialog } from '../Dialog';
 import { Button } from '../../../button/Button';
 import { startNewSession } from '../../../../store/slices/sessionSlice';
-import store, { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { restartApplication } from '../../../../restartAplication.ts';
 
 type ResetDialogProps = {
     onClose: () => void;
@@ -17,11 +18,6 @@ export function ResetDialog({ onClose }: ResetDialogProps) {
         onClose();
     }
 
-    async function restartApplication() {
-        await store.persistor.purge();
-        window.location.reload();
-    }
-    
     return (
             <Dialog title="Was möchtest du tun?" onBackdropClick={onClose}>
                 <div className="p-4">

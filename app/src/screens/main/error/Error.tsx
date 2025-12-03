@@ -1,19 +1,10 @@
 import { Button } from '../../../components/button/Button';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
-import { useEffect } from 'react';
+import { useAutoClose } from '../../../hooks/useAutoClose.ts';
+import { restartApplication } from '../../../restartAplication.ts';
 
 export function Error() {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            reload();
-        }, 30000);
-
-        return () => clearTimeout(timer);
-    });
-
-    function reload() {
-        window.location.reload();
-    }
+    useAutoClose(restartApplication);
 
     return (
             <>
@@ -21,8 +12,8 @@ export function Error() {
                     <Dialog title="Es ist ein Fehler aufgetreten">
                         <div className="p-4 text-blue-gray-800">
                             <p>Entschuldige, das hätte nicht passieren dürfen.</p>
-                            <p className="my-4">Bitte klicke auf OK und versuche es erneut.</p>
-                            <Button type="primary" onClick={reload}>OK</Button>
+                            <p className="my-4">Bitte klicke auf OK und versuche es erneut. Die Kasse wird neu gestartet.</p>
+                            <Button type="primary" onClick={restartApplication}>OK</Button>
                         </div>
                     </Dialog>
                 </div>
