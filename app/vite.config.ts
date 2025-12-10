@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, configDefaults } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { loadEnv } from 'vite';
@@ -43,6 +43,7 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: 'jsdom',
       setupFiles: ['tests.setup.js'],
+      exclude: [...configDefaults.exclude, 'tests/**'],
     },
     server: {
       host: true,
