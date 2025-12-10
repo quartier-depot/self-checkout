@@ -25,8 +25,7 @@ export function Customer({ className }: CustomerProps) {
         if (loggedIn) {
             setShowResetDialog(!showMemberDialog);
         } else {
-            // setShowMemberDialog(!showMemberDialog);
-            
+            setShowMemberDialog(!showMemberDialog);
         }
     }
 
