@@ -5,7 +5,6 @@ import { SelectPaymentMethodDialog } from '../selectPaymentMethodDialog/SelectPa
 import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
 import { formatPrice } from '../../../../format/formatPrice.ts';
 import { Cart } from '../../../../store/api/cart/Cart.ts';
-import { ProcessingPayrexxPayment } from '../processingPayrexxPayment/ProcessingPayrexxPayment.tsx';
 import { ConfirmationDialog } from '../confirmationDialog/ConfirmationDialog.tsx';
 import { ErrorDialog } from '../errorDialog/ErrorDialog.tsx';
 import { CancellingPaymentDialog } from '../cancellingPaymentDialog/CancellingPaymentDialog.tsx';
@@ -15,20 +14,15 @@ export function PaymentDialog() {
     const cart: Cart = useAppSelector(state => state.cart.cart);
     
     let title = 'Bezahlen '+formatPrice(cart.price);
-    let component = <p></p>;
+    let component = <PaymentSpinnerDialog />;
     
     switch (payment.state) {
         case 'CreatingOrder':
             title = 'Bezahlen vorbereiten...';
-            component = <PaymentSpinnerDialog />;
             break;
             
         case 'SelectPaymentMethod':
             component = <SelectPaymentMethodDialog />;
-            break;
-
-        case 'ProcessingPayrexxPayment':
-            component = <ProcessingPayrexxPayment />;
             break;
             
         case 'CancellingPayment':
