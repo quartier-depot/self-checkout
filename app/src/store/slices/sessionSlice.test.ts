@@ -3,14 +3,13 @@ import sessionReducer, {
   PaymentState,
   PaymentStates,
   selectPaymentMethod,
-  selectPaymentRole,
   topUpWallet,
   payWithWallet,
   payWithPayrexx,
   showSuccess,
   showFailure,
   cancel,
-  createOrder, PaymentRoles, setOrder, setPaymentRole, setTransactionId,
+  createOrder, setOrder, setTransactionId,
 } from './sessionSlice';
 import { createProduct, Product } from '../api/products/Product.ts';
 import { WalletBalance } from '../api/api.ts';
@@ -20,16 +19,6 @@ import { Customer } from '../api/customers/Customer.ts';
 describe('sessionSlice', () => {
   describe('payment', () => {
     describe('when in NoPayment', () => {
-      test('selectPaymentRole moves to SelectPaymentRole state', () => {
-        const initialState = buildAppState({
-          state: 'NoPayment',
-        });
-
-        expect(sessionReducer(initialState, selectPaymentRole()).session.payment).toEqual({
-          state: 'SelectPaymentRole',
-          paymentRole: undefined,
-        });
-      });
       test('createOrder moves to CreatingOrder', () => {
         const initialState = buildAppState({
           state: 'NoPayment',
@@ -49,43 +38,6 @@ describe('sessionSlice', () => {
         expect(sessionReducer(initialState, setOrder(action)).session.payment).toEqual({
           orderId: 'orderId',
           orderTotal: 42,
-          state: 'NoPayment',
-        });
-      });
-      test('setPaymentRole sets the payment role', () => {
-        const initialState = buildAppState({
-          state: 'NoPayment',
-        });
-        const action = {
-          paymentRole: PaymentRoles.guest,
-        };
-        expect(sessionReducer(initialState, setPaymentRole(action)).session.payment).toEqual({
-          paymentRole: PaymentRoles.guest,
-          state: 'NoPayment',
-        });
-      });
-    });
-
-    describe('when in SelectPaymentRole', () => {
-      test('selectPaymentRole moves to SelectPaymentRole state', () => {
-        const initialState = buildAppState({
-          state: 'NoPayment',
-        });
-
-        expect(sessionReducer(initialState, selectPaymentRole()).session.payment).toEqual({
-          state: 'SelectPaymentRole',
-          paymentRole: undefined,
-        });
-      });
-      test('setPaymentRole sets the payment role', () => {
-        const initialState = buildAppState({
-          state: 'NoPayment',
-        });
-        const action = {
-          paymentRole: PaymentRoles.guest,
-        };
-        expect(sessionReducer(initialState, setPaymentRole(action)).session.payment).toEqual({
-          paymentRole: PaymentRoles.guest,
           state: 'NoPayment',
         });
       });
@@ -173,7 +125,7 @@ describe('sessionSlice', () => {
       });
     });
 
-    describe.each([['SelectPaymentRole'], ['SelectPaymentMethod'], ['TopUpWallet']])('when in %s', (currentState: string) => {
+    describe.each([['SelectPaymentMethod'], ['TopUpWallet']])('when in %s', (currentState: string) => {
       test('cancel moves to CancellingPayment', () => {
         const initialState = buildAppState({
           state: currentState as unknown as PaymentStates,

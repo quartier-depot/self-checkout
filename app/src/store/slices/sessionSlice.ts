@@ -15,14 +15,12 @@ const initialState: AppState = {
       orderId: undefined,
       transactionId: undefined,
       orderTotal: undefined,
-      paymentRole: undefined,
     },
   },
 };
 
 export type PaymentStates =
   'NoPayment'
-  | 'SelectPaymentRole'
   | 'CreatingOrder'
   | 'SelectPaymentMethod'
   | 'TopUpWallet'
@@ -32,18 +30,11 @@ export type PaymentStates =
   | 'Failure'
   | 'CancellingPayment';
 
-export enum PaymentRoles { customer, guest };
-
 export interface PaymentState {
   state: PaymentStates;
-  paymentRole?: PaymentRoles;
   orderId?: string;
   orderTotal?: number;
   transactionId?: number | string;
-}
-
-interface SetPaymentRolePayload {
-  paymentRole: PaymentRoles;
 }
 
 interface SetOrderPayload {
@@ -66,15 +57,6 @@ const sessionSlice = createSlice({
     },
     logActivity: (state) => {
       state.session.initialState = false;
-    },
-    selectPaymentRole: (state) => {
-      assertStateIn(state, ['NoPayment']);
-      state.session.payment.state = 'SelectPaymentRole';
-      state.session.payment.paymentRole = undefined;
-    },
-    setPaymentRole: (state, action: PayloadAction<SetPaymentRolePayload>) => {
-      assertStateIn(state, ['NoPayment', 'SelectPaymentRole']);
-      state.session.payment.paymentRole = action.payload.paymentRole;
     },
     createOrder: (state) => {
       assertStateIn(state, ['NoPayment']);
@@ -127,5 +109,5 @@ function assertStateIn(state: AppState, expectedStates: PaymentStates[]) {
   }
 }
 
-export const { startNewSession, logActivity, selectPaymentRole, setOrder, setPaymentRole, setTransactionId, createOrder, selectPaymentMethod, topUpWallet, payWithWallet, payWithPayrexx, showSuccess, showFailure, cancel, noPayment } = sessionSlice.actions;
+export const { startNewSession, logActivity, setOrder, setTransactionId, createOrder, selectPaymentMethod, topUpWallet, payWithWallet, payWithPayrexx, showSuccess, showFailure, cancel, noPayment } = sessionSlice.actions;
 export default sessionSlice.reducer; 
