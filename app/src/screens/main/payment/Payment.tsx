@@ -10,6 +10,8 @@ import {
 } from '../../../store/slices/sessionSlice';
 import { useCreateOrderMutation } from '../../../store/api/api.ts';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
+import { useState } from 'react';
+import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog.tsx';
 
 
 export function Payment() {
@@ -19,16 +21,19 @@ export function Payment() {
     const customer = useAppSelector(state => state.customer.customer);
     const payment: PaymentState = useAppSelector(state => state.session.session.payment);
     const [createOrder ] = useCreateOrderMutation();
+    const [showMemberDialog, setShowMemberDialog] = useState(false);
     
-    async function handleStartPayment() {
-        try {
-            if (cart.price <= 0) {
-                return;
-            }
-            if (!customer) {
-                return;
-            }
+    async function handleClick() {
+        if (!customer) {
+            setShowMemberDialog(true);
+            return;
+        }
 
+        if (cart.price <= 0) {
+            return;
+        }
+        
+        try {
             dispatch(setCreateOrder());
 
             const { orderId, orderTotal } = await createOrder({
@@ -57,12 +62,14 @@ export function Payment() {
                         <div>TOTAL</div>
                         <div className={'text-right w-full text-xl'}>{formatPrice(cart.price)} CHF</div>
                     </div>
-                    <Button disabled={!paymentEnabled} withDisabledLock={true} onClick={handleStartPayment} type={'primary'}>
+                    <Button disabled={!paymentEnabled} withDisabledLock={true} onClick={handleClick} type={'primary'}>
                         Bezahlen
                     </Button>
                 </div>
 
                 {showPaymentDialog && <PaymentDialog />}
+
+                {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} /> }
             </>
     );
 }
