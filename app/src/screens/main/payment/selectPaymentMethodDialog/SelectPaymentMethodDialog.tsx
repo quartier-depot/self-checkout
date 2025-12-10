@@ -133,8 +133,40 @@ export function SelectPaymentMethodDialog() {
             <>
                 <div className={'flex-1 grid grid-cols-2 grid-rows-1 gap-4 overflow-y-auto'}>
 
+                    {payrexxAvailable && (<>
+                        <div className={'p-4 border-r border-gray-300'}>
+                            <h2 className={'font-semibold'}>Mit Twint bezahlen</h2>
+                            <p className={'py-8 list-decimal'}>
+                                Bezahle mit Twint.<br />
+                                Du benötigst dazu dein Smartphone.
+                            </p>
+                            <div className={'flex justify-center justify-left items-center'}>
+                                <div className="w-72">
+                                    <Button type="primary" onClick={handlePayWithPayrexx}>Mit Twint
+                                        bezahlen</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </>)}
+
+                    {!payrexxAvailable && (<>
+                        <div className={'p-4 border-r border-gray-300'}>
+                            <h2 className={'font-semibold'}>Mit Twint bezahlen {payrexxAvailable?.toString()}</h2>
+                            <p className={'py-8 list-decimal'}>
+                                Bezahlung mit Twint steht momentan nicht zur Verfügung.<br />
+                                Bitte verwende dein Guthaben oder probiere es später noch einmal.
+                            </p>
+                            <div className={'flex justify-center justify-left items-center'}>
+                                <div className="w-72">
+                                    <Button type="primary" onClick={refetchPayrexx} disabled={true}>Mit Twint
+                                        bezahlen</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </>)}
+
                     {customer && walletBalance && walletBalance.balance > cart.price && (<>
-                                <div className={'p-4 border-r border-gray-300'}>
+                                <div className={'p-4'}>
                                     <h2 className={'font-semibold'}>
                                         Mit Guthaben bezahlen
                                     </h2>
@@ -173,39 +205,7 @@ export function SelectPaymentMethodDialog() {
                                 </div>
                             </>
                     )}
-
-                    {payrexxAvailable && (<>
-                        <div className={'p-4'}>
-                            <h2 className={'font-semibold'}>Mit Twint bezahlen</h2>
-                            <p className={'py-8 list-decimal'}>
-                                Bezahle mit Twint.<br />
-                                Du benötigst dazu dein Smartphone.
-                            </p>
-                            <div className={'flex justify-center justify-left items-center'}>
-                                <div className="w-72">
-                                    <Button type="primary" onClick={handlePayWithPayrexx}>Mit Twint
-                                        bezahlen</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </>)}
-
-                    {!payrexxAvailable && (<>
-                        <div className={'p-4'}>
-                            <h2 className={'font-semibold'}>Mit Twint bezahlen {payrexxAvailable?.toString()}</h2>
-                            <p className={'py-8 list-decimal'}>
-                                Bezahlung mit Twint steht momentan nicht zur Verfügung.<br />
-                                Bitte verwende dein Guthaben oder probiere es später noch einmal.
-                            </p>
-                            <div className={'flex justify-center justify-left items-center'}>
-                                <div className="w-72">
-                                    <Button type="primary" onClick={refetchPayrexx} disabled={true}>Mit Twint
-                                        bezahlen</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </>)}
-
+                    
                 </div>
                 <div className={'p-4'}>
                     <Button type="secondary" onClick={handleCancel}>Abbrechen</Button>
