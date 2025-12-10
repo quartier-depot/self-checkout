@@ -25,6 +25,9 @@ config.payrexxRedirectUrl = process.env.PAYREXX_REDIRECT_URL || process.env.VITE
 config.payrexxInstance = process.env.PAYREXX_INSTANCE || process.env.VITE_PAYREXX_INSTANCE;
 config.payrexxApiKey = process.env.PAYREXX_API_KEY || process.env.VITE_PAYREXX_API_KEY;
 
+// restart
+let restart = true;
+
 // express
 const express = require('express');
 const app = express();
@@ -88,6 +91,20 @@ app.get('/api/configuration', (_, res) => {
   })
 });
 
+// Configuration
+app.get('/api/restart', (_, res) => {
+  res.json({
+    restart: restart,
+  })
+});
+app.post('/api/restart', (_, res) => {
+  restart = false;
+  res.json({
+    restart: restart,
+  })
+});
+
+
 // frontend availability
 app.post('/api/availability', (_, res) => {
   appInsights.defaultClient.trackAvailability({name: "heartbeat", success: true, runLocation: 'frontend' });
@@ -110,4 +127,5 @@ setInterval(() => {
 }, config.applicationInsights.availabilityInterval);
 
 const packageJson = require('./package.json');
+const nocache = require('nocache');
 appInsights.defaultClient.trackEvent({name: "server-start", properties: { version: packageJson.version }});

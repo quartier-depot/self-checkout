@@ -21,12 +21,17 @@ export default defineConfig(({ mode }) => {
       react(),
       tailwindcss(),
       {
-        name: 'availability-endpoint',
+        name: 'mocked-endpoints',
         configureServer(server) {
           server.middlewares.use('/api/availability', (_, res) => {
             console.log('Availability endpoint hit at:', new Date().toISOString());
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ message: 'Availability endpoint hit' }));
+          });
+          server.middlewares.use('/api/restart', (_, res) => {
+            console.log('Restart endpoint hit at:', new Date().toISOString());
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ restart: 'false' }));
           });
         },
       },

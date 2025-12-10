@@ -1,4 +1,9 @@
-import { useGetProductsQuery, useGetCustomersQuery, useCheckSignatureQuery } from '../../store/api/api';
+import {
+    useGetProductsQuery,
+    useGetCustomersQuery,
+    useCheckSignatureQuery,
+    useIsRestartQuery, useSetRestartedMutation
+} from '../../store/api/api';
 import { Cart } from './cart/Cart';
 import { Payment } from './payment/Payment';
 import { Loading } from '../../components/modal/loading/Loading';
@@ -7,13 +12,25 @@ import { Barcode } from './barcode/Barcode';
 import { useInactivityTimer } from '../../hooks/useInactivityTimer.ts';
 import { InactivityDialog } from '../../components/modal/dialog/inactivityDialog/InactivityDialog.tsx';
 import { Display } from './display/Display.tsx';
+import { useEffect } from 'react';
+import { restartApplication } from '../../restartAplication.ts';
 
 export function Main() {
     const { isSuccess: isProductsSuccess, isFetching: isProductsFetching } = useGetProductsQuery();
     const { isSuccess: isCustomersSuccess, isFetching: isCustomersFetching } = useGetCustomersQuery();
     const { isSuccess: isCheckSignatureSuccess, isFetching: isCheckSignatureFetching } = useCheckSignatureQuery();
-
-    const loadingData = isProductsFetching || isCustomersFetching || isCheckSignatureFetching || !isProductsSuccess || !isCustomersSuccess || !isCheckSignatureSuccess;
+    const { data: isRestartData, isFetching: isRestartFetching } = useIsRestartQuery();
+    const [setRestartedMutation] = useSetRestartedMutation();
+    
+    useEffect(() => {
+        if (isRestartData) {
+            setRestartedMutation();
+            // noinspection JSIgnoredPromiseFromCall
+            restartApplication();
+        }
+    }, [isRestartData]);
+    
+    const loadingData = isProductsFetching || isCustomersFetching || isCheckSignatureFetching || isRestartFetching || !isProductsSuccess || !isCustomersSuccess || !isCheckSignatureSuccess;
 
     const { showInactivityDialog, resetTimer } = useInactivityTimer();
 
