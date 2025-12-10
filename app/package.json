@@ -8,8 +8,10 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "test": "vitest",
-        "preview": "vite preview"
-    },
+        "preview": "vite preview",
+        "e2e": "playwright test",
+        "e2e:ui": "playwright test --ui"
+  },
     "dependencies": {
         "@microsoft/applicationinsights-react-js": "^19.3.6",
         "@microsoft/applicationinsights-web": "^3.3.6",
@@ -35,6 +37,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.21.0",
+        "@playwright/test": "^1.49.1",
         "@testing-library/user-event": "^14.6.1",
         "@types/node": "^24.0.1",
         "@types/react": "^19.0.10",
