@@ -127,5 +127,4 @@ setInterval(() => {
 }, config.applicationInsights.availabilityInterval);
 
 const packageJson = require('./package.json');
-const nocache = require('nocache');
 appInsights.defaultClient.trackEvent({name: "server-start", properties: { version: packageJson.version }});
