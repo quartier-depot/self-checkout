@@ -1,7 +1,6 @@
 import { Dialog } from '../../../../components/modal/dialog/Dialog.tsx';
 import { PaymentState } from '../../../../store/slices/sessionSlice.ts';
 import { useAppSelector } from '../../../../store/store.ts';
-import { SelectMemberDialog } from '../selectMemberDialog/SelectMemberDialog.tsx';
 import { SelectPaymentMethodDialog } from '../selectPaymentMethodDialog/SelectPaymentMethodDialog.tsx';
 import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
 import { formatPrice } from '../../../../format/formatPrice.ts';
@@ -19,10 +18,6 @@ export function PaymentDialog() {
     let component = <p></p>;
     
     switch (payment.state) {
-        case 'SelectPaymentRole':
-            component = <SelectMemberDialog />
-            break;
-            
         case 'CreatingOrder':
             title = 'Bezahlen vorbereiten...';
             component = <PaymentSpinnerDialog />;

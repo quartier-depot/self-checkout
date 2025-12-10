@@ -3,12 +3,10 @@ import { Button } from '../../../components/button/Button';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { PaymentDialog } from './paymentDialog/PaymentDialog.tsx';
 import {
-    PaymentRoles,
     selectPaymentMethod,
-    selectPaymentRole,
     createOrder as setCreateOrder,
     setOrder,
-    setPaymentRole, showFailure, PaymentState
+    showFailure, PaymentState
 } from '../../../store/slices/sessionSlice';
 import { useCreateOrderMutation } from '../../../store/api/api.ts';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
@@ -27,6 +25,9 @@ export function Payment() {
             if (cart.price <= 0) {
                 return;
             }
+            if (!customer) {
+                return;
+            }
 
             dispatch(setCreateOrder());
 
@@ -36,13 +37,7 @@ export function Payment() {
             }).unwrap();
 
             dispatch(setOrder({ orderId, orderTotal }));
-
-            if (customer) {
-                dispatch(setPaymentRole({ paymentRole: PaymentRoles.customer }));
-                dispatch(selectPaymentMethod());
-            } else {
-                dispatch(selectPaymentRole());
-            }
+            dispatch(selectPaymentMethod());
         } catch (error: any) {
             applicationInsights.getAppInsights().trackException({
                 exception: error as Error,
@@ -52,7 +47,7 @@ export function Payment() {
         }
     }
 
-    const paymentEnabled = cart.price > 0;
+    const paymentEnabled = cart.price > 0 && customer;
     const showPaymentDialog = payment.state !== 'NoPayment';
     
     return (

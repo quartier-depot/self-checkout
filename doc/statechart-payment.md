@@ -5,12 +5,8 @@ stateDiagram
     
     [*] --> CreatingOrder: createOrder()
     
-    CreatingOrder --> SelectPaymentRole
     CreatingOrder --> SelectPaymentMethod
     CreatingOrder --> Failure
-    
-    SelectPaymentRole --> [*]: cancel()
-    SelectPaymentRole --> SelectPaymentMethod
     
     SelectPaymentMethod --> SelectPaymentMethod: topUpWallet()
     SelectPaymentMethod --> Success: payWithWallet()
