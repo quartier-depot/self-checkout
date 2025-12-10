@@ -6,7 +6,15 @@ import { RootState } from '../store';
 import { Abo, createAbo, addOrder } from './abo/Abo';
 import Papa from 'papaparse';
 
-export type OrderStatus = 'pending' | 'processing' | 'on-hold' | 'completed' | 'cancelled' | 'refunded' | 'failed' | 'trash';
+export type OrderStatus =
+  'pending'
+  | 'processing'
+  | 'on-hold'
+  | 'completed'
+  | 'cancelled'
+  | 'refunded'
+  | 'failed'
+  | 'trash';
 
 export interface OrderUpdate {
   id: string;
@@ -315,14 +323,14 @@ export const api = createApi({
 
     getOrder: builder.query<GetOrderResponse, string>({
       query: (orderId) => ({
-        url: `orders/${orderId}`
+        url: `orders/${orderId}`,
       }),
       transformResponse: (response: any): GetOrderResponse => {
         return {
           orderId: response.id,
           orderTotal: parseFloat(response.total),
           orderStatus: response.status,
-          transactionId: response.transaction_id
+          transactionId: response.transaction_id,
         };
       },
     }),
@@ -433,7 +441,7 @@ export const payrexxApi = createApi({
         const state = getState() as RootState;
         const config = state.configuration.configuration;
         if (!(config?.payrexx.redirectUrl)) {
-          throw new Error("Payrexx redirect url not configured.")
+          throw new Error('Payrexx redirect url not configured.');
         }
 
         const params = new URLSearchParams();
@@ -441,9 +449,9 @@ export const payrexxApi = createApi({
         params.append('amount', amount);
         params.append('currency', 'CHF');
         params.append('referenceId', `self-checkout-${request.orderId}`);
-        params.append('fields[forename][value]', request.customer?.first_name || "");
-        params.append('fields[surname][value]', request.customer?.last_name || "Gast");
-        params.append('fields[email][value]', request.customer?.email || "");
+        params.append('fields[forename][value]', request.customer?.first_name || '');
+        params.append('fields[surname][value]', request.customer?.last_name || 'Unbekannt');
+        params.append('fields[email][value]', request.customer?.email || '');
         params.append('pm[0]', 'twint');
         params.append('language', 'DE');
         params.append('successRedirectUrl', config.payrexx.redirectUrl);
@@ -478,6 +486,31 @@ export const payrexxApi = createApi({
   }),
 });
 
+export const restartApi = createApi({
+  reducerPath: 'restartApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api/restart/',
+  }),
+  tagTypes: ['Restart'],
+  endpoints: (builder) => ({
+    isRestart: builder.query<boolean, void>({
+      query: () => ``,
+      transformResponse: (response: any): boolean => {
+        return response.restart === true;
+      },
+      providesTags: ['Restart'],
+    }),
+    setRestarted: builder.mutation<void, void>({
+      query: () => ({
+        url: ``,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Restart'],
+    }),
+  }),
+});
+
+
 export const {
   useGetProductsQuery,
   useGetCustomersQuery,
@@ -498,3 +531,8 @@ export const {
   useCheckSignatureQuery,
   useCreateGatewayMutation,
 } = payrexxApi;
+
+export const {
+  useIsRestartQuery,
+  useSetRestartedMutation,
+} = restartApi;

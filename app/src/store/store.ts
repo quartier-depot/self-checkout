@@ -6,7 +6,7 @@ import customerReducer from './slices/customerSlice';
 import displayReducer from './slices/displaySlice';
 import sessionReducer from './slices/sessionSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
-import { aboApi, api, payrexxApi } from './api/api';
+import { aboApi, api, payrexxApi, restartApi } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
 import { cartLoggingMiddleware } from './middleware/cartLoggingMiddleware';
 import { bulkItemMiddleware } from './middleware/bulkItemMiddleware.ts';
@@ -27,13 +27,14 @@ const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   [aboApi.reducerPath]: aboApi.reducer,
   [payrexxApi.reducerPath]: payrexxApi.reducer,
+  [restartApi.reducerPath]: restartApi.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   version:1,
   storage,
-  blacklist: [api.reducerPath, aboApi.reducerPath, payrexxApi.reducerPath]
+  blacklist: [api.reducerPath, aboApi.reducerPath, payrexxApi.reducerPath, restartApi.reducerPath]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -49,6 +50,7 @@ const store = configureStore({
       .concat(api.middleware)
       .concat(aboApi.middleware)
       .concat(payrexxApi.middleware)
+      .concat(restartApi.middleware)
       .concat(soundMiddleware)
       .concat(cartLoggingMiddleware)
       .concat(productValidationMiddleware)
