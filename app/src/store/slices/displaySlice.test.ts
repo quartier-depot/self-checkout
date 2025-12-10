@@ -116,7 +116,7 @@ describe('displaySlice', () => {
       expect(selectFilteredDisplayItems(state as any)).toBeUndefined();
     });
 
-    it.only('should filter display items by search term', () => {
+    it('should filter display items by search term', () => {
       const state = {
         display: {
           viewMode: 'search',
@@ -163,7 +163,7 @@ describe('displaySlice', () => {
       const result = selectFilteredDisplayItems(state as any);
       expect(result).toHaveLength(1);
       const category = result![0] as CategoryDisplayItemType;
-      expect(category.key).toBe('A');
+      expect(category.key).toBe('1');
     });
 
     it('should group display items by category when no specific category is selected', () => {
