@@ -6,8 +6,9 @@ import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDial
 import { formatPrice } from '../../../../format/formatPrice.ts';
 import { Cart } from '../../../../store/api/cart/Cart.ts';
 import { ConfirmationDialog } from '../confirmationDialog/ConfirmationDialog.tsx';
-import { ErrorDialog } from '../errorDialog/ErrorDialog.tsx';
+import { FailureDialog } from '../failureDialog/FailureDialog';
 import { CancellingPaymentDialog } from '../cancellingPaymentDialog/CancellingPaymentDialog.tsx';
+import { ProcessingPayrexxPaymentDialog } from '../processingPayrexxPaymentDialog/ProcessingPayrexxPaymentDialog.tsx';
 
 export function PaymentDialog() {
     const payment: PaymentState = useAppSelector(state => state.session.session.payment);
@@ -25,6 +26,10 @@ export function PaymentDialog() {
             component = <SelectPaymentMethodDialog />;
             break;
             
+        case 'ProcessingPayrexxPayment':
+            component = <ProcessingPayrexxPaymentDialog />;
+            break;
+            
         case 'CancellingPayment':
             title = 'Bezahlen abbrechen...';
             component = <CancellingPaymentDialog />;
@@ -37,7 +42,7 @@ export function PaymentDialog() {
             
         case 'Failure':
             title = 'Bezahlen fehlgeschlagen';
-            component = <ErrorDialog />
+            component = <FailureDialog />
             break;
     }
 

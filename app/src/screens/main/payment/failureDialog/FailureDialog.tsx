@@ -1,17 +1,10 @@
 import cartXIcon from '../../../../assets/cart-x.svg';
 import { Button } from '../../../../components/button/Button.tsx';
-import { useEffect } from 'react';
 import { useAutoClose } from '../../../../hooks/useAutoClose.ts';
 import { restartApplication } from '../../../../restartAplication.ts';
-const alert = new Audio('/assets/sounds/alert.mp3');
 
-export function ErrorDialog() {
+export function FailureDialog() {
     useAutoClose(handleClose);
-    
-    useEffect(() => {
-        // noinspection JSIgnoredPromiseFromCall
-        alert.play();
-    })
     
     async function handleClose() {
         await restartApplication();
