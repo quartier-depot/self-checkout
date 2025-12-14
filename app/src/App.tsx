@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Styleguide } from './screens/styleguide/Styleguide';
-import { Statistics } from './screens/statistics/Statistics';
 import { Provider } from 'react-redux';
 import store, { useAppDispatch, useAppSelector } from './store/store';
 import { setConfiguration } from './store/slices/configurationSlice';
@@ -115,7 +114,6 @@ function AppContent() {
                     <Routes>
                         <Route path="/" element={<Main />} />
                         <Route path="styleguide" element={<Styleguide />} />
-                        <Route path="statistics" element={<Statistics />} />
                         <Route path="error" element={<ErrorScreen />} />
                     </Routes>
                 </AppInsightsErrorBoundary>
