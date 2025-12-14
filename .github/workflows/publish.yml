@@ -21,7 +21,7 @@ jobs:
         run: npm ci
       - name: Run unit tests
         working-directory: ./app
-        run: npx vitest run --reporter=default --reporter=junit --outputFile.json=./vitest-results.xml
+        run: npx vitest run --reporter=default --reporter=junit --outputFile.junit=./vitest-results.xml
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
