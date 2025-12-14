@@ -21,14 +21,14 @@ jobs:
         run: npm ci
       - name: Run unit tests
         working-directory: ./app
-        run: npx vitest run --reporter=default --reporter=json --outputFile.json=./vitest-results.json
+        run: npx vitest run --reporter=default --reporter=junit --outputFile.json=./vitest-results.xml
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
           name: Vitest Tests
           working-directory: ./app
-          path: 'vitest-results.json' 
-          reporter: jest-junit
+          path: 'vitest-results.xml' 
+          reporter: java-junit
       - name: Install Playwright Browsers
         working-directory: ./app
         run: npx playwright install chromium --with-deps
