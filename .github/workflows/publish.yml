@@ -23,6 +23,7 @@ jobs:
         working-directory: ./app
         run: npx vitest run --reporter=default --reporter=json --outputFile.json=./vitest-results.json
       - uses: dorny/test-reporter@v2
+        if: ${{ !cancelled() }}
         with:
           artifact: vitest-results
           name: Vitest Tests
@@ -35,6 +36,7 @@ jobs:
         working-directory: ./app
         run: npx playwright test
       - uses: dorny/test-reporter@v2
+        if: ${{ !cancelled() }}
         with:
           artifact: playwright-results
           name: Playwright Tests
