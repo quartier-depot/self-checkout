@@ -24,4 +24,8 @@ export default defineConfig({
     url: 'http://localhost:5173',
     reuseExistingServer: true,
   },
+  reporter: [
+    ['junit', { outputFile: 'playwright-results.xml' }],
+    [process.env.CI ? 'github' : 'list'],
+  ],
 });
