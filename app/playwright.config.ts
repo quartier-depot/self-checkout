@@ -3,9 +3,11 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: 'tests',
   timeout: 30_000,
+  // Store snapshots next to the spec, but do NOT add -darwin/-linux suffixes
+  snapshotPathTemplate: '{testDir}/{testFilePath}-snapshots/{arg}-{projectName}{ext}',
   expect: {
     timeout: 5_000,
-  },
+},
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
@@ -27,5 +29,5 @@ export default defineConfig({
   reporter: [
     ['junit', { outputFile: 'playwright-results.xml' }],
     [process.env.CI ? 'github' : 'list'],
-  ],
+  ]
 });
