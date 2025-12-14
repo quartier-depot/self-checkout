@@ -25,7 +25,6 @@ jobs:
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
-          artifact: vitest-results
           name: Vitest Tests
           working-directory: ./app
           path: 'vitest-results.json' 
@@ -39,7 +38,6 @@ jobs:
       - uses: dorny/test-reporter@v2
         if: ${{ !cancelled() }}
         with:
-          artifact: playwright-results
           name: Playwright Tests
           working-directory: ./app
           path: 'playwright-results.xml'
