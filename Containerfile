@@ -1,7 +1,6 @@
 # Stage 1: Build the React app
 FROM node:24-alpine AS build
 WORKDIR /app
-COPY --from=test /app/app/test-results.json /app/app/test-results.json
 COPY app ./app
 WORKDIR /app/app
 RUN npm install && npm run build
