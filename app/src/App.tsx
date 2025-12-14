@@ -68,11 +68,12 @@ function AppContent() {
             });
             appInsights.loadAppInsights();
             appInsights.trackPageView();
+            setReactPlugin(reactPlugin);
 
             initializeCartLoggingMiddleware(appInsights);
             initializeProductValidationMiddleware(appInsights);
             initializeCustomerValidationMiddleware(appInsights);
-            setReactPlugin(reactPlugin);
+
         }
 
         bootstrap();
