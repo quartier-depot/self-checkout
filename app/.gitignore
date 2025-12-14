@@ -14,8 +14,7 @@ logs
 npm-debug.log*
 
 # test-results
-test-results.json
-vitest-results.json
+vitest-results.xml
 playwright-results.xml
 /test-results
 
