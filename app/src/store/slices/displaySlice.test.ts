@@ -109,6 +109,7 @@ describe('displaySlice', () => {
             },
           },
         },
+        aboApi: {},
         customer: {
           customer: null,
         },
@@ -130,6 +131,7 @@ describe('displaySlice', () => {
             },
           },
         },
+        aboApi: {},
         customer: {
           customer: null,
         },
@@ -156,6 +158,7 @@ describe('displaySlice', () => {
             },
           },
         },
+        aboApi: {},
         customer: {
           customer: null,
         },
@@ -180,6 +183,7 @@ describe('displaySlice', () => {
             },
           },
         },
+        aboApi: {},
         customer: {
           customer: null,
         },
@@ -212,6 +216,7 @@ describe('displaySlice', () => {
             },
           },
         },
+        aboApi: {},
         customer: {
           customer: {
             id: 42,
@@ -259,6 +264,7 @@ describe('displaySlice', () => {
             },
           },
         },
+        aboApi: {},
         customer: {
           customer: {
             id: 42,
@@ -287,6 +293,7 @@ describe('displaySlice', () => {
             },
           },
         },
+        aboApi: {},
         customer: {
           customer: null,
         },
