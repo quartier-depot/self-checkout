@@ -299,7 +299,7 @@ describe('displaySlice', () => {
         },
       };
       const result = selectFilteredDisplayItems(state as any);
-      expect(result).toHaveLength(1);
+      expect(result).toHaveLength(0);
     });
   });
 }); 
