@@ -27,7 +27,8 @@ jobs:
         with:
           artifact: vitest-results
           name: Vitest Tests
-          path: 'app/vitest-results.json' 
+          working-directory: ./app
+          path: 'vitest-results.json' 
           reporter: jest-junit
       - name: Install Playwright Browsers
         working-directory: ./app
@@ -40,7 +41,8 @@ jobs:
         with:
           artifact: playwright-results
           name: Playwright Tests
-          path: 'app/playwright-results.xml'
+          working-directory: ./app
+          path: 'playwright-results.xml'
           reporter: java-junit
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
