@@ -27,7 +27,7 @@ export function Barcode() {
     const [showNoCustomerFound, setShowNoCustomerFound] = useState(false);
     const [barcode, setBarcode] = useState('');
     const session = useAppSelector(state => state.session.session);
-    const isProductScanningAllowed = useAppSelector(state => state.session.session.payment.state) === 'NoPayment';
+    const isPaymentInProgress = useAppSelector(state => state.session.session.payment.state) !== 'NoPayment';
     const productByBarcode = useMemo<Map<string, Product>>(createProductByBarcodeMap, [products]);
     const productsWithWeightEncoding = useMemo<Map<string, Product>>(createProductsWithWeightEncodingMap, [products]);
     
@@ -49,14 +49,14 @@ export function Barcode() {
             });
             // noinspection JSIgnoredPromiseFromCall
             keyboardScanner.connect();
-            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products, isProductScanningAllowed));
+            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products, isPaymentInProgress));
 
             return () => {
                 // noinspection JSIgnoredPromiseFromCall
                 keyboardScanner.disconnect();
             };
         }
-    }, [isProductsSuccess, isCustomersSuccess, isProductScanningAllowed]);
+    }, [isProductsSuccess, isCustomersSuccess, isPaymentInProgress]);
     
     function createProductByBarcodeMap(): Map<string, Product> {
         const map = new Map();
@@ -83,14 +83,14 @@ export function Barcode() {
         return map;
     }
     
-    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[], isProductScanningAllowed: boolean) {
+    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[], isPaymentInProgress: boolean) {
         if (!(e.value)) {
             return;
         }
         if (isMemberBarcode(e.value)) {
-            memberInput(e.value, customers);
+            memberInput(e.value, customers, isPaymentInProgress);
         } else {
-            barcodeInput(e, products, isProductScanningAllowed);
+            barcodeInput(e, products, isPaymentInProgress);
         }
     }
 
@@ -99,7 +99,14 @@ export function Barcode() {
         return barcode.startsWith('M') && barcode.length === 11;
     }
 
-    function memberInput(barcode: string, customers: Customer[]) {
+    function memberInput(barcode: string, customers: Customer[], isPaymentInProgress: boolean) {
+        if (isPaymentInProgress) {
+            console.log('Member barcode not processed product scanning is not allowed at the moment');
+            // noinspection JSIgnoredPromiseFromCall
+            alertSound.play();
+            return;
+        }
+        
         if (!customers || customers.length === 0) {
             console.log('Member barcode not processed because customersQuery.data is ' + customers);
             return;
@@ -118,8 +125,8 @@ export function Barcode() {
         }
     }
 
-    function barcodeInput(e: BarcodeEvent, products: Product[], isProductScanningAllowed: boolean) {
-        if (!isProductScanningAllowed) {
+    function barcodeInput(e: BarcodeEvent, products: Product[], isNoPaymentInProgress: boolean) {
+        if (isNoPaymentInProgress) {
             console.log('Product barcode not processed product scanning is not allowed at the moment');
             // noinspection JSIgnoredPromiseFromCall
             alertSound.play();
