@@ -34,6 +34,7 @@ export function SelectPaymentMethodDialog() {
     const [updateOrder] = useUpdateOrderMutation();
     const [createGateway] = useCreateGatewayMutation();
     const { data: payrexxAvailable, refetch: refetchPayrexx } = useCheckSignatureQuery();
+    const name = `${customer?.first_name} ${customer?.last_name}`;
 
     useEffect(() => {
         if (!walletBalance || walletBalance.balance >= cart.price) {
@@ -137,7 +138,7 @@ export function SelectPaymentMethodDialog() {
                         <div className={'p-4 border-r border-gray-300'}>
                             <h2 className={'font-semibold'}>Mit Twint bezahlen</h2>
                             <p className={'py-8 list-decimal'}>
-                                Bezahle mit Twint.<br />
+                                Bezahle <b>{formatPrice(cart.price)}</b> mit Twint.<br />
                                 Du benötigst dazu dein Smartphone.
                             </p>
                             <div className={'flex justify-center justify-left items-center'}>
@@ -171,8 +172,8 @@ export function SelectPaymentMethodDialog() {
                                         Mit Guthaben bezahlen
                                     </h2>
                                     <p className={'py-8 list-decimal'}>
-                                        Dein Guthaben beträgt <b>{formatPrice(walletBalance.balance)}</b>.<br />
-                                        Ein Klick und alles ist bezahlt.
+                                        Bezahle <b>{formatPrice(cart.price)}</b> mit dem Guthaben<br />
+                                        von <b>{name}</b> ({formatPrice(walletBalance.balance)}).
                                     </p>
                                     <div className={'flex justify-center justify-left items-center'}>
                                         <div className="w-72">
@@ -191,9 +192,8 @@ export function SelectPaymentMethodDialog() {
                                         {isRefetchingBalance && <Spinner className={'ml-2 h-4 w-4 inline-block'} />}
                                     </h2>
                                     <p className={'py-8 list-decimal'}>
-                                        Dein Guthaben ({formatPrice(walletBalance?.balance)}) reicht für deinen
-                                        Einkauf
-                                        nicht aus.
+                                        <b>{name}</b>, dein Guthaben ({formatPrice(walletBalance?.balance)}) reicht für deinen
+                                        Einkauf nicht aus.
                                         Öffne folgenden QR-Code mit dem Smartphone und lade dein Virtuelles Konto
                                         auf.
                                     </p>
