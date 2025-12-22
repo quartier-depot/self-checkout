@@ -1,5 +1,5 @@
-import { getMetaData } from '../helper/getMetaData';
-import { semicolonSeparatedList } from '../helper/semicolonSeparatedList';
+import { getMetaData } from './helper/getMetaData';
+import { semicolonSeparatedList } from './helper/semicolonSeparatedList';
 import { Unit, UNIT_MAPPING } from './Unit.ts';
 import { decode } from 'html-entities';
 

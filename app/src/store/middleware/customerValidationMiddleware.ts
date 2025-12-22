@@ -1,6 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { woocommerceApi } from '../api/woocommerceApi/woocommerceApi';
-import { Customer } from '../api/customers/Customer.ts';
+import { Customer } from '../api/Customer.ts';
 
 let appInsights: any = null;
 

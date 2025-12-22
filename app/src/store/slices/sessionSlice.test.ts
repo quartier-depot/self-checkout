@@ -11,10 +11,10 @@ import sessionReducer, {
   cancel,
   createOrder, setOrder, setTransactionId,
 } from './sessionSlice';
-import { createProduct, Product } from '../api/products/Product.ts';
+import { createProduct, Product } from '../api/Product.ts';
 import { WalletBalance } from '../api/woocommerceApi/woocommerceApi';
-import { Cart } from '../api/cart/Cart.ts';
-import { Customer } from '../api/customers/Customer.ts';
+import { Cart } from '../api/Cart.ts';
+import { Customer } from '../api/Customer.ts';
 
 describe('sessionSlice', () => {
   describe('payment', () => {

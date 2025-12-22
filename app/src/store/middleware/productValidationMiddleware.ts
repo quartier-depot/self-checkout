@@ -1,6 +1,6 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { woocommerceApi } from '../api/woocommerceApi/woocommerceApi';
-import { NO_BARCODE_VALUE, Product } from '../api/products/Product.ts';
+import { NO_BARCODE_VALUE, Product } from '../api/Product.ts';
 
 let appInsights: any = null;
 

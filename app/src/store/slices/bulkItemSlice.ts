@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from '../api/products/Product';
+import { Product } from '../api/Product';
 
 interface BulkItemState {
   bulkItem: Product | undefined;

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import {  Customer } from '../customers/Customer';
+import {  Customer } from '../Customer';
 import { RootState } from '../../store';
 
 interface CreateGateway {

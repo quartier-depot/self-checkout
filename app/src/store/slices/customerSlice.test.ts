@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import customerReducer, { setCustomer } from './customerSlice';
-import { Customer } from '../api/customers/Customer';
+import { Customer } from '../api/Customer';
 
 describe('customerSlice', () => {
   describe('when no customer is set', () => {

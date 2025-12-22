@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../../../components/button/Button";
-import { Unit } from '../../../../store/api/products/Unit.ts';
+import { Unit } from '../../../../store/api/Unit.ts';
 
 type NumPadProps = {
     value: number,

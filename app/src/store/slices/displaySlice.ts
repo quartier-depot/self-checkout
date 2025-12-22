@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product as ProductType } from '../api/products/Product.ts';
+import { Product as ProductType } from '../api/Product.ts';
 import { startNewSession } from './sessionSlice';
 import { RootState } from '../store';
 import { woocommerceApi } from '../api/woocommerceApi/woocommerceApi';

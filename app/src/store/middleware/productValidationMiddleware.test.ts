@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Middleware, MiddlewareAPI } from '@reduxjs/toolkit';
 import { initializeProductValidationMiddleware, productValidationMiddleware } from './productValidationMiddleware';
-import { Product } from '../api/products/Product.ts';
-import { Unit } from '../api/products/Unit.ts';
+import { Product } from '../api/Product.ts';
+import { Unit } from '../api/Unit.ts';
 
 describe('productValidationMiddleware', () => {
   let mockAppInsights: {

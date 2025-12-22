@@ -1,4 +1,4 @@
-import { CartItem as CartItemType } from '../../../store/api/cart/Cart';
+import { CartItem as CartItemType } from '../../../store/api/Cart';
 import { formatPrice } from '../../../format/formatPrice';
 import moreHorizontal from '../../../assets/more-horizontal.svg';
 
