@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import displayReducer, {
   CategoryDisplayItemType,
+  customerHasPickUp,
+  ListDisplayItemType,
   ProductDisplayItemType,
   selectFilteredDisplayItems,
   setCategory,
@@ -92,7 +94,7 @@ describe('displaySlice', () => {
         isBulkItem: false,
         unit: Unit.NoUnit,
         hasBarcodes: false,
-      }
+      };
     });
 
     it('should return undefined when viewMode is empty', () => {
@@ -109,7 +111,6 @@ describe('displaySlice', () => {
             },
           },
         },
-        aboApi: {},
         customer: {
           customer: null,
         },
@@ -131,7 +132,6 @@ describe('displaySlice', () => {
             },
           },
         },
-        aboApi: {},
         customer: {
           customer: null,
         },
@@ -158,7 +158,6 @@ describe('displaySlice', () => {
             },
           },
         },
-        aboApi: {},
         customer: {
           customer: null,
         },
@@ -183,7 +182,6 @@ describe('displaySlice', () => {
             },
           },
         },
-        aboApi: {},
         customer: {
           customer: null,
         },
@@ -216,7 +214,6 @@ describe('displaySlice', () => {
             },
           },
         },
-        aboApi: {},
         customer: {
           customer: {
             id: 42,
@@ -264,7 +261,6 @@ describe('displaySlice', () => {
             },
           },
         },
-        aboApi: {},
         customer: {
           customer: {
             id: 42,
@@ -293,7 +289,6 @@ describe('displaySlice', () => {
             },
           },
         },
-        aboApi: {},
         customer: {
           customer: null,
         },
@@ -301,5 +296,145 @@ describe('displaySlice', () => {
       const result = selectFilteredDisplayItems(state as any);
       expect(result).toHaveLength(0);
     });
+
+    it('should return pickups for a customer with active pickups', () => {
+      const state = {
+        display: {
+          viewMode: 'abo',
+          searchTerm: '',
+          category: '',
+        },
+        woocommerceApi: {
+          queries: {
+            'getProducts(undefined)': {
+              data: mockProducts,
+            },
+            'getPickUp(undefined)': {
+              data: {
+                lists: [
+                  {
+                    id: 101,
+                    title: 'Weekly Basket',
+                    delivery: '2025-12-25',
+                    customers: [
+                      {
+                        customer_id: 42,
+                        preorders: [{ product_id: 1, amount: 2 }],
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        },
+        customer: {
+          customer: { id: 42 },
+        },
+      };
+
+      const result = selectFilteredDisplayItems(state as any);
+
+      expect(result).toHaveLength(2); // 1 List header + 1 Product
+      expect((result![0] as ListDisplayItemType).type).toBe('list');
+      expect((result![0] as ListDisplayItemType).title).toBe('Weekly Basket');
+      expect((result![1] as ProductDisplayItemType).product.id).toBe(1);
+      expect((result![1] as ProductDisplayItemType).quantity).toBe(2);
+    });
+
+    it('should return pickups ordered by date for a customer with multiple pickups', () => {
+      const state = {
+        display: {
+          viewMode: 'abo',
+          searchTerm: '',
+          category: '',
+        },
+        woocommerceApi: {
+          queries: {
+            'getProducts(undefined)': {
+              data: mockProducts,
+            },
+            'getPickUp(undefined)': {
+              data: {
+                lists: [
+                  {
+                    id: 102,
+                    title: 'Second Basket',
+                    delivery: '2025-12-02',
+                    customers: [
+                      {
+                        customer_id: 42,
+                        preorders: [{ product_id: 1, amount: 2 }],
+                      },
+                    ],
+                  },
+                  {
+                    id: 101,
+                    title: 'First Basket',
+                    delivery: '2025-12-01',
+                    customers: [
+                      {
+                        customer_id: 42,
+                        preorders: [{ product_id: 1, amount: 2 }],
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          },
+        },
+        customer: {
+          customer: { id: 42 },
+        },
+      };
+
+      const result = selectFilteredDisplayItems(state as any);
+
+      expect(result).toHaveLength(4); // 1 List header + 1 Product each
+      expect((result![0] as ListDisplayItemType).title).toBe('First Basket');
+      expect((result![2] as ListDisplayItemType).title).toBe('Second Basket');
+    });
+
+    it('should return empty array in abo mode if customer has no pickups', () => {
+      const state = {
+        display: { viewMode: 'abo' },
+        woocommerceApi: {
+          queries: {
+            'getProducts(undefined)': { data: mockProducts },
+            'getPickUp(undefined)': { data: { lists: [] } },
+          },
+        },
+        customer: { customer: { id: 42 } },
+      };
+      const result = selectFilteredDisplayItems(state as any);
+      expect(result).toEqual([]);
+    });
+
   });
-}); 
+
+  describe('customerHasPickUp', () => {
+    it('should return true if customer is in a pickup list', () => {
+      const pickUp = {
+        lists: [
+          { customers: [{ customer_id: 1 }, { customer_id: 2 }] },
+        ],
+      };
+      expect(customerHasPickUp(1, pickUp as any)).toBe(true);
+    });
+
+    it('should return false if customer is not in any pickup list', () => {
+      const pickUp = {
+        lists: [
+          { customers: [{ customer_id: 2 }] },
+        ],
+      };
+      expect(customerHasPickUp(1, pickUp as any)).toBe(false);
+    });
+
+    it('should return false if customerId or pickUp is missing', () => {
+      expect(customerHasPickUp(undefined, {} as any)).toBe(false);
+      expect(customerHasPickUp(1, undefined)).toBe(false);
+    });
+  });
+});
