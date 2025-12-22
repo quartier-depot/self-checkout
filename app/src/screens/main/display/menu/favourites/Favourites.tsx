@@ -3,7 +3,7 @@ import { Button } from "../../../../../components/button/Button";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../store/store";
 import { setViewMode, selectViewMode } from "../../../../../store/slices/displaySlice.ts";
-import { useGetCustomerOrdersQuery } from "../../../../../store/api/api";
+import { useGetCustomerOrdersQuery } from "../../../../../store/api/woocommerceApi/woocommerceApi";
 import { MemberDialog } from "../../../../../components/modal/dialog/memberDialog/MemberDialog";
 
 

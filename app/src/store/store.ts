@@ -6,15 +6,18 @@ import customerReducer from './slices/customerSlice';
 import displayReducer from './slices/displaySlice';
 import sessionReducer from './slices/sessionSlice';
 import bulkItemReducer from './slices/bulkItemSlice';
-import { aboApi, api, payrexxApi, restartApi } from './api/api';
 import { soundMiddleware } from './middleware/soundMiddleware';
 import { cartLoggingMiddleware } from './middleware/cartLoggingMiddleware';
-import { bulkItemMiddleware } from './middleware/bulkItemMiddleware.ts';
-import { productValidationMiddleware } from './middleware/productValidationMiddleware.ts';
-import { customerValidationMiddleware } from './middleware/customerValidationMiddleware.ts';
+import { bulkItemMiddleware } from './middleware/bulkItemMiddleware';
+import { productValidationMiddleware } from './middleware/productValidationMiddleware';
+import { customerValidationMiddleware } from './middleware/customerValidationMiddleware';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { persistReducer, persistStore } from 'redux-persist';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
+import { woocommerceApi } from './api/woocommerceApi/woocommerceApi';
+import { payrexxApi } from './api/payrexxApi/payrexxApi';
+import { restartApi } from './api/restartApi/restartApi';
+import { aboApi } from './api/aboApi/aboApi';
 
 // We'll add our reducers here once we create them
 const rootReducer = combineReducers({
@@ -24,7 +27,7 @@ const rootReducer = combineReducers({
   customer: customerReducer,
   display: displayReducer,
   session: sessionReducer,
-  [api.reducerPath]: api.reducer,
+  [woocommerceApi.reducerPath]: woocommerceApi.reducer,
   [aboApi.reducerPath]: aboApi.reducer,
   [payrexxApi.reducerPath]: payrexxApi.reducer,
   [restartApi.reducerPath]: restartApi.reducer,
@@ -34,7 +37,7 @@ const persistConfig = {
   key: 'root',
   version:1,
   storage,
-  blacklist: [api.reducerPath, aboApi.reducerPath, payrexxApi.reducerPath, restartApi.reducerPath]
+  blacklist: [woocommerceApi.reducerPath, aboApi.reducerPath, payrexxApi.reducerPath, restartApi.reducerPath]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -47,7 +50,7 @@ const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     })
-      .concat(api.middleware)
+      .concat(woocommerceApi.middleware)
       .concat(aboApi.middleware)
       .concat(payrexxApi.middleware)
       .concat(restartApi.middleware)

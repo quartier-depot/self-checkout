@@ -1,4 +1,4 @@
-import {  useGetWalletBalanceQuery } from '../../../store/api/api';
+import {  useGetWalletBalanceQuery } from '../../../store/api/woocommerceApi/woocommerceApi';
 import { formatPrice } from '../../../format/formatPrice';
 import { useEffect, useState } from 'react';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog';

@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
 import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
 import { noPayment, PaymentState, setOrder } from '../../../../store/slices/sessionSlice';
 import { useEffect } from 'react';
-import { useDeleteOrderMutation } from '../../../../store/api/api';
+import { useDeleteOrderMutation } from '../../../../store/api/woocommerceApi/woocommerceApi';
 import cartXIcon from '../../../../assets/cart-x.svg';
 
 export function CancellingPaymentDialog() {

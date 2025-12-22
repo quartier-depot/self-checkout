@@ -5,7 +5,7 @@ import { setCustomer } from '../../../store/slices/customerSlice';
 import { changeCartQuantity } from '../../../store/slices/cartSlice';
 import { Product } from '../../../store/api/products/Product';
 import { Customer } from '../../../store/api/customers/Customer';
-import { useGetProductsQuery, useGetCustomersQuery } from '../../../store/api/api';
+import { useGetProductsQuery, useGetCustomersQuery } from '../../../store/api/woocommerceApi/woocommerceApi';
 import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { Button } from '../../../components/button/Button';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';

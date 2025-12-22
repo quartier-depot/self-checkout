@@ -3,7 +3,7 @@ import { Button } from '../../../../components/button/Button';
 import cartCheckIcon from '../../../../assets/cart-check.svg';
 import { PaymentState } from '../../../../store/slices/sessionSlice.ts';
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { useGetWalletBalanceQuery } from '../../../../store/api/api.ts';
+import { useGetWalletBalanceQuery } from '../../../../store/api/woocommerceApi/woocommerceApi';
 import { startNewSession } from '../../../../store/slices/sessionSlice.ts';
 import { useAutoClose } from '../../../../hooks/useAutoClose.ts';
 

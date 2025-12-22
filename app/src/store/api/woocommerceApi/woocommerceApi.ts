@@ -1,10 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { createProduct, Product } from './products/Product';
-import { createCustomer, Customer } from './customers/Customer';
-import { Cart } from './cart/Cart';
-import { RootState } from '../store';
-import { Abo, createAbo, addOrder } from './abo/Abo';
-import Papa from 'papaparse';
+import { createProduct, Product } from '../products/Product';
+import { createCustomer, Customer } from '../customers/Customer';
+import { Cart } from '../cart/Cart';
+import { RootState } from '../../store';
 
 export type OrderStatus =
   'pending'
@@ -63,21 +61,9 @@ export interface WalletBalance {
   currency: string;
 }
 
-interface CreateGateway {
-  orderTotal: number,
-  customer?: Customer,
-  orderId: string
-}
-
-interface CreateGatewayResponse {
-  status: string;
-  message?: string;
-  orderId?: string;
-  link?: string;
-}
 
 
-export const api = createApi({
+export const woocommerceApi = createApi({
   reducerPath: 'woocommerceApi',
   baseQuery: fetchBaseQuery({
     baseUrl: '/wp-json/wc/v3/',
@@ -275,7 +261,7 @@ export const api = createApi({
           billing: customer?.billing,
           shipping: customer?.shipping,
           created_via: 'pos-rest-api',
-          line_items: cart.items.map(item => ({
+          line_items: cart.items.map((item: any) => ({
             product_id: item.product.id,
             quantity: item.quantity,
           })),
@@ -352,164 +338,6 @@ export const api = createApi({
   }),
 });
 
-export const aboApi = createApi({
-  reducerPath: 'aboApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/docs-google-com/spreadsheets/d/',
-    responseHandler: 'text',
-  }),
-  tagTypes: ['Abo'],
-  endpoints: (builder) => ({
-    getAbo: builder.query<Abo, void>({
-      async queryFn(_arg, queryApi, _extraOptions, fetchWithBaseQuery) {
-
-        const state = queryApi.getState() as RootState;
-        const configuration = state.configuration.configuration;
-        const documentId = configuration?.abo?.documentId;
-        if (!documentId) {
-          throw new Error('Missing configuration: abo.documentId');
-        }
-
-        const matrixPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv`);
-        const basisPromise = await fetchWithBaseQuery(`${documentId}/export?format=csv&gid=0`);
-
-        const descriptionToArticleId = new Map();
-        if (basisPromise.data && matrixPromise.data) {
-          const abo = createAbo();
-
-          const parsedBasis = Papa.parse<any>(basisPromise.data.toString());
-          const descriptionColumn = 0;
-          const articleIdColumn = 53;
-          parsedBasis.data
-            .filter(row => row[descriptionColumn] && row[articleIdColumn])
-            .forEach(row => descriptionToArticleId.set(row[descriptionColumn], row[articleIdColumn]),
-            );
-
-          const parsedMatrix = Papa.parse<any>(matrixPromise.data.toString(), { skipFirstNLines: 1, header: true });
-          abo.description = parsedMatrix.data[0]['Name'] || parsedMatrix.data[0][''];
-          parsedMatrix.data.forEach((row: any, index: number) => {
-            if (index > 0) {
-              const total = row['Alles'];
-              if (total !== '0') {
-                const customerId = row['User ID'];
-                if (customerId) {
-                  const articleDescriptions = Object.keys(row);
-                  articleDescriptions.forEach((description: string) => {
-                    const articleId = descriptionToArticleId.get(description);
-                    if (articleId) {
-                      const quantity = row[description];
-                      if (quantity) {
-                        addOrder(abo, customerId, articleId, quantity);
-                      }
-                    }
-                  });
-                }
-              }
-            }
-          });
-          return { data: abo };
-        } else {
-          console.log('no abo data');
-          return {
-            error: {
-              status: 'FETCH_ERROR',
-              error: 'Failed to fetch Abo data from Google Sheets',
-            },
-          };
-        }
-      },
-      providesTags: ['Abo'],
-    }),
-  }),
-});
-
-export const payrexxApi = createApi({
-  reducerPath: 'payrexxApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/payrexx/v1.13/',
-  }),
-  tagTypes: ['Payrexx'],
-  endpoints: (builder) => ({
-    checkSignature: builder.query<boolean, void>({
-      query: () => `SignatureCheck`,
-      transformResponse: (response: any): boolean => {
-        return response?.status === 'success';
-      },
-    }),
-    createGateway: builder.mutation<CreateGatewayResponse, CreateGateway>({
-      async queryFn(request, { getState }, _extraOptions, fetchWithBaseQuery) {
-        const state = getState() as RootState;
-        const config = state.configuration.configuration;
-        if (!(config?.payrexx.redirectUrl)) {
-          throw new Error('Payrexx redirect url not configured.');
-        }
-
-        const params = new URLSearchParams();
-        var amount = (request.orderTotal * 100).toString();
-        params.append('amount', amount);
-        params.append('currency', 'CHF');
-        params.append('referenceId', `self-checkout-${request.orderId}`);
-        params.append('fields[forename][value]', request.customer?.first_name || '');
-        params.append('fields[surname][value]', request.customer?.last_name || 'Unbekannt');
-        params.append('fields[email][value]', request.customer?.email || '');
-        params.append('pm[0]', 'twint');
-        params.append('language', 'DE');
-        params.append('successRedirectUrl', config.payrexx.redirectUrl);
-        params.append('failedRedirectUrl', `${config.payrexx.redirectUrl}?payrexx=failure`);
-        params.append('basket[0][name]', `Bestellung ${request.orderId}`);
-        params.append('basket[0][amount]', amount);
-
-        const result = await fetchWithBaseQuery({
-          url: 'Gateway',
-          method: 'POST',
-          body: params.toString(),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-
-        if (result.error) {
-          return { error: result.error };
-        }
-
-        const response = result.data as any;
-        return {
-          data: {
-            status: response.status,
-            message: response.message,
-            orderId: response.data[0]?.referenceId,
-            link: response.data[0]?.link,
-          },
-        };
-      },
-    }),
-  }),
-});
-
-export const restartApi = createApi({
-  reducerPath: 'restartApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api/restart/',
-  }),
-  tagTypes: ['Restart'],
-  endpoints: (builder) => ({
-    isRestart: builder.query<boolean, void>({
-      query: () => ``,
-      transformResponse: (response: any): boolean => {
-        return response.restart === true;
-      },
-      providesTags: ['Restart'],
-    }),
-    setRestarted: builder.mutation<void, void>({
-      query: () => ({
-        url: ``,
-        method: 'POST',
-      }),
-      invalidatesTags: ['Restart'],
-    }),
-  }),
-});
-
 
 export const {
   useGetProductsQuery,
@@ -521,18 +349,4 @@ export const {
   useDeleteOrderMutation,
   useGetOrderQuery,
   useGetCustomerOrdersQuery,
-} = api;
-
-export const {
-  useGetAboQuery,
-} = aboApi;
-
-export const {
-  useCheckSignatureQuery,
-  useCreateGatewayMutation,
-} = payrexxApi;
-
-export const {
-  useIsRestartQuery,
-  useSetRestartedMutation,
-} = restartApi;
+} = woocommerceApi;

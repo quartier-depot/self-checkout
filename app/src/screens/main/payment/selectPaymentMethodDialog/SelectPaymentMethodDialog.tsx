@@ -7,11 +7,13 @@ import {
     showSuccess, setTransactionId, payWithPayrexx, showFailure
 } from '../../../../store/slices/sessionSlice.ts';
 import {
-    useCheckSignatureQuery, useCreateGatewayMutation,
     useGetWalletBalanceQuery,
     usePayWithWalletMutation,
     useUpdateOrderMutation
-} from '../../../../store/api/api.ts';
+} from '../../../../store/api/woocommerceApi/woocommerceApi';
+import {
+    useCheckSignatureQuery, useCreateGatewayMutation
+} from '../../../../store/api/payrexxApi/payrexxApi';
 import { formatPrice } from '../../../../format/formatPrice';
 import { useEffect } from 'react';
 import { Spinner } from '../../../../components/spinner/Spinner';
