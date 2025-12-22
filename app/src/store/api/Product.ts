@@ -1,5 +1,3 @@
-import { getMetaData } from './helper/getMetaData';
-import { semicolonSeparatedList } from './helper/semicolonSeparatedList';
 import { Unit, UNIT_MAPPING } from './Unit.ts';
 import { decode } from 'html-entities';
 
@@ -63,3 +61,17 @@ export function hasMatchingBarcode(product: Product | string[], code: string): b
   return barcodes.some(barcode => barcode === code);
 }
 
+function semicolonSeparatedList(value: string | undefined): string[] {
+  if (!value) return [];
+  return value.split(';').map(item => item.trim()).filter(item => item.length > 0);
+}
+
+function getMetaData(key: string, dto: any): string {
+  if (!dto || !dto.meta_data || !Array.isArray(dto.meta_data)) {
+    return '';
+  }
+
+  return (
+    dto.meta_data.find((meta: { key: string; value: string }) => meta.key === key)?.value ?? ''
+  );
+}
