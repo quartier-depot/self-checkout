@@ -6,7 +6,7 @@ type NoAboDialogProps = {
     onClose: () => void;
 }
 
-export function NoAboDialog({ onClose }: NoAboDialogProps) {
+export function NoPickUpDialog({ onClose }: NoAboDialogProps) {
     return (
             
             <Dialog title="Interessiert am Abo?" onBackdropClick={onClose}>

@@ -3,6 +3,7 @@ import { createProduct, Product } from '../Product';
 import { createCustomer, Customer } from '../Customer';
 import { Cart } from '../Cart';
 import { RootState } from '../../store';
+import { PickUp } from '../PickUp.ts';
 
 export type OrderStatus =
   'pending'
@@ -77,7 +78,7 @@ export const woocommerceApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Products', 'Customers', 'Wallet', 'Orders'],
+  tagTypes: ['Products', 'Customers', 'Wallet', 'Orders', 'PickUp'],
   endpoints: (builder) => ({
     // Products
     getProducts: builder.query<Product[], void>({
@@ -335,6 +336,13 @@ export const woocommerceApi = createApi({
       },
       providesTags: ['Orders'],
     }),
+
+    getPickUp: builder.query<PickUp, void>({
+      query: () => ({
+        url: 'ondemand/pick-up'
+      }),
+      providesTags: ['PickUp'],
+    }),
   }),
 });
 
@@ -349,4 +357,5 @@ export const {
   useDeleteOrderMutation,
   useGetOrderQuery,
   useGetCustomerOrdersQuery,
+  useGetPickUpQuery
 } = woocommerceApi;

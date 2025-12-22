@@ -6,7 +6,7 @@ import { useAppSelector } from '../../../store/store';
 import Scrollbar from '../../../components/scrollbar/Scrollbar';
 import { DisplayItemType, selectFilteredDisplayItems } from '../../../store/slices/displaySlice.ts';
 import { CategoryDisplayItem } from './CategoryDisplayItem.tsx';
-
+import { ListDisplayItem } from './ListDisplayItem.tsx';
 
 export function Display() {
     const displayItems = useAppSelector(selectFilteredDisplayItems);
@@ -32,6 +32,13 @@ export function Display() {
                           return (<CategoryDisplayItem
                             key={displayItem.key}
                             category={displayItem.key}
+                          />)
+
+                      case 'list':
+                          return (<ListDisplayItem
+                                  key={displayItem.key}
+                                  title={displayItem.title}
+                                  delivery={displayItem.delivery}
                           />)
                       }
                     }

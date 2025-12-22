@@ -3,7 +3,7 @@ import { Product as ProductType } from '../api/Product.ts';
 import { startNewSession } from './sessionSlice';
 import { RootState } from '../store';
 import { woocommerceApi } from '../api/woocommerceApi/woocommerceApi';
-import { aboApi } from '../api/aboApi/aboApi';
+import { List, PickUp } from '../api/PickUp.ts';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites' | 'abo';
 
@@ -48,12 +48,13 @@ export const selectSearchTerm = (state: RootState) => state.display.searchTerm;
 
 export type ProductDisplayItemType = { key: string; type: 'product', product: ProductType; quantity: number };
 export type CategoryDisplayItemType = { key: string; type: 'category' };
-export type DisplayItemType = ProductDisplayItemType | CategoryDisplayItemType;
+export type ListDisplayItemType = { key: string; type: 'list', delivery: string, title: string};
+export type DisplayItemType = ProductDisplayItemType | CategoryDisplayItemType | ListDisplayItemType;
 
 export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] | undefined => {
   const { viewMode, searchTerm } = state.display;
   const products = woocommerceApi.endpoints.getProducts.select()(state).data;
-  const abo = aboApi.endpoints.getAbo.select()(state).data;
+  const pickUp = woocommerceApi.endpoints.getPickUp.select()(state).data;
   const customerId = state.customer.customer?.id;
 
   if (!products) return undefined;
@@ -107,14 +108,27 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
         .map(product => createProductDisplayItem(product, 1));
             
     case 'abo':
-      if (!customerId) return [];
+      if (!customerId || !pickUp || !customerHasPickUp(customerId, pickUp)) return [];
       
-      if (abo?.orders[customerId]) {
-        const items = abo.orders[customerId];
-        return items.map(item => createProductDisplayItem(products.find(product => product.articleId == item.articleId)!, item.quantity));
-      } else {
-        return [];
+      const lists: List[] = [];
+      for (const list of pickUp.lists) {
+        for (const customer of list.customers) {
+          if (customer.customer_id === customerId) {
+            lists.push(list);
+           }
+        }
       }
+      
+      lists.sort((a, b) => Date.parse(a.delivery) - Date.parse(b.delivery));
+      
+      const items: DisplayItemType[] = [];
+      for (const list of lists) {
+        for (const customer of list.customers) {
+          items.push({ key: list.id.toString(), type: 'list', delivery: list.delivery, title: list.title });
+          items.push(...customer.preorders.map(preorder => createProductDisplayItem(products.find(product => product.id === preorder.product_id)!, preorder.amount)));
+        }
+      }
+      return items;
 
     default:
       return undefined;
@@ -135,6 +149,16 @@ function createCategoryDisplayItem(category: string): DisplayItemType {
     key: category,
     type: 'category'
   };
+}
+
+export function customerHasPickUp(customerId: number | undefined, pickUp: PickUp | undefined) {
+  if (!customerId || !pickUp) {
+    return false;
+  }
+
+  return pickUp.lists.some(list =>
+    list.customers.some(c => c.customer_id === customerId)
+  );
 }
 
 export const { setViewMode, setSearchTerm, setCategory } = displaySlice.actions;
