@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product as ProductType } from '../api/products/Product.ts';
 import { startNewSession } from './sessionSlice';
 import { RootState } from '../store';
-import { aboApi, api } from '../api/api';
+import { woocommerceApi } from '../api/woocommerceApi/woocommerceApi';
+import { aboApi } from '../api/aboApi/aboApi';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites' | 'abo';
 
@@ -51,7 +52,7 @@ export type DisplayItemType = ProductDisplayItemType | CategoryDisplayItemType;
 
 export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] | undefined => {
   const { viewMode, searchTerm } = state.display;
-  const products = api.endpoints.getProducts.select()(state).data;
+  const products = woocommerceApi.endpoints.getProducts.select()(state).data;
   const abo = aboApi.endpoints.getAbo.select()(state).data;
   const customerId = state.customer.customer?.id;
 
@@ -82,7 +83,7 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
     case 'favourites':
       if (!customerId) return [];
 
-      const orders = api.endpoints.getCustomerOrders.select(customerId)(state).data;
+      const orders = woocommerceApi.endpoints.getCustomerOrders.select(customerId)(state).data;
       if (!orders) return [];
 
       // Calculate product frequency

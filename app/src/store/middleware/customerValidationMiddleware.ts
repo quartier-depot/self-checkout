@@ -1,5 +1,5 @@
 import { Middleware } from '@reduxjs/toolkit';
-import { api } from '../api/api.ts';
+import { woocommerceApi } from '../api/woocommerceApi/woocommerceApi';
 import { Customer } from '../api/customers/Customer.ts';
 
 let appInsights: any = null;
@@ -14,7 +14,7 @@ export const customerValidationMiddleware: Middleware = () => (next) => (action:
   }
 
   if (
-    action.type === `${api.reducerPath}/executeQuery/fulfilled` &&
+    action.type === `${woocommerceApi.reducerPath}/executeQuery/fulfilled` &&
     action.meta?.arg?.endpointName === 'getCustomers'
   ) {
     const customers = action.payload as Customer[];

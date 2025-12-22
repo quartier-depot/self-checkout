@@ -12,7 +12,7 @@ import sessionReducer, {
   createOrder, setOrder, setTransactionId,
 } from './sessionSlice';
 import { createProduct, Product } from '../api/products/Product.ts';
-import { WalletBalance } from '../api/api.ts';
+import { WalletBalance } from '../api/woocommerceApi/woocommerceApi';
 import { Cart } from '../api/cart/Cart.ts';
 import { Customer } from '../api/customers/Customer.ts';
 

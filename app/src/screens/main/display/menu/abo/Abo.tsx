@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../store/store';
 import { setViewMode, selectViewMode, setSearchTerm } from '../../../../../store/slices/displaySlice.ts';
 import { MemberDialog } from '../../../../../components/modal/dialog/memberDialog/MemberDialog';
-import { useGetAboQuery } from '../../../../../store/api/api.ts';
+import { useGetAboQuery } from '../../../../../store/api/aboApi/aboApi';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { NoAboDialog } from './noAboDialog/NoAboDialog.tsx';
 

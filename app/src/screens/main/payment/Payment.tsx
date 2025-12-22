@@ -8,7 +8,7 @@ import {
     setOrder,
     showFailure, PaymentState
 } from '../../../store/slices/sessionSlice';
-import { useCreateOrderMutation } from '../../../store/api/api.ts';
+import { useCreateOrderMutation } from '../../../store/api/woocommerceApi/woocommerceApi';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { useState } from 'react';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog.tsx';

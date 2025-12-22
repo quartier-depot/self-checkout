@@ -1,9 +1,13 @@
 import {
     useGetProductsQuery,
-    useGetCustomersQuery,
-    useCheckSignatureQuery,
+    useGetCustomersQuery
+} from '../../store/api/woocommerceApi/woocommerceApi';
+import {
     useIsRestartQuery, useSetRestartedMutation
-} from '../../store/api/api';
+} from '../../store/api/restartApi/restartApi';
+import {
+    useCheckSignatureQuery
+} from '../../store/api/payrexxApi/payrexxApi';
 import { Cart } from './cart/Cart';
 import { Payment } from './payment/Payment';
 import { Loading } from '../../components/modal/loading/Loading';
