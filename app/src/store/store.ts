@@ -17,7 +17,6 @@ import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist
 import { woocommerceApi } from './api/woocommerceApi/woocommerceApi';
 import { payrexxApi } from './api/payrexxApi/payrexxApi';
 import { restartApi } from './api/restartApi/restartApi';
-import { aboApi } from './api/aboApi/aboApi';
 
 // We'll add our reducers here once we create them
 const rootReducer = combineReducers({
@@ -28,7 +27,6 @@ const rootReducer = combineReducers({
   display: displayReducer,
   session: sessionReducer,
   [woocommerceApi.reducerPath]: woocommerceApi.reducer,
-  [aboApi.reducerPath]: aboApi.reducer,
   [payrexxApi.reducerPath]: payrexxApi.reducer,
   [restartApi.reducerPath]: restartApi.reducer,
 });
@@ -37,7 +35,7 @@ const persistConfig = {
   key: 'root',
   version:1,
   storage,
-  blacklist: [woocommerceApi.reducerPath, aboApi.reducerPath, payrexxApi.reducerPath, restartApi.reducerPath]
+  blacklist: [woocommerceApi.reducerPath, payrexxApi.reducerPath, restartApi.reducerPath]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -51,7 +49,6 @@ const store = configureStore({
       },
     })
       .concat(woocommerceApi.middleware)
-      .concat(aboApi.middleware)
       .concat(payrexxApi.middleware)
       .concat(restartApi.middleware)
       .concat(soundMiddleware)
