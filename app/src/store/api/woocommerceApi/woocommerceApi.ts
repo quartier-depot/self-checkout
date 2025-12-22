@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { createProduct, Product } from '../products/Product';
-import { createCustomer, Customer } from '../customers/Customer';
-import { Cart } from '../cart/Cart';
+import { createProduct, Product } from '../Product';
+import { createCustomer, Customer } from '../Customer';
+import { Cart } from '../Cart';
 import { RootState } from '../../store';
 
 export type OrderStatus =

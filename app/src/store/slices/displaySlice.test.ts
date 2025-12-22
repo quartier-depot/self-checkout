@@ -8,8 +8,8 @@ import displayReducer, {
   setViewMode,
 } from './displaySlice.ts';
 import { startNewSession } from './sessionSlice';
-import { Product } from '../api/products/Product.ts';
-import { Unit } from '../api/products/Unit.ts';
+import { Product } from '../api/Product.ts';
+import { Unit } from '../api/Unit.ts';
 
 type ViewMode = '' | 'browse' | 'search' | 'favourites';
 

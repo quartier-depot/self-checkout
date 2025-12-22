@@ -1,4 +1,4 @@
-import { Product as ProductClass } from '../../../store/api/products/Product';
+import { Product as ProductClass } from '../../../store/api/Product';
 import { formatPrice } from '../../../format/formatPrice';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { changeCartQuantity } from '../../../store/slices/cartSlice';

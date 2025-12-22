@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../../store';
-import { Abo, createAbo, addOrder } from './Abo';
+import { Abo, createAbo, addOrder } from '../Abo';
 import Papa from 'papaparse';
 
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import cartReducer, { changeCartQuantity, setCartQuantity } from './cartSlice';
-import { createProduct, Product } from '../api/products/Product.ts';
+import { createProduct, Product } from '../api/Product.ts';
 
 describe('cartSlice', () => {
   test('when cart is empty, on change cart quantity by +1 sets product once', () => {

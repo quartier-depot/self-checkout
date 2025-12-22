@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CartItem as ItemType } from '../../../store/api/cart/Cart';
+import { CartItem as ItemType } from '../../../store/api/Cart';
 import cartIcon from '../../../assets/cart.svg';
 import { CartItem } from './CartItem.tsx';
 import { NumPad } from './numPad/NumPad';

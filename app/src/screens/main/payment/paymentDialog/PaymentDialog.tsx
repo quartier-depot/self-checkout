@@ -4,7 +4,7 @@ import { useAppSelector } from '../../../../store/store.ts';
 import { SelectPaymentMethodDialog } from '../selectPaymentMethodDialog/SelectPaymentMethodDialog.tsx';
 import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
 import { formatPrice } from '../../../../format/formatPrice.ts';
-import { Cart } from '../../../../store/api/cart/Cart.ts';
+import { Cart } from '../../../../store/api/Cart.ts';
 import { ConfirmationDialog } from '../confirmationDialog/ConfirmationDialog.tsx';
 import { FailureDialog } from '../failureDialog/FailureDialog';
 import { CancellingPaymentDialog } from '../cancellingPaymentDialog/CancellingPaymentDialog.tsx';

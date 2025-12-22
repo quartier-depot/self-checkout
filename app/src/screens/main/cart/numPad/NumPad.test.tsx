@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { NumPad } from './NumPad';
 import { describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { Unit } from '../../../../store/api/products/Unit.ts';
+import { Unit } from '../../../../store/api/Unit.ts';
 
 describe('NumPad', () => {
 
