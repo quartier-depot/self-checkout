@@ -2,24 +2,28 @@ import classNames from 'classnames';
 import { Button } from '../../../../../components/button/Button';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../../store/store';
-import { setViewMode, selectViewMode, setSearchTerm } from '../../../../../store/slices/displaySlice.ts';
+import {
+    setViewMode,
+    selectViewMode,
+    setSearchTerm,
+    customerHasPickUp
+} from '../../../../../store/slices/displaySlice.ts';
 import { MemberDialog } from '../../../../../components/modal/dialog/memberDialog/MemberDialog';
-import { useGetAboQuery } from '../../../../../store/api/aboApi/aboApi';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
-import { NoAboDialog } from './noAboDialog/NoAboDialog.tsx';
+import { NoPickUpDialog } from './noPickUpDialog/NoPickUpDialog';
+import { useGetPickUpQuery } from '../../../../../store/api/woocommerceApi/woocommerceApi';
 
-export function Abo() {
+export function PickUp() {
     const dispatch = useAppDispatch();
     const applicationInsights = useAppInsightsContext();
     const customer = useAppSelector(state => state.customer.customer);
-    const { isLoading, isError, data: abo } = useGetAboQuery();
+    const { isLoading, isError, data: pickUp } = useGetPickUpQuery();
     const [showMemberDialog, setShowMemberDialog] = useState(false);
-    const [showNoAboDialog, setShowNoAboDialog] = useState(false);
+    const [showNoPickUpDialog, setShowNoPickUpDialog] = useState(false);
     const viewMode = useAppSelector(selectViewMode);
     const isActive = viewMode === 'abo';
     const loggedIn = Boolean(customer);
-    const customerHasAbo = customer && abo && abo.orders[customer.id];
-    const disabled = !customer || isError || !abo || !customerHasAbo;
+    const disabled = !customer || isError || !pickUp || !customerHasPickUp;
 
 
     useEffect(() => {
@@ -29,23 +33,18 @@ export function Abo() {
     }, [loggedIn]);
 
     useEffect(() => {
-        if (abo && abo.count === 0) {
-            applicationInsights.trackException({ exception: new Error('Abo has not a single order.') });
-        }
         if (isError) {
-            applicationInsights.trackException({ exception: new Error('Error loading abo data.') });
+            applicationInsights.trackException({ exception: new Error('Error loading pickUp data.') });
         }
-    }, [abo, isError]);
-
-    const title = 'Abo ' + (customerHasAbo && abo.description || '');
+    }, [pickUp, isError]);
 
     const handleClick = () => {
-        if (customer && abo) {
-            if (customerHasAbo) {
+        if (customer && pickUp) {
+            if (customerHasPickUp(customer?.id, pickUp)) {
                 dispatch(setViewMode('abo'));
                 dispatch(setSearchTerm('abo'));
             } else {
-                setShowNoAboDialog(true);
+                setShowNoPickUpDialog(true);
             }
         } else {
             setShowMemberDialog(true);
@@ -54,13 +53,14 @@ export function Abo() {
 
     return (
             <>
-                <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive} withDisabledLock={!customer}
+                <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive}
+                        withDisabledLock={!customer}
                         className={classNames({ 'animate-pulse': isLoading })}>
-                    {title}
+                    Abo
                 </Button>
 
                 {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
-                {showNoAboDialog && <NoAboDialog onClose={() => setShowNoAboDialog(false)} />}
+                {showNoPickUpDialog && <NoPickUpDialog onClose={() => setShowNoPickUpDialog(false)} />}
             </>
-    )
+    );
 }
