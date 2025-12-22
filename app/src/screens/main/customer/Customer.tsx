@@ -53,7 +53,7 @@ export function Customer({ className }: CustomerProps) {
             )}
             {loggedIn && (
                 <>
-                    <div className={'h-8 font-bold text-xl'}>
+                    <div className={'h-8 font-bold text-xl'} data-testid={'customer-title'}>
                         {name}
                     </div>
                     <div className="text-right h-12 flex flex-col items-end justify-end">

@@ -57,7 +57,7 @@ export function Cart() {
             <div className={'h-12 text-left flex'}>
                 <div className={'pl-2 py-2 relative'} onClick={() => setShowCartDialog(true)}>
                     <img src={cartIcon} alt="cart" className={'h-6 inline-block'} />
-                    <Badge className={'absolute top-0 left-5'}>{cart.quantity}</Badge>
+                    <Badge className={'absolute top-0 left-5'} testId={'cart-quantity'}>{cart.quantity}</Badge>
                 </div>
             </div>
 
