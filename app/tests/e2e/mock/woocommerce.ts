@@ -1,5 +1,9 @@
 import { Page } from '@playwright/test';
 
+let customerId = 1000;
+let orderId = 3000;
+
+
 // Softdrinks (no barcode)
 const softdrinks = [
   product({
@@ -91,9 +95,8 @@ const fruits = [
 
 // Customers
 export const customers = [
-  customer( 1, "Branson",  "Sawyer")
+  customer(  "Branson",  "Sawyer")
 ]
-
 
 export async function mockWoocommerce(page: Page) {
 
@@ -139,6 +142,16 @@ export async function mockWoocommerce(page: Page) {
       contentType: 'application/json',
       body: JSON.stringify(customers),
       headers: headers,
+    });
+  });
+
+  await page.route('**/wp-json/wc/v3/orders**', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        order(customers[0], [pasta[1], vegetables[1], fruits[1], softdrinks[1]])
+      ]),
     });
   });
 
@@ -190,7 +203,8 @@ export async function mockWoocommerce(page: Page) {
 
 }
 
-function customer(id: number, firstName: string, lastName: string) {
+function customer(firstName: string, lastName: string) {
+  const id = customerId++;
   return {
     id,
     email: `${id}@test.com`,
@@ -222,7 +236,7 @@ function customer(id: number, firstName: string, lastName: string) {
 }
 
 export function memberIdFor(id: number) {
-  return `M${id.toString().padStart(3, '0')}4567890`
+  return `M000000${id}`
 }
 
 /**
@@ -719,4 +733,1386 @@ function product({ id, name, price, articleId, category, barcodes }: {
  *             ]
  *         }
  *     },
+ */
+
+function order(customer: any, products: any[]) {
+  return {
+    id: orderId++,
+    customer_id: customer.id,
+    status: "completed",
+    billing: customer.billing,
+    shipping: customer.shipping,
+    line_items: products.map(product => ({ product_id: product.id, quantity: 1 })),
+  }
+}
+
+/**
+ * [
+ *   {
+ *     "id": 30282,
+ *     "parent_id": 0,
+ *     "status": "processing",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-21T12:40:25",
+ *     "date_modified": "2025-12-21T12:40:25",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.13",
+ *     "total": "5.20",
+ *     "total_tax": "0.13",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_mntO9nca4V544",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": null,
+ *     "date_paid": "2025-12-21T12:40:25",
+ *     "cart_hash": "",
+ *     "number": "30282",
+ *     "meta_data": [],
+ *     "line_items": [
+ *       {
+ *         "id": 92970,
+ *         "name": "R\u00fcebli zum Gem\u00fcseabo",
+ *         "product_id": 28817,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "5.07",
+ *         "subtotal_tax": "0.13",
+ *         "total": "5.07",
+ *         "total_tax": "0.13",
+ *         "taxes": [{ "id": 4, "total": "0.131774", "subtotal": "0.131774" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852324,
+ *             "key": "_price_without_tax",
+ *             "value": "5.068226",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "5.068226"
+ *           },
+ *           {
+ *             "id": 852325,
+ *             "key": "_price_with_tax",
+ *             "value": "5.2",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "5.2"
+ *           }
+ *         ],
+ *         "sku": "",
+ *         "price": 5.0682260000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92971,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.13",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30282/?pay_for_order=true&key=wc_order_mntO9nca4V544",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-21T11:40:25",
+ *     "date_modified_gmt": "2025-12-21T11:40:25",
+ *     "date_completed_gmt": null,
+ *     "date_paid_gmt": "2025-12-21T11:40:25",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30282"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30281,
+ *     "parent_id": 0,
+ *     "status": "processing",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-21T12:37:15",
+ *     "date_modified": "2025-12-21T12:37:15",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.13",
+ *     "total": "5.20",
+ *     "total_tax": "0.13",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_Ciasi4ZG1E87F",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": null,
+ *     "date_paid": "2025-12-21T12:37:15",
+ *     "cart_hash": "",
+ *     "number": "30281",
+ *     "meta_data": [],
+ *     "line_items": [
+ *       {
+ *         "id": 92968,
+ *         "name": "R\u00fcebli zum Gem\u00fcseabo",
+ *         "product_id": 28817,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "5.07",
+ *         "subtotal_tax": "0.13",
+ *         "total": "5.07",
+ *         "total_tax": "0.13",
+ *         "taxes": [{ "id": 4, "total": "0.131774", "subtotal": "0.131774" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852307,
+ *             "key": "_price_without_tax",
+ *             "value": "5.068226",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "5.068226"
+ *           },
+ *           {
+ *             "id": 852308,
+ *             "key": "_price_with_tax",
+ *             "value": "5.2",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "5.2"
+ *           }
+ *         ],
+ *         "sku": "",
+ *         "price": 5.0682260000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92969,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.13",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30281/?pay_for_order=true&key=wc_order_Ciasi4ZG1E87F",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-21T11:37:15",
+ *     "date_modified_gmt": "2025-12-21T11:37:15",
+ *     "date_completed_gmt": null,
+ *     "date_paid_gmt": "2025-12-21T11:37:15",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30281"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30280,
+ *     "parent_id": 0,
+ *     "status": "completed",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-21T12:36:00",
+ *     "date_modified": "2025-12-21T12:36:13",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.13",
+ *     "total": "5.20",
+ *     "total_tax": "0.13",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_nE98iEviPJBJy",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "wallet",
+ *     "payment_method_title": "Virtuelles Konto",
+ *     "transaction_id": "10721",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": "2025-12-21T12:36:13",
+ *     "date_paid": "2025-12-21T12:36:00",
+ *     "cart_hash": "",
+ *     "number": "30280",
+ *     "meta_data": [
+ *       { "id": 1051799, "key": "_bexio_order_id", "value": "1577" },
+ *       { "id": 1051800, "key": "_bexio_order_nr", "value": "AU-01577" },
+ *       { "id": 1051801, "key": "_bexio_delivery_id", "value": "1575" },
+ *       { "id": 1051802, "key": "_bexio_delivery_nr", "value": "LS-01575" },
+ *       { "id": 1051803, "key": "_bexio_invoice_id", "value": "1344" },
+ *       { "id": 1051804, "key": "_bexio_invoice_nr", "value": "RE-01344" },
+ *       { "id": 1051805, "key": "_bexio_invoice_issued", "value": "1" },
+ *       { "id": 1051808, "key": "_bexio_invoice_paid", "value": "1" },
+ *       { "id": 1051810, "key": "_bexio_delivery_issued", "value": "1" }
+ *     ],
+ *     "line_items": [
+ *       {
+ *         "id": 92966,
+ *         "name": "R\u00fcebli zum Gem\u00fcseabo",
+ *         "product_id": 28817,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "5.07",
+ *         "subtotal_tax": "0.13",
+ *         "total": "5.07",
+ *         "total_tax": "0.13",
+ *         "taxes": [{ "id": 4, "total": "0.131774", "subtotal": "0.131774" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852290,
+ *             "key": "_price_without_tax",
+ *             "value": "5.068226",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "5.068226"
+ *           },
+ *           {
+ *             "id": 852291,
+ *             "key": "_price_with_tax",
+ *             "value": "5.2",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "5.2"
+ *           }
+ *         ],
+ *         "sku": "",
+ *         "price": 5.0682260000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92967,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.13",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30280/?pay_for_order=true&key=wc_order_nE98iEviPJBJy",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-21T11:36:00",
+ *     "date_modified_gmt": "2025-12-21T11:36:13",
+ *     "date_completed_gmt": "2025-12-21T11:36:13",
+ *     "date_paid_gmt": "2025-12-21T11:36:00",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30280"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30279,
+ *     "parent_id": 0,
+ *     "status": "processing",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-21T12:30:33",
+ *     "date_modified": "2025-12-21T12:30:34",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.59",
+ *     "total": "23.10",
+ *     "total_tax": "0.59",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_5NyyIGC1sF9Xj",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": null,
+ *     "date_paid": "2025-12-21T12:30:34",
+ *     "cart_hash": "",
+ *     "number": "30279",
+ *     "meta_data": [],
+ *     "line_items": [
+ *       {
+ *         "id": 92964,
+ *         "name": "Gugelhopf Bratapfel, Sorbetto",
+ *         "product_id": 28358,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "22.51",
+ *         "subtotal_tax": "0.59",
+ *         "total": "22.51",
+ *         "total_tax": "0.59",
+ *         "taxes": [{ "id": 4, "total": "0.58538", "subtotal": "0.58538" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852273,
+ *             "key": "_price_without_tax",
+ *             "value": "22.51462",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "22.51462"
+ *           },
+ *           {
+ *             "id": 852274,
+ *             "key": "_price_with_tax",
+ *             "value": "23.1",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "23.1"
+ *           }
+ *         ],
+ *         "sku": "QD-0-0764",
+ *         "price": 22.514620000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92965,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.59",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30279/?pay_for_order=true&key=wc_order_5NyyIGC1sF9Xj",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-21T11:30:33",
+ *     "date_modified_gmt": "2025-12-21T11:30:34",
+ *     "date_completed_gmt": null,
+ *     "date_paid_gmt": "2025-12-21T11:30:34",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30279"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30278,
+ *     "parent_id": 0,
+ *     "status": "completed",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-21T11:58:23",
+ *     "date_modified": "2025-12-21T11:58:27",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.59",
+ *     "total": "23.10",
+ *     "total_tax": "0.59",
+ *     "customer_id": 214,
+ *     "order_key": "wc_order_Tki8owxQCU3XY",
+ *     "billing": {
+ *       "first_name": "Johnny",
+ *       "last_name": "Subscriber",
+ *       "company": "",
+ *       "address_1": "",
+ *       "address_2": "",
+ *       "city": "",
+ *       "state": "",
+ *       "postcode": "",
+ *       "country": "",
+ *       "email": "subscriber@info.ch",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "",
+ *       "last_name": "",
+ *       "company": "",
+ *       "address_1": "",
+ *       "address_2": "",
+ *       "city": "",
+ *       "state": "",
+ *       "postcode": "",
+ *       "country": "",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "wallet",
+ *     "payment_method_title": "Virtuelles Konto",
+ *     "transaction_id": "10720",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": "2025-12-21T11:58:27",
+ *     "date_paid": "2025-12-21T11:58:23",
+ *     "cart_hash": "",
+ *     "number": "30278",
+ *     "meta_data": [
+ *       { "id": 1051709, "key": "_bexio_order_id", "value": "1576" },
+ *       { "id": 1051710, "key": "_bexio_order_nr", "value": "AU-01576" },
+ *       { "id": 1051711, "key": "_bexio_delivery_id", "value": "1574" },
+ *       { "id": 1051712, "key": "_bexio_delivery_nr", "value": "LS-01574" },
+ *       { "id": 1051713, "key": "_bexio_invoice_id", "value": "1343" },
+ *       { "id": 1051714, "key": "_bexio_invoice_nr", "value": "RE-01343" },
+ *       { "id": 1051715, "key": "_bexio_invoice_issued", "value": "1" },
+ *       { "id": 1051718, "key": "_bexio_invoice_paid", "value": "1" },
+ *       { "id": 1051720, "key": "_bexio_delivery_issued", "value": "1" }
+ *     ],
+ *     "line_items": [
+ *       {
+ *         "id": 92962,
+ *         "name": "Gugelhopf Bratapfel, Sorbetto",
+ *         "product_id": 28358,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "22.51",
+ *         "subtotal_tax": "0.59",
+ *         "total": "22.51",
+ *         "total_tax": "0.59",
+ *         "taxes": [{ "id": 4, "total": "0.58538", "subtotal": "0.58538" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852256,
+ *             "key": "_price_without_tax",
+ *             "value": "22.51462",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "22.51462"
+ *           },
+ *           {
+ *             "id": 852257,
+ *             "key": "_price_with_tax",
+ *             "value": "23.1",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "23.1"
+ *           }
+ *         ],
+ *         "sku": "QD-0-0764",
+ *         "price": 22.514620000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92963,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.59",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30278/?pay_for_order=true&key=wc_order_Tki8owxQCU3XY",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-21T10:58:23",
+ *     "date_modified_gmt": "2025-12-21T10:58:27",
+ *     "date_completed_gmt": "2025-12-21T10:58:27",
+ *     "date_paid_gmt": "2025-12-21T10:58:23",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30278"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/214"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30277,
+ *     "parent_id": 0,
+ *     "status": "processing",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-21T11:56:35",
+ *     "date_modified": "2025-12-21T11:56:35",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.59",
+ *     "total": "23.10",
+ *     "total_tax": "0.59",
+ *     "customer_id": 214,
+ *     "order_key": "wc_order_DFg0tsusvToQA",
+ *     "billing": {
+ *       "first_name": "Johnny",
+ *       "last_name": "Subscriber",
+ *       "company": "",
+ *       "address_1": "",
+ *       "address_2": "",
+ *       "city": "",
+ *       "state": "",
+ *       "postcode": "",
+ *       "country": "",
+ *       "email": "subscriber@info.ch",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "",
+ *       "last_name": "",
+ *       "company": "",
+ *       "address_1": "",
+ *       "address_2": "",
+ *       "city": "",
+ *       "state": "",
+ *       "postcode": "",
+ *       "country": "",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": null,
+ *     "date_paid": "2025-12-21T11:56:35",
+ *     "cart_hash": "",
+ *     "number": "30277",
+ *     "meta_data": [],
+ *     "line_items": [
+ *       {
+ *         "id": 92960,
+ *         "name": "Gugelhopf Bratapfel, Sorbetto",
+ *         "product_id": 28358,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "22.51",
+ *         "subtotal_tax": "0.59",
+ *         "total": "22.51",
+ *         "total_tax": "0.59",
+ *         "taxes": [{ "id": 4, "total": "0.58538", "subtotal": "0.58538" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852239,
+ *             "key": "_price_without_tax",
+ *             "value": "22.51462",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "22.51462"
+ *           },
+ *           {
+ *             "id": 852240,
+ *             "key": "_price_with_tax",
+ *             "value": "23.1",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "23.1"
+ *           }
+ *         ],
+ *         "sku": "QD-0-0764",
+ *         "price": 22.514620000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92961,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.59",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30277/?pay_for_order=true&key=wc_order_DFg0tsusvToQA",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-21T10:56:35",
+ *     "date_modified_gmt": "2025-12-21T10:56:35",
+ *     "date_completed_gmt": null,
+ *     "date_paid_gmt": "2025-12-21T10:56:35",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30277"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/214"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30276,
+ *     "parent_id": 0,
+ *     "status": "processing",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-21T11:55:41",
+ *     "date_modified": "2025-12-21T11:55:41",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.59",
+ *     "total": "23.10",
+ *     "total_tax": "0.59",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_F3Qy28TgDmmuG",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": null,
+ *     "date_paid": "2025-12-21T11:55:41",
+ *     "cart_hash": "",
+ *     "number": "30276",
+ *     "meta_data": [],
+ *     "line_items": [
+ *       {
+ *         "id": 92958,
+ *         "name": "Gugelhopf Bratapfel, Sorbetto",
+ *         "product_id": 28358,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "22.51",
+ *         "subtotal_tax": "0.59",
+ *         "total": "22.51",
+ *         "total_tax": "0.59",
+ *         "taxes": [{ "id": 4, "total": "0.58538", "subtotal": "0.58538" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852222,
+ *             "key": "_price_without_tax",
+ *             "value": "22.51462",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "22.51462"
+ *           },
+ *           {
+ *             "id": 852223,
+ *             "key": "_price_with_tax",
+ *             "value": "23.1",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "23.1"
+ *           }
+ *         ],
+ *         "sku": "QD-0-0764",
+ *         "price": 22.514620000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92959,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.59",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30276/?pay_for_order=true&key=wc_order_F3Qy28TgDmmuG",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-21T10:55:41",
+ *     "date_modified_gmt": "2025-12-21T10:55:41",
+ *     "date_completed_gmt": null,
+ *     "date_paid_gmt": "2025-12-21T10:55:41",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30276"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30274,
+ *     "parent_id": 0,
+ *     "status": "completed",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-10T20:39:53",
+ *     "date_modified": "2025-12-10T20:40:28",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.42",
+ *     "total": "16.69",
+ *     "total_tax": "0.42",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_v04T7Mp1vpWpq",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": "2025-12-10T20:40:28",
+ *     "date_paid": "2025-12-10T20:39:53",
+ *     "cart_hash": "",
+ *     "number": "30274",
+ *     "meta_data": [
+ *       { "id": 1051615, "key": "bankabgleichskontrolle", "value": "0" },
+ *       {
+ *         "id": 1051616,
+ *         "key": "_bankabgleichskontrolle",
+ *         "value": "field_60dce78647468"
+ *       },
+ *       { "id": 1051617, "key": "in_buchhaltung_ubertragen", "value": "0" },
+ *       {
+ *         "id": 1051618,
+ *         "key": "_in_buchhaltung_ubertragen",
+ *         "value": "field_60dce8e1a46f9"
+ *       }
+ *     ],
+ *     "line_items": [
+ *       {
+ *         "id": 92956,
+ *         "name": "Cassata Ice-Torte, Sorbetto, 350ml",
+ *         "product_id": 19087,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "16.27",
+ *         "subtotal_tax": "0.42",
+ *         "total": "16.27",
+ *         "total_tax": "0.42",
+ *         "taxes": [{ "id": 4, "total": "0.422943", "subtotal": "0.422943" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852205,
+ *             "key": "_price_without_tax",
+ *             "value": "16.267057",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "16.267057"
+ *           },
+ *           {
+ *             "id": 852206,
+ *             "key": "_price_with_tax",
+ *             "value": "16.69",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "16.69"
+ *           }
+ *         ],
+ *         "sku": "QD-0-0015",
+ *         "price": 16.267057000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92957,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.42",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30274/?pay_for_order=true&key=wc_order_v04T7Mp1vpWpq",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-10T19:39:53",
+ *     "date_modified_gmt": "2025-12-10T19:40:28",
+ *     "date_completed_gmt": "2025-12-10T19:40:28",
+ *     "date_paid_gmt": "2025-12-10T19:39:53",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30274"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30273,
+ *     "parent_id": 0,
+ *     "status": "processing",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-10T20:39:15",
+ *     "date_modified": "2025-12-10T20:39:15",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.42",
+ *     "total": "16.69",
+ *     "total_tax": "0.42",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_l45ZrT2m5CCYE",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": null,
+ *     "date_paid": "2025-12-10T20:39:15",
+ *     "cart_hash": "",
+ *     "number": "30273",
+ *     "meta_data": [],
+ *     "line_items": [
+ *       {
+ *         "id": 92954,
+ *         "name": "Cassata Ice-Torte, Sorbetto, 350ml",
+ *         "product_id": 19087,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "16.27",
+ *         "subtotal_tax": "0.42",
+ *         "total": "16.27",
+ *         "total_tax": "0.42",
+ *         "taxes": [{ "id": 4, "total": "0.422943", "subtotal": "0.422943" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852188,
+ *             "key": "_price_without_tax",
+ *             "value": "16.267057",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "16.267057"
+ *           },
+ *           {
+ *             "id": 852189,
+ *             "key": "_price_with_tax",
+ *             "value": "16.69",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "16.69"
+ *           }
+ *         ],
+ *         "sku": "QD-0-0015",
+ *         "price": 16.267057000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92955,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.42",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30273/?pay_for_order=true&key=wc_order_l45ZrT2m5CCYE",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-10T19:39:15",
+ *     "date_modified_gmt": "2025-12-10T19:39:15",
+ *     "date_completed_gmt": null,
+ *     "date_paid_gmt": "2025-12-10T19:39:15",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30273"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   },
+ *   {
+ *     "id": 30272,
+ *     "parent_id": 0,
+ *     "status": "completed",
+ *     "currency": "CHF",
+ *     "version": "8.7.0",
+ *     "prices_include_tax": true,
+ *     "date_created": "2025-12-10T20:38:05",
+ *     "date_modified": "2025-12-10T20:39:05",
+ *     "discount_total": "0.00",
+ *     "discount_tax": "0.00",
+ *     "shipping_total": "0.00",
+ *     "shipping_tax": "0.00",
+ *     "cart_tax": "0.42",
+ *     "total": "16.69",
+ *     "total_tax": "0.42",
+ *     "customer_id": 213,
+ *     "order_key": "wc_order_MhNrgvSaYl40p",
+ *     "billing": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "CH",
+ *       "email": "christian+kunde@abegg.rocks",
+ *       "phone": ""
+ *     },
+ *     "shipping": {
+ *       "first_name": "Jennifer",
+ *       "last_name": "Campbell",
+ *       "company": "Quartierdepot",
+ *       "address_1": "R\u00f6telstrasse 126",
+ *       "address_2": "",
+ *       "city": "Z\u00fcrich",
+ *       "state": "",
+ *       "postcode": "8057",
+ *       "country": "",
+ *       "phone": ""
+ *     },
+ *     "payment_method": "",
+ *     "payment_method_title": "",
+ *     "transaction_id": "",
+ *     "customer_ip_address": "",
+ *     "customer_user_agent": "",
+ *     "created_via": "rest-api",
+ *     "customer_note": "",
+ *     "date_completed": "2025-12-10T20:39:05",
+ *     "date_paid": "2025-12-10T20:38:05",
+ *     "cart_hash": "",
+ *     "number": "30272",
+ *     "meta_data": [
+ *       { "id": 1051535, "key": "bankabgleichskontrolle", "value": "0" },
+ *       {
+ *         "id": 1051536,
+ *         "key": "_bankabgleichskontrolle",
+ *         "value": "field_60dce78647468"
+ *       },
+ *       { "id": 1051537, "key": "in_buchhaltung_ubertragen", "value": "0" },
+ *       {
+ *         "id": 1051538,
+ *         "key": "_in_buchhaltung_ubertragen",
+ *         "value": "field_60dce8e1a46f9"
+ *       }
+ *     ],
+ *     "line_items": [
+ *       {
+ *         "id": 92952,
+ *         "name": "Cassata Ice-Torte, Sorbetto, 350ml",
+ *         "product_id": 19087,
+ *         "variation_id": 0,
+ *         "quantity": 1,
+ *         "tax_class": "mwst-reduzierter-satz",
+ *         "subtotal": "16.27",
+ *         "subtotal_tax": "0.42",
+ *         "total": "16.27",
+ *         "total_tax": "0.42",
+ *         "taxes": [{ "id": 4, "total": "0.422943", "subtotal": "0.422943" }],
+ *         "meta_data": [
+ *           {
+ *             "id": 852171,
+ *             "key": "_price_without_tax",
+ *             "value": "16.267057",
+ *             "display_key": "_price_without_tax",
+ *             "display_value": "16.267057"
+ *           },
+ *           {
+ *             "id": 852172,
+ *             "key": "_price_with_tax",
+ *             "value": "16.69",
+ *             "display_key": "_price_with_tax",
+ *             "display_value": "16.69"
+ *           }
+ *         ],
+ *         "sku": "QD-0-0015",
+ *         "price": 16.267057000000001,
+ *         "image": { "id": "", "src": "" },
+ *         "parent_name": null
+ *       }
+ *     ],
+ *     "tax_lines": [
+ *       {
+ *         "id": 92953,
+ *         "rate_code": "CH-ZH-MWST. REDUZIERTER SATZ-1",
+ *         "rate_id": 4,
+ *         "label": "MwSt. reduzierter Satz",
+ *         "compound": false,
+ *         "tax_total": "0.42",
+ *         "shipping_tax_total": "0.00",
+ *         "rate_percent": 2.6000000000000001,
+ *         "meta_data": []
+ *       }
+ *     ],
+ *     "shipping_lines": [],
+ *     "fee_lines": [],
+ *     "coupon_lines": [],
+ *     "refunds": [],
+ *     "payment_url": "https://quartierdepot-april2024.local/kasse/bezahlen/30272/?pay_for_order=true&key=wc_order_MhNrgvSaYl40p",
+ *     "is_editable": false,
+ *     "needs_payment": false,
+ *     "needs_processing": true,
+ *     "date_created_gmt": "2025-12-10T19:38:05",
+ *     "date_modified_gmt": "2025-12-10T19:39:05",
+ *     "date_completed_gmt": "2025-12-10T19:39:05",
+ *     "date_paid_gmt": "2025-12-10T19:38:05",
+ *     "currency_symbol": "CHF",
+ *     "_links": {
+ *       "self": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders/30272"
+ *         }
+ *       ],
+ *       "collection": [
+ *         { "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/orders" }
+ *       ],
+ *       "customer": [
+ *         {
+ *           "href": "https://quartierdepot-april2024.local/wp-json/wc/v3/customers/213"
+ *         }
+ *       ]
+ *     }
+ *   }
+ * ]
  */
