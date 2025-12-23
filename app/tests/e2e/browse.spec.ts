@@ -19,6 +19,6 @@ test.describe('browse view', () => {
     await expect(productTiles).toHaveCount(2);
 
     await page.getByRole('button', { name: /cola/i }).click();
-    await expect(page).toHaveScreenshot('browse-add-coke-to-cart.png'); // expect two categories
+    await expect(page.getByTestId('cart-quantity')).toHaveText('1'); // expect 1 cola in cart
   });
 });
