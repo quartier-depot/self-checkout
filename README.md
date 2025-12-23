@@ -11,6 +11,7 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 * Search by past orders (favorites)
 * Search by abo orders
 * Pay with virtual wallet
+* Pay with Twint
 
 ### Watch on YouTube
 
