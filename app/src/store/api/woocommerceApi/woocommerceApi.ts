@@ -338,9 +338,19 @@ export const woocommerceApi = createApi({
     }),
 
     getPickUp: builder.query<PickUp, void>({
-      query: () => ({
-        url: 'ondemand/pick-up'
-      }),
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBaseQuery) {
+        const result = await fetchWithBaseQuery('ondemand/pick-up');
+
+        if (result.error && result.error.status === 500 && (result.error.data as any).message === 'Keine Bestellungen gefunden.') {
+          return { data: { lists: []} };
+        }
+
+        if (result.error) {
+          return { error: result.error };
+        }
+
+        return { data: result.data as PickUp };
+      },
       providesTags: ['PickUp'],
     }),
   }),
