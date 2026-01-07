@@ -11,7 +11,6 @@ import {
 import { Cart } from './cart/Cart';
 import { Payment } from './payment/Payment';
 import { Loading } from '../../components/modal/loading/Loading';
-import { Customer } from './customer/Customer';
 import { Barcode } from './barcode/Barcode';
 import { useInactivityTimer } from '../../hooks/useInactivityTimer.ts';
 import { InactivityDialog } from '../../components/modal/dialog/inactivityDialog/InactivityDialog.tsx';
@@ -45,9 +44,10 @@ export function Main() {
                         <Display />
                     </div>
                     <div className={'w-2/5 flex flex-col'}>
-                        <Customer className={'bg-slate-50 p-3 ml-3 mb-3 mt-0 mr-0'} />
-                        <div className={'bg-slate-50 ml-3 mb-0 mt-0 mr-0 p-2 grow flex flex-col overflow-hidden'}>
+                        <div className={'bg-slate-50 p-3 ml-3 mb-3 mt-0 mr-0 grow overflow-hidden' } >
                             <Cart />
+                        </div>
+                        <div className={'bg-slate-50 ml-3 mb-0 mt-0 mr-0 p-2 flex flex-col '}>
                             <Payment />
                         </div>
                     </div>

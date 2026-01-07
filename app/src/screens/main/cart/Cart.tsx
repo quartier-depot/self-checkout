@@ -15,9 +15,11 @@ import { Badge } from '../../../components/badge/Badge.tsx';
 export function Cart() {
     const dispatch = useAppDispatch();
     const cart = useAppSelector(state => state.cart.cart);
+    const customer = useAppSelector(state => state.customer.customer);
     const bulkItem = useAppSelector(state => state.bulkItem.bulkItem);
     const session = useAppSelector(state => state.session.session);
     const applicationInsights = useAppInsightsContext();
+    const name = customer ? `${customer?.first_name} ${customer?.last_name}` : '';
     
     const [dialogItem, setDialogItem] = useState<ItemType | null>();
     const [showCartDialog, setShowCartDialog] = useState(false);
@@ -54,10 +56,13 @@ export function Cart() {
 
     return (
         <>
-            <div className={'h-12 text-left flex'}>
-                <div className={'pl-2 py-2 relative'} onClick={() => setShowCartDialog(true)}>
+            <div className={'h-12 text-left flex'} onClick={() => setShowCartDialog(true)}>
+                <div className={'pl-2 py-2 relative'} >
                     <img src={cartIcon} alt="cart" className={'h-6 inline-block'} />
                     <Badge className={'absolute top-0 left-5'} testId={'cart-quantity'}>{cart.quantity}</Badge>
+                </div>
+                <div className={'flex-1 text-xl font-bold text-right'} data-testid={'customer-title'}>
+                    {name}
                 </div>
             </div>
 
