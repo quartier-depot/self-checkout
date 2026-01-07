@@ -13,8 +13,10 @@ const initialState: AppState = {
     payment: {
       state: 'NoPayment',
       orderId: undefined,
+      paymentMethod: undefined,
       transactionId: undefined,
       orderTotal: undefined,
+      charges: undefined,
     },
   },
 };
@@ -22,19 +24,20 @@ const initialState: AppState = {
 export type PaymentStates =
   'NoPayment'
   | 'CreatingOrder'
-  | 'SelectPaymentMethod'
-  | 'TopUpWallet'
   | 'ProcessingWalletPayment'
   | 'ProcessingPayrexxPayment'
   | 'Success'
-  | 'Failure'
-  | 'CancellingPayment';
+  | 'Failure';
+
+export type PaymentMethods = 'Payrexx'| 'Wallet';
 
 export interface PaymentState {
   state: PaymentStates;
   orderId?: string;
   orderTotal?: number;
+  paymentMethod?: PaymentMethods;
   transactionId?: number | string;
+  charges?: number;
 }
 
 interface SetOrderPayload {
@@ -59,55 +62,35 @@ const sessionSlice = createSlice({
       state.session.initialState = false;
     },
     createOrder: (state) => {
-      assertStateIn(state, ['NoPayment']);
       state.session.payment.state = 'CreatingOrder';
     },
     setOrder: (state, action: PayloadAction<SetOrderPayload>) => {
-      assertStateIn(state, ['NoPayment']);
       state.session.payment.orderId = action.payload.orderId;
       state.session.payment.orderTotal = action.payload.orderTotal;
     },
     setTransactionId: (state, action: PayloadAction<SetTransactionIdPayload>) => {
       state.session.payment.transactionId = action.payload.transactionId;
     },
-    selectPaymentMethod: (state) => {
-      assertStateIn(state, ['CreatingOrder']);
-      state.session.payment.state = 'SelectPaymentMethod';
-    },
-    topUpWallet: (state) => {
-      assertStateIn(state, ['SelectPaymentMethod']);
-      state.session.payment.state = 'TopUpWallet';
-    },
     payWithWallet: (state) => {
-      assertStateIn(state, ['SelectPaymentMethod']);
+      state.session.payment.paymentMethod = 'Wallet';
       state.session.payment.state = 'ProcessingWalletPayment';
     },
     payWithPayrexx: (state) => {
-      assertStateIn(state, ['SelectPaymentMethod']);
+      state.session.payment.paymentMethod = 'Payrexx';
+      state.session.payment.charges = (state.session.payment.orderTotal || 0) * 0.0125 + 0.18;
       state.session.payment.state = 'ProcessingPayrexxPayment';
     },
     showSuccess: (state) => {
-      assertStateIn(state, ['ProcessingWalletPayment', 'ProcessingPayrexxPayment']);
       state.session.payment.state = 'Success';
     },
     showFailure: (state) => {
       state.session.payment.state = 'Failure';
     },
-    cancel: (state) => {
-      state.session.payment.state = 'CancellingPayment';
-    }
-    , noPayment: (state) => {
+    noPayment: (state) => {
       state.session.payment.state = 'NoPayment';
     },
   },
 });
 
-
-function assertStateIn(state: AppState, expectedStates: PaymentStates[]) {
-  if (!expectedStates.includes(state.session.payment.state)) {
-    console.log(`Expected state to be in ${expectedStates} but was ${state.session.payment.state}`);
-  }
-}
-
-export const { startNewSession, logActivity, setOrder, setTransactionId, createOrder, selectPaymentMethod, topUpWallet, payWithWallet, payWithPayrexx, showSuccess, showFailure, cancel, noPayment } = sessionSlice.actions;
+export const { startNewSession, logActivity, setOrder, setTransactionId, createOrder, payWithWallet, payWithPayrexx, showSuccess, showFailure, noPayment } = sessionSlice.actions;
 export default sessionSlice.reducer; 

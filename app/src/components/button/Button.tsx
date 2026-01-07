@@ -16,8 +16,10 @@ export function Button({ disabled, onClick, type, toggled, className, children, 
         <button
             onClick={onClick}
             className={classNames(
-                'rounded-lg w-full mt-2 p-2 border-2 uppercase select-none flex items-center justify-center',
-
+                'rounded-lg w-full mt-2 p-2 border-2 uppercase select-none flex justify-center items-center',
+                    
+                { 'flex-row': withDisabledLock },
+                { 'flex-col': !withDisabledLock },
                 { 'text-white': type === 'primary' },
                 { 'bg-emerald-800 border-emerald-800 active:border-emerald-700 active:bg-emerald-700': type === 'primary' && !disabled },
                 { 'bg-slate-500 border-slate-500': type === 'primary' && disabled },

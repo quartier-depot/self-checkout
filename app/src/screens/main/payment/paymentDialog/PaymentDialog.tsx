@@ -1,47 +1,38 @@
 import { Dialog } from '../../../../components/modal/dialog/Dialog.tsx';
 import { PaymentState } from '../../../../store/slices/sessionSlice.ts';
 import { useAppSelector } from '../../../../store/store.ts';
-import { SelectPaymentMethodDialog } from '../selectPaymentMethodDialog/SelectPaymentMethodDialog.tsx';
-import { PaymentSpinnerDialog } from '../paymentSpinnerDialog/PaymentSpinnerDialog.tsx';
-import { formatPrice } from '../../../../format/formatPrice.ts';
-import { Cart } from '../../../../store/api/Cart.ts';
 import { ConfirmationDialog } from '../confirmationDialog/ConfirmationDialog.tsx';
 import { FailureDialog } from '../failureDialog/FailureDialog';
-import { CancellingPaymentDialog } from '../cancellingPaymentDialog/CancellingPaymentDialog.tsx';
 import { ProcessingPayrexxPaymentDialog } from '../processingPayrexxPaymentDialog/ProcessingPayrexxPaymentDialog.tsx';
+import { CreatingOrderDialog } from '../creatingOrderDialog/CreatingOrderDialog.tsx';
+import { ProcessingWalletPaymentDialog } from '../processingWalletPaymentDialog/ProcessingWalletPaymentDialog.tsx';
 
 export function PaymentDialog() {
     const payment: PaymentState = useAppSelector(state => state.session.session.payment);
-    const cart: Cart = useAppSelector(state => state.cart.cart);
     
-    let title = 'Bezahlen '+formatPrice(cart.price);
-    let component = <PaymentSpinnerDialog />;
+    let title = 'Bezahlung';
+    let component = <p />;
     
     switch (payment.state) {
         case 'CreatingOrder':
-            title = 'Bezahlen vorbereiten...';
-            break;
-            
-        case 'SelectPaymentMethod':
-            component = <SelectPaymentMethodDialog />;
+            component = <CreatingOrderDialog />;
             break;
             
         case 'ProcessingPayrexxPayment':
             component = <ProcessingPayrexxPaymentDialog />;
             break;
-            
-        case 'CancellingPayment':
-            title = 'Bezahlen abbrechen...';
-            component = <CancellingPaymentDialog />;
+
+        case 'ProcessingWalletPayment':
+            component = <ProcessingWalletPaymentDialog />;
             break;
             
         case 'Success': 
-            title = 'Bezahlen erfolgreich';
+            title = 'Bezahlung erfolgreich';
             component = <ConfirmationDialog />
             break;
             
         case 'Failure':
-            title = 'Bezahlen fehlgeschlagen';
+            title = 'Bezahlung fehlgeschlagen';
             component = <FailureDialog />
             break;
     }

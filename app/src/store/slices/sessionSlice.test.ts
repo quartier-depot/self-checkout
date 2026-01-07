@@ -2,13 +2,10 @@ import { describe, expect, test } from 'vitest';
 import sessionReducer, {
   PaymentState,
   PaymentStates,
-  selectPaymentMethod,
-  topUpWallet,
   payWithWallet,
   payWithPayrexx,
   showSuccess,
   showFailure,
-  cancel,
   createOrder, setOrder, setTransactionId,
 } from './sessionSlice';
 import { createProduct, Product } from '../api/Product.ts';
@@ -43,39 +40,37 @@ describe('sessionSlice', () => {
       });
     });
 
-    test('when in CreatingOrder, selectPaymentMethod moves to SelectPaymentMethod', () => {
+    test('when in CreatingOrder, payWithWallet moves to ProcessingWalletPayment', () => {
       const initialState = buildAppState({
         state: 'CreatingOrder',
       });
-      expect(sessionReducer(initialState, selectPaymentMethod()).session.payment).toEqual({
-        state: 'SelectPaymentMethod',
-      });
-    });
-
-    test('when in SelectPaymentMethod, topUpWallet moves to TopUpWallet', () => {
-      const initialState = buildAppState({
-        state: 'SelectPaymentMethod',
-      });
-      expect(sessionReducer(initialState, topUpWallet()).session.payment).toEqual({
-        state: 'TopUpWallet',
-      });
-    });
-
-    test('when in SelectPaymentMethod, payWithWallet moves to ProcessingWalletPayment', () => {
-      const initialState = buildAppState({
-        state: 'SelectPaymentMethod',
-      });
       expect(sessionReducer(initialState, payWithWallet()).session.payment).toEqual({
         state: 'ProcessingWalletPayment',
+        paymentMethod: "Wallet",
       });
     });
 
-    test('when in SelectPaymentMethod, payWithPayrexx moves to ProcessingPayrexxPayment', () => {
+    test('when in CreatingOrder, payWithPayrexx moves to ProcessingPayrexxPayment', () => {
       const initialState = buildAppState({
-        state: 'SelectPaymentMethod',
+        state: 'CreatingOrder',
       });
       expect(sessionReducer(initialState, payWithPayrexx()).session.payment).toEqual({
         state: 'ProcessingPayrexxPayment',
+        paymentMethod: 'Payrexx',
+        charges: 0.18
+      });
+    });
+
+    test('when in CreatingOrder, payWithPayrexx calculates charges correctly', () => {
+      const initialState = buildAppState({
+        state: 'CreatingOrder',
+        orderTotal: 1000,
+      });
+      expect(sessionReducer(initialState, payWithPayrexx()).session.payment).toEqual({
+        state: 'ProcessingPayrexxPayment',
+        paymentMethod: 'Payrexx',
+        orderTotal: 1000,
+        charges: 12.68
       });
     });
 
@@ -115,26 +110,7 @@ describe('sessionSlice', () => {
         state: 'Failure',
       });
     });
-
-    test('when in TopUpWallet, showFailure moves to Failure', () => {
-      const initialState = buildAppState({
-        state: 'TopUpWallet',
-      });
-      expect(sessionReducer(initialState, showFailure()).session.payment).toEqual({
-        state: 'Failure',
-      });
-    });
-
-    describe.each([['SelectPaymentMethod'], ['TopUpWallet']])('when in %s', (currentState: string) => {
-      test('cancel moves to CancellingPayment', () => {
-        const initialState = buildAppState({
-          state: currentState as unknown as PaymentStates,
-        });
-        expect(sessionReducer(initialState, cancel()).session.payment).toEqual({
-          state: 'CancellingPayment',
-        });
-      });
-    });
+    
   });
 });
 
