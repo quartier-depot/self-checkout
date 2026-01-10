@@ -26,7 +26,7 @@ export function ConfirmationDialog() {
 
     return (
             <>
-                <div className={'flex-1 grid grid-cols-2 grid-rows-1 gap-4 overflow-y-auto'} onClick={handleClose}>
+                <div className={'flex-1 grid grid-cols-2 grid-rows-1 gap-4 overflow-y-auto'} onClick={handleClose} data-testid={'confirmation-dialog'}>
                     <div className={'p-4 border-r border-gray-300'}>
                         <div className={'grid grid-cols-2 gap-2 my-4'}>
                             <div>Betrag:</div>
