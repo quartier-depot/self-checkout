@@ -13,9 +13,9 @@ A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](ht
 * Pay with virtual wallet
 * Pay with Twint
 
-### Screenshots
+![Start](./app/tests/e2e/payment.spec.ts-snapshots/start-chromium-darwin.png)
 
-see [FEATURES.md](./FEATURES.md)
+For more screenshots see [FEATURES.md](./FEATURES.md)
 
 ### Watch on YouTube
 

@@ -146,13 +146,38 @@ export async function mockWoocommerce(page: Page) {
   });
 
   await page.route('**/wp-json/wc/v3/orders**', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify([
-        order(customers[0], [pasta[1], vegetables[1], fruits[1], softdrinks[1]])
-      ]),
-    });
+    switch (route.request().method()) {
+      case "GET":
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([
+            order(customers[0], [pasta[1], vegetables[1], fruits[1], softdrinks[1]])
+          ]),
+        });
+        break;
+        
+      case "POST":
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(
+            newOrder("processing", await route.request().postDataJSON())
+          ),
+        });
+        break;
+
+      case "PUT":
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([
+            newOrder("completed", await route.request().postDataJSON())
+          ]),
+        });
+        break;
+    }
+
   });
 
   await page.route('**/wp-json/wc/v3/wallet/balance**', async route => {
@@ -160,6 +185,14 @@ export async function mockWoocommerce(page: Page) {
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({ balance: "42.00", currency: "CHF" }),
+    });
+  });
+
+  await page.route('**/wp-json/wc/v3/wallet', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ id: "#walletTransactionId", response: "success" }),
     });
   });
 
@@ -743,6 +776,15 @@ function order(customer: any, products: any[]) {
     billing: customer.billing,
     shipping: customer.shipping,
     line_items: products.map(product => ({ product_id: product.id, quantity: 1 })),
+  }
+}
+
+function newOrder(status: string, body: any) {
+  return {
+    ...body,
+    id: "#newOrderId",
+    status,
+    total: "42.00",
   }
 }
 

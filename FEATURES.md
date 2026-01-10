@@ -33,6 +33,13 @@
 
 * Integrates with the [TeraWallet Plugin](https://wordpress.org/plugins/woo-wallet/)
 
+![After Login](./app/tests/e2e/payment.spec.ts-snapshots/after-login-chromium-darwin.png)
+
+![Cart](./app/tests/e2e/payment.spec.ts-snapshots/cart-chromium-darwin.png)
+
+![Confirmation](./app/tests/e2e/payment.spec.ts-snapshots/confirmation-wallet-chromium-darwin.png)
+
+
 ## Pay with Twint
 
 * Integrates with [Payrexx](https://payrexx.com/de-ch)
