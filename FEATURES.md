@@ -20,6 +20,10 @@
 
 ## Search by article Id
 
+![Numpad](./app/tests/e2e/search.spec.ts-snapshots/numpad-chromium-darwin.png)
+
+![Result](./app/tests/e2e/search.spec.ts-snapshots/spaghetti-chromium-darwin.png)
+
 ## Search by past orders (favorites)
 
 ## Search by pre-orders

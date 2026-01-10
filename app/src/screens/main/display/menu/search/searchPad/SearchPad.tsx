@@ -29,7 +29,7 @@ export function SearchPad({ onSearch, onCancel, onChange }: SearchPadProps) {
     }
 
     return (
-        <div className="grid grid-cols-3 gap-4 p-4">
+        <div className="grid grid-cols-3 gap-4 p-4" data-testid={'search-pad'}>
             <div className="col-span-3 text-4xl mt-5 text-center h-12">
                 <span className="text-slate-500">*</span>{value}
             </div>
