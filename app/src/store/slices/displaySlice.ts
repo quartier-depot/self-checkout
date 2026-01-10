@@ -124,17 +124,19 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
       const items: DisplayItemType[] = [];
       for (const list of lists) {
         for (const customer of list.customers) {
-          items.push({ key: list.id.toString(), type: 'list', delivery: list.delivery, title: list.title });
-          items.push(...customer.preorders.map(preorder => {
-            const productId = Number(preorder.product_id);
-            const product = products.find(product => product.id === productId);
-            if (!product) {
-              throw new Error('Product not found for preorder: ' + preorder.product_id);
-            }
-            const amount = Number(preorder.amount); // TODO: deprecated, remove when plugin is deployed
-            const quantity = Number(preorder.quantity);
-            return createProductDisplayItem(product, amount || quantity);
-          }));
+          if (customer.customer_id === customerId) {
+            items.push({ key: list.id.toString(), type: 'list', delivery: list.delivery, title: list.title });
+            items.push(...customer.preorders.map(preorder => {
+              const productId = Number(preorder.product_id);
+              const product = products.find(product => product.id === productId);
+              if (!product) {
+                throw new Error('Product not found for preorder: ' + preorder.product_id);
+              }
+              const amount = Number(preorder.amount); // TODO: deprecated, remove when plugin is deployed
+              const quantity = Number(preorder.quantity);
+              return createProductDisplayItem(product, amount || quantity);
+            }));
+          }
         }
       }
       return items;
