@@ -56,7 +56,7 @@ export function PickUp() {
                 <Button type="secondary" disabled={disabled} onClick={handleClick} toggled={isActive}
                         withDisabledLock={!customer}
                         className={classNames({ 'animate-pulse': isLoading })}>
-                    Abo
+                    Vorbestellungen
                 </Button>
 
                 {showMemberDialog && <MemberDialog onClose={() => setShowMemberDialog(false)} />}
