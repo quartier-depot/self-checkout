@@ -24,9 +24,11 @@ export function ProductDisplayItem({ product, quantity }: ProductDisplayItemProp
                 <h2 className={'text-2xl font-bold '}>
                     {product.articleId}
                 </h2>
-                <p className={'grow truncate mr-1 relative'}>{product.name}</p>
+                <p className={'grow truncate mr-1 relative'}>
+                    {quantity > 1 && <Badge className={'mr-2'}>{quantity}x</Badge>}{product.name}
+                </p>
                 <p className={'nowrap text-l'}>{formatPrice(product.price)}</p>
-                {quantity > 1 && <Badge className={'absolute top-3 right-35'}>{quantity}</Badge>}
+
             </div>
     );
 }
