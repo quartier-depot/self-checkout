@@ -2,11 +2,13 @@
 
 ## Scan by product code
 
-## Supports multiple barcodes per product
+![Scan](./app/tests/e2e/scan.spec.ts-snapshots/cart-chromium-darwin.png)
+
+### Supports multiple barcodes per product
 
 * A product can have multiple barcodes in a semicolon separated list
 
-## Support weight encoded barcodes
+### Support weight encoded barcodes
 
 * A product can have a weight encoded barcode
 * The weight is added to the cart automatically
@@ -19,6 +21,8 @@
 ![Browse](./app/tests/e2e/browse.spec.ts-snapshots/browse-two-categories-chromium-darwin.png)
 
 ## Search by article Id
+
+* Enter a part of the articles ID and press OK to search for the product.
 
 ![Numpad](./app/tests/e2e/search.spec.ts-snapshots/numpad-chromium-darwin.png)
 
@@ -42,7 +46,6 @@
 ![Cart](./app/tests/e2e/payment.spec.ts-snapshots/cart-chromium-darwin.png)
 
 ![Confirmation](./app/tests/e2e/payment.spec.ts-snapshots/confirmation-wallet-chromium-darwin.png)
-
 
 ## Pay with Twint
 

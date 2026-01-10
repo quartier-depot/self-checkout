@@ -41,7 +41,7 @@ const pasta = [...(
   })))];
 
 // Vegetables (bulk item, weighted barcode, muliple barcodes)
-const vegetables = [
+export const vegetables = [
   product({
     id: 301,
     name: 'Salat',
