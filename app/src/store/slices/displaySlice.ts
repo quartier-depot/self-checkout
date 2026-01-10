@@ -126,11 +126,12 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
         for (const customer of list.customers) {
           items.push({ key: list.id.toString(), type: 'list', delivery: list.delivery, title: list.title });
           items.push(...customer.preorders.map(preorder => {
-            const product = products.find(product => product.id === preorder.product_id);
+            const productId = Number(preorder.product_id);
+            const product = products.find(product => product.id === productId);
             if (!product) {
               throw new Error('Product not found for preorder: ' + preorder.product_id);
             }
-            return createProductDisplayItem(product, preorder.amount);
+            return createProductDisplayItem(product, Number(preorder.amount));
           }));
         }
       }
