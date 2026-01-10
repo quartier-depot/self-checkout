@@ -17,7 +17,7 @@ test.describe('browse view', () => {
     const locator = page.getByTestId('customer-title');
     await expect(locator).toHaveText(customer.first_name + ' ' + customer.last_name);
     
-    await page.getByRole('button', { name: /Abo/i }).click();
+    await page.getByRole('button', { name: /Vorbestellungen/i }).click();
 
     await page.getByRole('button', { name: /Apfel/i }).click();
     await expect(page.getByTestId('cart-quantity')).toHaveText('10');
