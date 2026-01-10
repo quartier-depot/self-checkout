@@ -131,7 +131,9 @@ export const selectFilteredDisplayItems = (state: RootState): DisplayItemType[] 
             if (!product) {
               throw new Error('Product not found for preorder: ' + preorder.product_id);
             }
-            return createProductDisplayItem(product, Number(preorder.amount));
+            const amount = Number(preorder.amount); // TODO: deprecated, remove when plugin is deployed
+            const quantity = Number(preorder.quantity);
+            return createProductDisplayItem(product, amount || quantity);
           }));
         }
       }
