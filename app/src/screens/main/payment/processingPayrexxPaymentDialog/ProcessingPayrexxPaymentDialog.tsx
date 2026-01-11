@@ -9,7 +9,7 @@ import { Spinner } from '../../../../components/spinner/Spinner.tsx';
 export function ProcessingPayrexxPaymentDialog() {
     const dispatch = useAppDispatch();
     const payment = useAppSelector(state => state.session.session.payment);
-    const order = useGetOrderQuery(payment.orderId || '200', { pollingInterval: 3000 });
+    const order = useGetOrderQuery(payment.orderId!, { pollingInterval: 3000, skip: !payment.orderId });
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {

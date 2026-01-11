@@ -1,25 +1,33 @@
 # Woocommerce Self-Checkout Point Of Sale
 
-A self-checkout POS using a WooCommerce backend tailored for [Quartier Depot](https://www.quartier-depot.ch/).
-
-## Features
-
-* Scan by product code
-* Supports multiple barcodes per product
-* Support weight encoded barcodes
-* Search by category or article Id
-* Search by past orders (favorites)
-* Search by pre-orders (pick-up)
-* Pay with virtual wallet
-* Pay with Twint
+Self-checkout POS using a WooCommerce backend.
 
 ![Start](./app/tests/e2e/payment.spec.ts-snapshots/start-chromium-darwin.png)
 
-For more screenshots see [FEATURES.md](./FEATURES.md)
+## Features
+
+* [Scan by product code](./FEATURES.md#scan-by-product-code)
+  * [Supports multiple barcodes per product](./FEATURES.md#supports-multiple-barcodes-per-product)
+  * [Support weight encoded barcodes](./FEATURES.md#support-weight-encoded-barcodes)
+* [Search by category](./FEATURES.md#search-by-category)
+* [Search by article Id](./FEATURES.md#search-by-article-id)
+* [Search by past orders (favorites)](./FEATURES.md#search-by-past-orders-favorites)
+* [Search by pre-orders](./FEATURES.md#search-by-pre-orders)
+* [Identify with member barcode](./FEATURES.md#identify-with-member-barcode)
+* [Pay with virtual wallet](./FEATURES.md#pay-with-virtual-wallet)
+* [Pay with Payrexx (Twint)](./FEATURES.md#pay-with-payrexx-twint)
 
 ### Watch on YouTube
 
 [![in action](https://img.youtube.com/vi/EAuKzgOIUrg/0.jpg)](https://www.youtube.com/watch?v=EAuKzgOIUrg)
+
+## Customization
+
+Currently heavily tailored for [Quartier Depot](https://www.quartier-depot.ch/). 
+
+Want to use it for your own shop? Contact us for professional services to implement your system.
+
+Or if you are a developer: Feel free to fork, customize and contribute back.
 
 ## Backend prerequisites
 
@@ -32,6 +40,7 @@ For more screenshots see [FEATURES.md](./FEATURES.md)
   * Customers with field `member_id`
 * Plugin [quartierdepot-memberid](https://github.com/quartier-depot/quartierdepot-memberid)
   * Exposes `acf/member_id` field in customer DTO of Woocommerce REST API
+* Plugin [WooCommerce OnDemand Lists](https://github.com/quartier-depot/Quartierdepot---OnDemand-Lists)
 
 ## Techstack
 
