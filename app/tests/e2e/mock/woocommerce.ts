@@ -30,15 +30,15 @@ const softdrinks = [
 const pasta = [...(
   ['Spaghetti', 'Penne', 'Fettuccine', 'Rigatoni', 'Fusilli', 'Linguine', 'Pappardelle', 'Orecchiette', 'Conchiglie', 'Bucatini', 'Rotini', 'Cavatappi', 'Macaroni', 'Tagliatelle', 'Gemelli', 'Campanelle', 'Paccheri', 'Ravioli', 'Tortellini']
     .map((name, index) =>
-  product({
-    id: 200 + index,
-    name,
-    price: 1 + index / 10,
-    articleId: `P${(index + 1).toString().padStart(2, '0')}`,
-    category: 'P - Pasta',
-    barcodes: ['KEIN BARCODE'],
-    freitext: '',
-  })))];
+      product({
+        id: 200 + index,
+        name,
+        price: 1 + index / 10,
+        articleId: `P${(index + 1).toString().padStart(2, '0')}`,
+        category: 'P - Pasta',
+        barcodes: ['KEIN BARCODE'],
+        freitext: '',
+      })))];
 
 // Vegetables (bulk item, weighted barcode, muliple barcodes)
 export const vegetables = [
@@ -91,12 +91,12 @@ const fruits = [
     barcodes: ['1234567890402'],
     freitext: '',
   }),
-]
+];
 
 // Customers
 export const customers = [
-  customer(  "Branson",  "Sawyer")
-]
+  customer('Branson', 'Sawyer'),
+];
 
 export async function mockWoocommerce(page: Page) {
 
@@ -118,7 +118,7 @@ export async function mockWoocommerce(page: Page) {
       case '2': {
         products = [
           ...vegetables,
-          ...fruits
+          ...fruits,
         ];
         break;
       }
@@ -147,44 +147,53 @@ export async function mockWoocommerce(page: Page) {
 
   await page.route('**/wp-json/wc/v3/orders**', async route => {
     switch (route.request().method()) {
-      case "GET":
+      case 'GET':
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify([
-            order(customers[0], [pasta[1], vegetables[1], fruits[1], softdrinks[1]])
+            order(customers[0], [pasta[1], vegetables[1], fruits[1], softdrinks[1]]),
           ]),
         });
         break;
-        
-      case "POST":
+
+      case 'POST':
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify(
-            newOrder("processing", await route.request().postDataJSON())
+            newOrder('processing', await route.request().postDataJSON()),
           ),
         });
         break;
 
-      case "PUT":
+      case 'PUT':
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
           body: JSON.stringify([
-            newOrder("completed", await route.request().postDataJSON())
+            newOrder('completed', await route.request().postDataJSON()),
           ]),
         });
         break;
     }
+  });
 
+  await page.route('**/wp-json/wc/v3/orders/**', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(
+        newOrder('completed', await route.request().postDataJSON()),
+      ),
+    });
   });
 
   await page.route('**/wp-json/wc/v3/wallet/balance**', async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ balance: "42.00", currency: "CHF" }),
+      body: JSON.stringify({ balance: '42.00', currency: 'CHF' }),
     });
   });
 
@@ -192,41 +201,41 @@ export async function mockWoocommerce(page: Page) {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ id: "#walletTransactionId", response: "success" }),
+      body: JSON.stringify({ id: '#walletTransactionId', response: 'success' }),
     });
   });
 
   await page.route('**/wp-json/wc/v3/ondemand/pick-up', async route => {
     const response = {
-      generated: "2025-12-22",
+      generated: '2025-12-22',
       lists: [
         {
           id: 1,
-          title: "Weekly preorder",
-          description: "Description weekly",
-          delivery: "2025-12-19",
+          title: 'Weekly preorder',
+          description: 'Description weekly',
+          delivery: '2025-12-19',
           customers: [
             {
               customer_id: customers[0].id,
-              preorders: [{ "product_id": fruits[0].id, "amount": 10 }]
-            }
-          ]
+              preorders: [{ 'product_id': fruits[0].id, 'amount': 10 }],
+            },
+          ],
         },
         {
           id: 2,
-          title: "One off preorder",
-          description: "Description one off",
-          delivery: "2025-12-22",
+          title: 'One off preorder',
+          description: 'Description one off',
+          delivery: '2025-12-22',
           customers: [
             {
               customer_id: customers[0].id,
-              preorders: [{ "product_id": pasta[0].id, "amount": 1 }]
-            }
-          ]
-        }
-      ]
-    }
-    
+              preorders: [{ 'product_id': pasta[0].id, 'amount': 1 }],
+            },
+          ],
+        },
+      ],
+    };
+
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -248,28 +257,28 @@ function customer(firstName: string, lastName: string) {
     shipping: {},
     billing: {},
     meta_data: [
-      { id: 1000+id, key: "member_id", "value": memberIdFor(id) },
+      { id: 1000 + id, key: 'member_id', 'value': memberIdFor(id) },
       {
-        id: 1100+id,
-        key: "passkey_id",
-        value: "passkey_id_value"
+        id: 1100 + id,
+        key: 'passkey_id',
+        value: 'passkey_id_value',
       },
       {
-        id: 1200+id,
-        key: "google_wallet_token",
-        "value": "google_wallet_token_value"      
+        id: 1200 + id,
+        key: 'google_wallet_token',
+        'value': 'google_wallet_token_value',
       },
     ],
     acf: {
       member_id: memberIdFor(id),
-      passkey_id: "passkey_id_value",
-      google_wallet_token: "google_wallet_token_value"
-     },
-  }
+      passkey_id: 'passkey_id_value',
+      google_wallet_token: 'google_wallet_token_value',
+    },
+  };
 }
 
 export function memberIdFor(id: number) {
-  return `M000000${id}`
+  return `M000000${id}`;
 }
 
 /**
@@ -772,20 +781,21 @@ function order(customer: any, products: any[]) {
   return {
     id: orderId++,
     customer_id: customer.id,
-    status: "completed",
+    status: 'completed',
     billing: customer.billing,
     shipping: customer.shipping,
     line_items: products.map(product => ({ product_id: product.id, quantity: 1 })),
-  }
+  };
 }
 
 function newOrder(status: string, body: any) {
   return {
     ...body,
-    id: "#newOrderId",
+    id: '1230321',
     status,
-    total: "42.00",
-  }
+    total: '42.00',
+    transaction_id: '#payrexxTransactionId',
+  };
 }
 
 /**

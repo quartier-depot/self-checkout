@@ -11,7 +11,7 @@
   * [Search by pre-orders](#search-by-pre-orders)
   * [Identify with member barcode](#identify-with-member-barcode)
   * [Pay with virtual wallet](#pay-with-virtual-wallet)
-  * [Pay with Twint](#pay-with-twint)
+  * [Pay with Payrexx (Twint)](#pay-with-payrexx-twint)
 <!-- TOC -->
 
 ## Scan by product code
@@ -63,13 +63,12 @@
 
 * Integrates with the [TeraWallet Plugin](https://wordpress.org/plugins/woo-wallet/)
 
-![After Login](./app/tests/e2e/payment.spec.ts-snapshots/after-login-chromium-darwin.png)
-
 ![Cart](./app/tests/e2e/payment.spec.ts-snapshots/cart-chromium-darwin.png)
 
 ![Confirmation](./app/tests/e2e/payment.spec.ts-snapshots/confirmation-wallet-chromium-darwin.png)
 
-## Pay with Twint
+## Pay with Payrexx (Twint)
 
 * Integrates with [Payrexx](https://payrexx.com/de-ch)
 
+![Confirmation](./app/tests/e2e/payment.spec.ts-snapshots/confirmation-payrexx-chromium-darwin.png)
