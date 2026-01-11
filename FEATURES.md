@@ -1,12 +1,25 @@
 # Features
 
+<!-- TOC -->
+* [Features](#features)
+  * [Scan by product code](#scan-by-product-code)
+    * [Supports multiple barcodes per product](#supports-multiple-barcodes-per-product)
+    * [Support weight encoded barcodes](#support-weight-encoded-barcodes)
+  * [Search by category](#search-by-category)
+  * [Search by article Id](#search-by-article-id)
+  * [Search by past orders (favorites)](#search-by-past-orders-favorites)
+  * [Search by pre-orders](#search-by-pre-orders)
+  * [Pay with virtual wallet](#pay-with-virtual-wallet)
+  * [Pay with Twint](#pay-with-twint)
+<!-- TOC -->
+
 ## Scan by product code
 
 ![Scan](./app/tests/e2e/scan.spec.ts-snapshots/cart-chromium-darwin.png)
 
 ### Supports multiple barcodes per product
 
-* A product can have multiple barcodes in a semicolon separated list
+* A product can have multiple barcodes in a semicolon separated list (i.e. `111111111111;222222222222`)
 
 ### Support weight encoded barcodes
 
@@ -30,12 +43,14 @@
 
 ## Search by past orders (favorites)
 
+![Cart](./app/tests/e2e/favourites.spec.ts-snapshots/cart-chromium-darwin.png)
+
 ## Search by pre-orders
 
 * Integrates with the [WooCommerce OnDemand Lists](https://github.com/quartier-depot/Quartierdepot---OnDemand-Lists) plugin.
 * Adds the pre-ordered quantity to the cart in one click (i.e. 10 apples) 
 
-![Pick-Up](./app/tests/e2e/pickup.spec.ts-snapshots/pick-up-add-apples-to-cart-chromium-darwin.png)
+![Pick-Up](./app/tests/e2e/pickup.spec.ts-snapshots/cart-chromium-darwin.png)
 
 ## Pay with virtual wallet
 
