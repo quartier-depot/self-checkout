@@ -13,7 +13,7 @@ import {
     usePayWithWalletMutation, useUpdateOrderMutation
 } from '../../../store/api/woocommerceApi/woocommerceApi';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MemberDialog } from '../../../components/modal/dialog/memberDialog/MemberDialog.tsx';
 import { useCheckSignatureQuery, useCreateGatewayMutation } from '../../../store/api/payrexxApi/payrexxApi.ts';
 import { TopUpWalletDialog } from './topUpWalletDialog/TopUpWalletDialog.tsx';
@@ -40,6 +40,12 @@ export function Payment() {
 
     const noop = () => {
     };
+
+    useEffect(() => {
+        if (loggedIn) {
+            setShowMemberDialog(false);
+        }
+    }, [loggedIn]);
 
 
     async function handlePayWithWallet() {

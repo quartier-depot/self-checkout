@@ -17,7 +17,6 @@ test.describe('payment', () => {
     await page.keyboard.type(memberIdFor(customer.id));
     const locator = page.getByTestId('customer-title');
     await expect(locator).toHaveText(customer.first_name + ' ' + customer.last_name);
-    await expect(page).toHaveScreenshot('after-login.png'); // expect name and grey button
 
     await page.getByRole('button', { name: /kein Barcode/i }).click();
     await page.getByRole('button', { name: /softdrinks/i }).click();

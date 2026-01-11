@@ -9,6 +9,7 @@
   * [Search by article Id](#search-by-article-id)
   * [Search by past orders (favorites)](#search-by-past-orders-favorites)
   * [Search by pre-orders](#search-by-pre-orders)
+  * [Identify with member barcode](#identify-with-member-barcode)
   * [Pay with virtual wallet](#pay-with-virtual-wallet)
   * [Pay with Twint](#pay-with-twint)
 <!-- TOC -->
@@ -51,6 +52,12 @@
 * Adds the pre-ordered quantity to the cart in one click (i.e. 10 apples) 
 
 ![Pick-Up](./app/tests/e2e/pickup.spec.ts-snapshots/cart-chromium-darwin.png)
+
+## Identify with member barcode
+
+* Integrates with the [QuartierDepot MemberId Plugin](https://github.com/quartier-depot/quartierdepot-memberid)
+
+![Pick-Up](./app/tests/e2e/login.spec.ts-snapshots/member-id-chromium-darwin.png)
 
 ## Pay with virtual wallet
 
