@@ -3,8 +3,8 @@ import { mockRestart } from './mock/restart';
 import { customers, memberIdFor, mockWoocommerce } from './mock/woocommerce';
 import { mockPayrexx } from './mock/payrexx';
 
-test.describe('browse view', () => {
-  test('user navigates to pickup, sees 2 lists, adds 10 apples to cart', async ({ page }) => {
+test.describe('favourites view', () => {
+  test('user navigates to favourites, sees 4 products and adds 10 pears to cart', async ({ page }) => {
     const customer = customers[0];
     await mockWoocommerce(page);
     await mockPayrexx(page);
@@ -17,11 +17,13 @@ test.describe('browse view', () => {
     const locator = page.getByTestId('customer-title');
     await expect(locator).toHaveText(customer.first_name + ' ' + customer.last_name);
     
-    await page.getByRole('button', { name: /Vorbestellungen/i }).click();
+    await page.getByRole('button', { name: /Favoriten/i }).click();
     
+    const productTiles = page.getByRole('button').filter({ hasText: /02/ });
+    await expect(productTiles).toHaveCount(4);
 
-    await page.getByRole('button', { name: /Apfel/i }).click();
-    await expect(page.getByTestId('cart-quantity')).toHaveText('10');
-    await expect(page).toHaveScreenshot('cart.png'); // expect adding 10 apples
+    await page.getByRole('button', { name: /Birne/i }).click();
+    await expect(page.getByTestId('cart-quantity')).toHaveText('1');
+    await expect(page).toHaveScreenshot('cart.png'); // expect adding 1 pear
   });
 });
