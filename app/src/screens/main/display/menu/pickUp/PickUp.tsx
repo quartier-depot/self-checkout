@@ -17,15 +17,14 @@ export function PickUp() {
     const dispatch = useAppDispatch();
     const applicationInsights = useAppInsightsContext();
     const customer = useAppSelector(state => state.customer.customer);
-    const { isLoading, isError, data: pickUp } = useGetPickUpQuery();
+    const { isLoading, isError, error, data: pickUp } = useGetPickUpQuery();
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const [showNoPickUpDialog, setShowNoPickUpDialog] = useState(false);
     const viewMode = useAppSelector(selectViewMode);
     const isActive = viewMode === 'abo';
     const loggedIn = Boolean(customer);
     const disabled = !customer || isError || !pickUp || !customerHasPickUp;
-
-
+    
     useEffect(() => {
         if (loggedIn) {
             setShowMemberDialog(false);
@@ -34,7 +33,7 @@ export function PickUp() {
 
     useEffect(() => {
         if (isError) {
-            applicationInsights.trackException({ exception: new Error('Error loading pickUp data.') });
+            applicationInsights.trackException({ exception: new Error('Error loading pickUp data: ' + JSON.stringify(error)) });
         }
     }, [pickUp, isError]);
 
