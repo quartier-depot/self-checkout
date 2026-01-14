@@ -75,8 +75,11 @@ $ npx dotenvx run -f ../app/.env -- node webserver.cjs
 
 ```bash
 $ podman build -t quartier-depot-self-checkout -f Containerfile . 
-$ podman run --env-file ./app/.env -p 3000:3000 localhost/quartier-depot-self-checkout:latest
+$ ipconfig getifaddr en0
+$ podman run --env-file ./app/.env.TEST --add-host=<wordpress>:<ip> -p 3000:3000 localhost/quartier-depot-self-checkout:latest
 ```
+
+Note: adding `--add-host=<wordpress>:<ip>` is only required, if the Wordpress instance runs locally (i.e. with https://localwp.com/)
 
 ## Release
 

@@ -47,6 +47,26 @@ function AppContent() {
                 };
             } else {
                 // using express webserver
+                
+                // wait for proxy to be ready
+                let proxyReady = false;
+                let attempts = 0;
+                while (!proxyReady && attempts < 50) {
+                    try {
+                        const healthResponse = await fetch('/api/health/proxy');
+                        if (healthResponse.ok) {
+                            proxyReady = true;
+                        } else {
+                            throw new Error();
+                        }
+                    } catch (e) {
+                        attempts++;
+                        console.log(`Waiting for proxy to be ready... ${attempts}/5`);
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+                
+                // get configuration
                 const url = '/api/configuration';
                 const response = await fetch(url);
                 if (response.ok) {
@@ -106,7 +126,7 @@ function AppContent() {
     }, [configuration]);
 
     if (!reactPlugin || !configuration) {
-        return <h1>Loading configuration...</h1>;
+        return <Loading text='' />;
     }
 
     return (
