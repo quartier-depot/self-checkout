@@ -40,9 +40,6 @@ interface GetOrderResponse extends CreateOrderResponse {
   transactionId: string;
 }
 
-interface DeleteOrderResponse extends CreateOrderResponse {
-}
-
 interface PayWithWalletResponse {
   response: string;
   isError: boolean;
@@ -293,21 +290,6 @@ export const woocommerceApi = createApi({
       },
     }),
 
-    deleteOrder: builder.mutation<DeleteOrderResponse, OrderDelete>({
-      query: (update) => ({
-        url: `orders/${update.orderId}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Orders'],
-      transformResponse: (response: any): DeleteOrderResponse => {
-        return {
-          orderId: response.id,
-          orderTotal: parseFloat(response.total),
-          orderStatus: response.status,
-        };
-      },
-    }),
-
     getOrder: builder.query<GetOrderResponse, string>({
       query: (orderId) => ({
         url: `orders/${orderId}`,
@@ -364,7 +346,6 @@ export const {
   usePayWithWalletMutation,
   useCreateOrderMutation,
   useUpdateOrderMutation,
-  useDeleteOrderMutation,
   useGetOrderQuery,
   useGetCustomerOrdersQuery,
   useGetPickUpQuery
