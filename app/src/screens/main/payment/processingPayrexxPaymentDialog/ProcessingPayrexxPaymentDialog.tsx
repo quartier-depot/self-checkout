@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { useGetOrderQuery } from '../../../../store/api/woocommerceApi/woocommerceApi';
+import { useGetOrderQuery, useUpdateOrderMutation } from '../../../../store/api/woocommerceApi/woocommerceApi';
 import { useEffect } from 'react';
 import { setTransactionId, showFailure, showSuccess } from '../../../../store/slices/sessionSlice.ts';
 import { useSearchParams } from 'react-router';
@@ -11,10 +11,17 @@ export function ProcessingPayrexxPaymentDialog() {
     const payment = useAppSelector(state => state.session.session.payment);
     const order = useGetOrderQuery(payment.orderId!, { pollingInterval: 3000, skip: !payment.orderId });
     const [searchParams, setSearchParams] = useSearchParams();
+    const [updateOrder] = useUpdateOrderMutation();
 
     useEffect(() => {
         if (searchParams.get('payrexx') === 'failure') {
             setSearchParams({});
+            
+            updateOrder({
+                id: payment.orderId!,
+                status: 'cancelled'
+            });
+            
             dispatch(showFailure());
             return;
         }

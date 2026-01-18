@@ -17,10 +17,10 @@ export type OrderStatus =
 
 export interface OrderUpdate {
   id: string;
-  payment_method: string;
-  payment_method_title: string,
-  transaction_id: string;
-  status: string,
+  payment_method?: string;
+  payment_method_title?: string,
+  transaction_id?: string;
+  status: OrderStatus,
 }
 
 export interface OrderDelete {
