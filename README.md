@@ -73,11 +73,12 @@ Create `.env` file first with `.env.template` in `./app` folder.
 
 ```bash
 $ cd ./app
+$ mv .env .env.EXPRESS
 $ npm install
 $ npm run build
 $ cd ../server
 $ npm install
-$ npx dotenvx run -f ../app/.env -- node webserver.cjs
+$ npx dotenvx run -f ../app/.env.EXPRESS -- node webserver.cjs
 ```
 
 ### Run (container)
