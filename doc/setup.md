@@ -97,6 +97,7 @@
 39. `systemctl --user start quartier-depot-self-checkout-container`
 40. Create `/home/admin/self-checkout.env` (see template)
 41. `sudo chmod 600 /home/admin/self-checkout.env`
+42. [Switch Ubuntu permanently to XOrg](https://youtu.be/Ec0oWmUdrRE) in `/etc/gdm3/custom.conf`
 
 ### Kasse 
 
