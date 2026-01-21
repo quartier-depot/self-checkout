@@ -60,14 +60,6 @@ app.use('/wp-json', createProxyMiddleware({
   },
 }));
 
-// Proxy calls to google docs for abo
-app.use('/docs-google-com', createProxyMiddleware({
-  target: `https://docs.google.com`,
-  changeOrigin: true,
-  followRedirects: true,
-  rewrite: (path) => path.replace(/^\/docs-google-com/, ''),
-}));
-
 // Proxy Payrexx API calls
 app.use('/payrexx', createProxyMiddleware({
   target: config.payrexxUrl,

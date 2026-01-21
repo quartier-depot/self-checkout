@@ -111,12 +111,6 @@ export default defineConfig(({ mode }) => {
             });
           },
         },
-        '/docs-google-com': {
-          target: 'https://docs.google.com',
-          changeOrigin: true,
-          followRedirects: true,
-          rewrite: (path) => path.replace(/^\/docs-google-com/, '')
-        },
         '/payrexx': {
           target: env.VITE_PAYREXX_URL,
           changeOrigin: true,
