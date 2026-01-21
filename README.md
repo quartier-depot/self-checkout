@@ -96,10 +96,11 @@ Note: adding `--add-host=<wordpress>:<ip>` is only required, if the Wordpress in
 1. In `/app` run `npm run build`, `npm run test`, `npm run e2e`
 2. Determine next version number (i.e. `git tag`)
 3. Set the version in both [app/package.json](./app/package.json) and in [server/package.json](./server/package.json) 
-4. Commit and push
-5. Tag the codebase (i.e. `git tag 1.0.0`) 
-6. Push `git push --tags`.
-7. A [GitHub action](./.github/workflows/publish.yml) builds the container and publishes it (see https://github.com/quartier-depot/self-checkout/actions)
+4. Run `npm install` in both folders (to update version number in `package-lock.json`)
+5. Commit and push
+6. Tag the codebase (i.e. `git tag 1.0.0`) 
+7. Push `git push --tags`.
+8. A [GitHub action](./.github/workflows/publish.yml) builds the container and publishes it (see https://github.com/quartier-depot/self-checkout/actions)
 
 ## Install
 
