@@ -9,15 +9,13 @@ import {
     customerHasPickUp
 } from '../../../../../store/slices/displaySlice.ts';
 import { MemberDialog } from '../../../../../components/modal/dialog/memberDialog/MemberDialog';
-import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { NoPickUpDialog } from './noPickUpDialog/NoPickUpDialog';
 import { useGetPickUpQuery } from '../../../../../store/api/woocommerceApi/woocommerceApi';
 
 export function PickUp() {
     const dispatch = useAppDispatch();
-    const applicationInsights = useAppInsightsContext();
     const customer = useAppSelector(state => state.customer.customer);
-    const { isLoading, isError, error, data: pickUp } = useGetPickUpQuery();
+    const { isLoading, isError,  data: pickUp } = useGetPickUpQuery();
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const [showNoPickUpDialog, setShowNoPickUpDialog] = useState(false);
     const viewMode = useAppSelector(selectViewMode);
@@ -30,12 +28,6 @@ export function PickUp() {
             setShowMemberDialog(false);
         }
     }, [loggedIn]);
-
-    useEffect(() => {
-        if (isError) {
-            applicationInsights.trackException({ exception: new Error('Error loading pickUp data: ' + JSON.stringify(error)) });
-        }
-    }, [pickUp, isError]);
 
     const handleClick = () => {
         if (customer && pickUp) {
