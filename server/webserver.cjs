@@ -11,7 +11,6 @@ appInsights.setup(appInsightsConnectionString)
   .setAutoCollectExceptions(true)
   .setAutoCollectPerformance(true, true)
   .setAutoCollectConsole(true)
-  .setSendLiveMetrics(true)
   .start();
 
 // config
