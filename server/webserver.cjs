@@ -113,7 +113,14 @@ app.post('/api/availability', (_, res) => {
   res.json({response: 'ok'});
 });
 
-app.get('/api/health/proxy', async (_, res) => {
+const setNoCache = (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+};
+
+app.get('/api/health/proxy', setNoCache, async (_, res) => {
   try {
     // We try to fetch the target URL with a short timeout. 
     // We don't need the body, just to see if the socket opens.
