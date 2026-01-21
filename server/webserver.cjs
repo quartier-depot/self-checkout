@@ -5,7 +5,14 @@ const appInsightsConnectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_S
 // Note: warning "Accessing resource attributes before async attributes settled []" is noise
 // see: https://github.com/microsoft/ApplicationInsights-node.js/issues/1218"
 const appInsights = require('applicationinsights');
-appInsights.setup(appInsightsConnectionString).start();
+appInsights.setup(appInsightsConnectionString)
+  .setAutoCollectRequests(true)
+  .setAutoCollectDependencies(true)
+  .setAutoCollectExceptions(true)
+  .setAutoCollectPerformance(true, true)
+  .setAutoCollectConsole(true)
+  .setSendLiveMetrics(true)
+  .start();
 
 // config
 let config = {
