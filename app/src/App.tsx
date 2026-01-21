@@ -61,7 +61,7 @@ function AppContent() {
                         }
                     } catch (e) {
                         attempts++;
-                        console.log(`Waiting for proxy to be ready... ${attempts}/5`);
+                        console.log(`Waiting for proxy to be ready... ${attempts}/50`);
                         await new Promise(resolve => setTimeout(resolve, 1000));
                     }
                 }
