@@ -55,6 +55,8 @@ function AppContent() {
                     try {
                         const healthResponse = await fetch('/api/health/proxy');
                         if (healthResponse.ok) {
+                            // Add a small grace period after the proxy says it's ready
+                            await new Promise(resolve => setTimeout(resolve, 500));
                             proxyReady = true;
                         } else {
                             throw new Error();

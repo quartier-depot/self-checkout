@@ -134,25 +134,20 @@ app.get('/api/health/proxy', setNoCache, async (_, res) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 20000);
     
-    await fetch(config.payrexxUrl, {
-      method: 'HEAD',
-      signal: controller.signal,
-    });
-    
     const {Agent} = require('undici');
     const dispatcher = new Agent({
       connect: {
         rejectUnauthorized: !insecure
       },
     });
-    await fetch(config.woocommerce.url, {
-      method: 'HEAD',
-      signal: controller.signal,
-      dispatcher: dispatcher,
-    });
-
-
+    
+    await Promise.all([
+      fetch(config.payrexxUrl, { method: 'HEAD', signal: controller.signal }),
+      fetch(config.woocommerce.url, { method: 'HEAD', signal: controller.signal, dispatcher })
+    ]);
+    
     clearTimeout(timeoutId);
+    
     res.json({status: 'ok', proxyReady: true});
   } catch (error) {
     console.error('Proxy health check failed:', error);
