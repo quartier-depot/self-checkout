@@ -95,7 +95,8 @@ const fruits = [
 
 // Customers
 export const customers = [
-  customer('Branson', 'Sawyer'),
+  customer('Alberto', 'Acosta'),
+  customer('Branson', 'Boyd'),
 ];
 
 export async function mockWoocommerce(page: Page) {
