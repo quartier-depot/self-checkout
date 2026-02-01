@@ -131,6 +131,11 @@ and taking care of CORS (all calls from web application are routed through a pro
 
 See also [setup.md](./doc/setup.md)
 
+## Alternatives
+
+* [This is Fever](https://www.thisisfever.co.uk/knowledge-hub/utilising-woocommerce-for-self-service-pos/) implemented a similar system for a Stripe S700 device.
+* [Final POS](https://finalpos.com/) promises to generate your own POS based on WooCommerce.
+
 ## Credits
 
 Kudos to the following projects for source code and inspiration:
