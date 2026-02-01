@@ -74,6 +74,13 @@ export function Payment() {
             }).unwrap();
 
             dispatch(showSuccess());
+
+            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, {
+                customer: customer?.id,
+                orderId: orderId,
+                transactionId: walletTransactionId,
+                paymentMethod: 'wallet',
+            });
         } catch (error: any) {
             dispatch(showFailure());
             applicationInsights.getAppInsights().trackException({
