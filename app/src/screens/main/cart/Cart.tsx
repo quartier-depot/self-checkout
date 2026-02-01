@@ -11,6 +11,7 @@ import Scrollbar from '../../../components/scrollbar/Scrollbar';
 import { removeBulkItem } from '../../../store/slices/bulkItemSlice.ts';
 import { ResetDialog } from '../../../components/modal/dialog/resetDialog/ResetDialog.tsx';
 import { Badge } from '../../../components/badge/Badge.tsx';
+import { formatCustomer } from '../../../format/formatCustomer';
 
 export function Cart() {
     const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ export function Cart() {
     const bulkItem = useAppSelector(state => state.bulkItem.bulkItem);
     const session = useAppSelector(state => state.session.session);
     const applicationInsights = useAppInsightsContext();
-    const name = customer ? `${customer?.first_name} ${customer?.last_name}` : '';
+    const name = formatCustomer(customer);
     
     const [dialogItem, setDialogItem] = useState<ItemType | null>();
     const [showCartDialog, setShowCartDialog] = useState(false);

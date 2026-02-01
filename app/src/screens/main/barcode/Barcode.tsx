@@ -10,6 +10,7 @@ import { Dialog } from '../../../components/modal/dialog/Dialog';
 import { Button } from '../../../components/button/Button';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 import { Barcode as ProductBarcode } from '../../../store/api/Barcode.ts';
+import { formatCustomer } from '../../../format/formatCustomer.ts';
 
 interface BarcodeEvent {
     value: string;
@@ -25,7 +26,10 @@ export function Barcode() {
     const { data: customers, isSuccess: isCustomersSuccess, refetch: refetchCustomers } = useGetCustomersQuery();
     const [showNoProductFound, setShowNoProductFound] = useState(false);
     const [showNoCustomerFound, setShowNoCustomerFound] = useState(false);
+    const [showDifferentCustomerLoggedIn, setShowDifferentCustomerLoggedIn] = useState(false);
+    const [newCustomer, setNewCustomer] = useState<Customer | null>(null);
     const [barcode, setBarcode] = useState('');
+    const loggedInCustomer = useAppSelector(state => state.customer.customer);
     const session = useAppSelector(state => state.session.session);
     const isPaymentInProgress = useAppSelector(state => state.session.session.payment.state) !== 'NoPayment';
     const productByBarcode = useMemo<Map<string, Product>>(createProductByBarcodeMap, [products]);
@@ -49,14 +53,14 @@ export function Barcode() {
             });
             // noinspection JSIgnoredPromiseFromCall
             keyboardScanner.connect();
-            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products, isPaymentInProgress));
+            keyboardScanner.addEventListener('barcode', (e: BarcodeEvent) => handleBarcodeEvent(e, customers, products, isPaymentInProgress, loggedInCustomer));
 
             return () => {
                 // noinspection JSIgnoredPromiseFromCall
                 keyboardScanner.disconnect();
             };
         }
-    }, [isProductsSuccess, isCustomersSuccess, isPaymentInProgress]);
+    }, [isProductsSuccess, isCustomersSuccess, isPaymentInProgress, loggedInCustomer]);
     
     function createProductByBarcodeMap(): Map<string, Product> {
         const map = new Map();
@@ -83,12 +87,12 @@ export function Barcode() {
         return map;
     }
     
-    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[], isPaymentInProgress: boolean) {
+    function handleBarcodeEvent(e: BarcodeEvent, customers: Customer[], products: Product[], isPaymentInProgress: boolean, loggedInCustomer: Customer | undefined) {
         if (!(e.value)) {
             return;
         }
         if (isMemberBarcode(e.value)) {
-            memberInput(e.value, customers, isPaymentInProgress);
+            memberInput(e.value, customers, isPaymentInProgress, loggedInCustomer);
         } else {
             barcodeInput(e, products, isPaymentInProgress);
         }
@@ -99,7 +103,7 @@ export function Barcode() {
         return barcode.startsWith('M') && barcode.length === 11;
     }
 
-    function memberInput(barcode: string, customers: Customer[], isPaymentInProgress: boolean) {
+    function memberInput(barcode: string, customers: Customer[], isPaymentInProgress: boolean, loggedInCustomer: Customer | undefined) {
         if (isPaymentInProgress) {
             console.log('Member barcode not processed product scanning is not allowed at the moment');
             // noinspection JSIgnoredPromiseFromCall
@@ -113,7 +117,14 @@ export function Barcode() {
         }
 
         const customer = customers.find((customer) => customer.member_id === barcode);
-        if (customer) {
+        if (customer && loggedInCustomer && loggedInCustomer.id !== customer.id) {
+            // noinspection JSIgnoredPromiseFromCall
+            alertSound.play();
+            setNewCustomer(customer);
+            setShowDifferentCustomerLoggedIn(true);
+        } else if (customer && loggedInCustomer && loggedInCustomer.id === customer.id) {
+            // no operation
+        } else if (customer) {
             dispatch(setCustomer(customer));
         } else {
             console.log('No customer found with memberId ' + barcode);
@@ -177,6 +188,14 @@ export function Barcode() {
         refetchCustomers();
         closeDialog();
     }
+    
+    function chooseCustomer(customer: Customer | null | undefined) {
+        if (!customer) {
+            throw new Error('Customer must not be null');
+        }
+        dispatch(setCustomer(customer));
+        setShowDifferentCustomerLoggedIn(false);
+    }
 
     if (showNoProductFound) {
         return (
@@ -207,6 +226,20 @@ export function Barcode() {
                         <Button type="primary" onClick={refetchCustomersAndCloseDialog}>OK</Button>
                     </div>
             </Dialog>
+        )
+    }
+
+    if (showDifferentCustomerLoggedIn) {
+        return (
+                <Dialog title="Jemand anderes kauft gerade ein" onBackdropClick={closeDialog}>
+                    <div className={'p-4 flex-grow'}>
+                        Mit wem möchtest du weiter einkaufen?
+                    </div>
+                    <div className={'p-4'}>
+                        <Button type="primary" onClick={() => chooseCustomer(loggedInCustomer)}>{ formatCustomer(loggedInCustomer)  }</Button>
+                        <Button type="primary" onClick={() => chooseCustomer(newCustomer)}>{ formatCustomer(newCustomer)  }</Button>
+                    </div>
+                </Dialog>
         )
     }
 
