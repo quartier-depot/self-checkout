@@ -5,13 +5,16 @@ import { setTransactionId, showFailure, showSuccess } from '../../../../store/sl
 import { useSearchParams } from 'react-router';
 import { formatPrice } from '../../../../format/formatPrice.ts';
 import { Spinner } from '../../../../components/spinner/Spinner.tsx';
+import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
 
 export function ProcessingPayrexxPaymentDialog() {
     const dispatch = useAppDispatch();
     const payment = useAppSelector(state => state.session.session.payment);
     const order = useGetOrderQuery(payment.orderId!, { pollingInterval: 3000, skip: !payment.orderId });
+    const customer = useAppSelector(state => state.customer.customer);
     const [searchParams, setSearchParams] = useSearchParams();
     const [updateOrder] = useUpdateOrderMutation();
+    const applicationInsights = useAppInsightsContext();
 
     useEffect(() => {
         if (searchParams.get('payrexx') === 'failure') {
@@ -28,6 +31,12 @@ export function ProcessingPayrexxPaymentDialog() {
         if (order.isSuccess && order.data.orderStatus === 'completed') {
             dispatch(setTransactionId({ transactionId: order.data.transactionId }));
             dispatch(showSuccess());
+            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, {
+                customer: customer?.id,
+                orderId: order.data.orderId,
+                transactionId: order.data.transactionId,
+                paymentMethod: "payrexx",
+            });
             return;
         }
     }, [order, dispatch, searchParams]);
