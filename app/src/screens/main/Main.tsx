@@ -44,7 +44,7 @@ export function Main() {
                         <Display />
                     </div>
                     <div className={'w-2/5 flex flex-col'}>
-                        <div className={'bg-slate-50 p-3 ml-3 mb-3 mt-0 mr-0 grow overflow-hidden' } >
+                        <div className={'bg-slate-50 p-3 ml-3 mb-3 mt-0 mr-0 grow overflow-hidden flex flex-col' } >
                             <Cart />
                         </div>
                         <div className={'bg-slate-50 ml-3 mb-0 mt-0 mr-0 p-2 flex flex-col '}>
