@@ -220,6 +220,10 @@ export async function mockWoocommerce(page: Page) {
               customer_id: customers[0].id,
               preorders: [{ 'product_id': fruits[0].id, 'amount': 10 }],
             },
+            {
+              customer_id: customers[1].id,
+              preorders: pasta.map(p => ({ 'product_id': p.id, 'amount': 1 }))
+            },
           ],
         },
         {
