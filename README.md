@@ -94,7 +94,7 @@ Note: adding `--add-host=<wordpress>:<ip>` is only required, if the Wordpress in
 ## Release
 
 1. In `/app` run `npm run build`, `npm run test`, `npm run e2e`
-2. Determine next version number (i.e. `git tag`)
+2. Determine next version number (i.e. current tag by `git tag --sort=-v:refname | head -n 1`)
 3. Set the version in both [app/package.json](./app/package.json) and in [server/package.json](./server/package.json) 
 4. Run `npm install` in both folders (to update version number in `package-lock.json`)
 5. Commit and push
