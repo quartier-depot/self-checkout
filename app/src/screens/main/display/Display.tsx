@@ -17,7 +17,7 @@ export function Display() {
             {displayItems === undefined && <Instructions />}
             {displayItems && displayItems.length === 0 && <EmptySearch />}
             {displayItems && displayItems.length > 0 && (
-            <Scrollbar>
+            <Scrollbar scrollPositionAfterUpdate={'top'}>
                 <div className={'grid grid-cols-2 gap-2P'}>
                     {displayItems.map((displayItem: DisplayItemType) => {
                       switch (displayItem.type) {

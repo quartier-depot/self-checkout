@@ -67,7 +67,7 @@ export function Cart() {
                 </div>
             </div>
 
-            <Scrollbar className="flex-1 font-mono">
+            <Scrollbar scrollPositionAfterUpdate={'bottom'} className="flex-1 font-mono">
                 <table className={'table-fixed w-full select-none'}>
                     <colgroup>
                         <col className="w-[25px]" />
