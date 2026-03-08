@@ -1,9 +1,5 @@
 import { Page } from '@playwright/test';
 
-let customerId = 1000;
-let orderId = 3000;
-
-
 // Softdrinks (no barcode)
 const softdrinks = [
   product({
@@ -93,13 +89,21 @@ const fruits = [
   }),
 ];
 
-// Customers
+// Customers (global)
+let customerId = 1000;
 export const customers = [
   customer('Alberto', 'Acosta'),
   customer('Branson', 'Boyd'),
 ];
 
+
 export async function mockWoocommerce(page: Page) {
+  // Orders (per test)
+  let orderId = 3000;
+
+  const orders: any[] = [
+    order(orderId++, customers[0], [pasta[1], vegetables[1], fruits[1], softdrinks[1]]),
+  ];
 
   await page.route('**/wp-json/wc/v3/products**', async (route, request) => {
     const url = new URL(request.url());
@@ -147,47 +151,53 @@ export async function mockWoocommerce(page: Page) {
   });
 
   await page.route('**/wp-json/wc/v3/orders**', async route => {
+    const url = new URL(route.request().url());
     switch (route.request().method()) {
       case 'GET':
+        let result = undefined;
+        
+        
+        const idFromGetUrl = url.pathname.split('/').pop();
+        if (idFromGetUrl !== 'orders' && idFromGetUrl) {
+          result = orders.find(o => o.id.toString() === idFromGetUrl);
+        } else {
+          const customerParam = url.searchParams.get('customer');
+          if (customerParam) {
+            result = orders.filter(o => o.customer_id === parseInt(customerParam));
+          }
+        }
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify([
-            order(customers[0], [pasta[1], vegetables[1], fruits[1], softdrinks[1]]),
-          ]),
+          body: JSON.stringify(result),
         });
         break;
 
       case 'POST':
+        const postData = await route.request().postDataJSON();
+        const createdOrder = newOrder(orderId++, 'processing', postData);
+        orders.push(createdOrder);
         await route.fulfill({
-          status: 200,
+          status: 201,
           contentType: 'application/json',
-          body: JSON.stringify(
-            newOrder('processing', await route.request().postDataJSON()),
-          ),
+          body: JSON.stringify(createdOrder),
         });
         break;
 
       case 'PUT':
+        const putData = await route.request().postDataJSON();
+        const idFromPutUrl = url.pathname.split('/').pop();
+        const orderToUpdate = orders.find(o => o.id.toString() === idFromPutUrl);
+        if (putData.status) {
+          orderToUpdate.status = putData.status;
+        }
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify([
-            newOrder('completed', await route.request().postDataJSON()),
-          ]),
+          body: JSON.stringify(orderToUpdate),
         });
         break;
     }
-  });
-
-  await page.route('**/wp-json/wc/v3/orders/**', async route => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(
-        newOrder('completed', await route.request().postDataJSON()),
-      ),
-    });
   });
 
   await page.route('**/wp-json/wc/v3/wallet/balance**', async route => {
@@ -222,7 +232,7 @@ export async function mockWoocommerce(page: Page) {
             },
             {
               customer_id: customers[1].id,
-              preorders: pasta.map(p => ({ 'product_id': p.id, 'amount': 1 }))
+              preorders: pasta.map(p => ({ 'product_id': p.id, 'amount': 1 })),
             },
           ],
         },
@@ -782,9 +792,9 @@ function product({ id, name, price, articleId, category, barcodes }: {
  *     },
  */
 
-function order(customer: any, products: any[]) {
+function order(id: number, customer: any, products: any[]) {
   return {
-    id: orderId++,
+    id: id,
     customer_id: customer.id,
     status: 'completed',
     billing: customer.billing,
@@ -793,10 +803,10 @@ function order(customer: any, products: any[]) {
   };
 }
 
-function newOrder(status: string, body: any) {
+function newOrder(id: number, status: string, body: any) {
   return {
     ...body,
-    id: '1230321',
+    id: id,
     status,
     total: '42.00',
     transaction_id: '#payrexxTransactionId',
