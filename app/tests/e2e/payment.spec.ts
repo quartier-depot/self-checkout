@@ -56,17 +56,43 @@ test.describe('payment', () => {
     await expect(page.getByText(/Bezahlung/)).toHaveCount(1);
     await expect(page).toHaveScreenshot('progress-payrexx.png');
     
-    await payrexxWebhookUpdatesOrderStatus(page, 3001, "completed");
+    await untilPayrexxWebhookSesOrderStatusToCompleted(page);
     
-    await expect(page.getByText(/Vielen Dank/)).toHaveCount(1);
     await expect(page.getByTestId('confirmation-dialog')).toHaveText(/3001/);
     await expect(page.getByTestId('confirmation-dialog')).toHaveText(/#payrexxTransactionId/);
     await expect(page.getByTestId('confirmation-dialog')).toHaveText(/Vielen Dank/);
     await expect(page).toHaveScreenshot('confirmation-payrexx.png');
   });
+
+  test('with payrexx failure', async ({ page }) => {
+    await mockWoocommerce(page);
+    await mockPayrexx(page);
+    await mockRestart(page);
+
+    await page.goto('/');
+    await expect(page).toHaveScreenshot('start.png');
+
+    await page.keyboard.type(memberIdFor(customer.id));
+    await page.getByRole('button', { name: /kein Barcode/i }).click();
+    await page.getByRole('button', { name: /softdrinks/i }).click();
+    await page.getByRole('button', { name: /cola/i }).click();
+
+    await page.getByRole('button', { name: /Twint/i }).click();
+
+    await expect(page.getByText('Mock Payrexx Gateway')).toHaveCount(1);
+    await page.getByText("Bezahlen").click();
+    await expect(page.getByText(/Bezahlung/)).toHaveCount(1);
+
+    await untilPayrexxWebhookSesOrderStatusToCancelled(page);
+    
+    await expect(page.getByTestId('failure-dialog')).toHaveText(/3001/);
+    await expect(page.getByTestId('failure-dialog')).toHaveText(/#payrexxTransactionId/);
+    await expect(page.getByTestId('failure-dialog')).toHaveText(/Es ist ein Fehler aufgetreten/);
+    await expect(page).toHaveScreenshot('failure-payrexx.png');
+  });
 });
 
-async function payrexxWebhookUpdatesOrderStatus(page: Page, orderId: number, status: string): Promise<void> {
+async function untilPayrexxWebhookSesOrderStatusToCompleted(page: Page): Promise<void> {
   await page.evaluate(async () => {
     await fetch(`/wp-json/wc/v3/orders/3001`, {
       method: 'PUT',
@@ -74,6 +100,18 @@ async function payrexxWebhookUpdatesOrderStatus(page: Page, orderId: number, sta
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ status: 'completed' }),
+    });
+  });
+}
+
+async function untilPayrexxWebhookSesOrderStatusToCancelled(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    await fetch(`/wp-json/wc/v3/orders/3001`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: 'cancelled' }),
     });
   });
 }
