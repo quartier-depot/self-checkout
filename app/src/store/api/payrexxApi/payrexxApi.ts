@@ -47,7 +47,7 @@ export const payrexxApi = createApi({
         params.append('pm[0]', 'twint');
         params.append('language', 'DE');
         params.append('successRedirectUrl', config.payrexx.redirectUrl);
-        params.append('failedRedirectUrl', `${config.payrexx.redirectUrl}?payrexx=failure`);
+        params.append('failedRedirectUrl', config.payrexx.redirectUrl);
         params.append('basket[0][name]', `Bestellung ${request.orderId}`);
         params.append('basket[0][amount]', amount);
 

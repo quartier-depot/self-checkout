@@ -1,8 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../../../store/store.ts';
-import { useGetOrderQuery, useUpdateOrderMutation } from '../../../../store/api/woocommerceApi/woocommerceApi';
+import { useGetOrderQuery } from '../../../../store/api/woocommerceApi/woocommerceApi';
 import { useEffect } from 'react';
 import { setTransactionId, showFailure, showSuccess } from '../../../../store/slices/sessionSlice.ts';
-import { useSearchParams } from 'react-router';
 import { formatPrice } from '../../../../format/formatPrice.ts';
 import { Spinner } from '../../../../components/spinner/Spinner.tsx';
 import { useAppInsightsContext } from '@microsoft/applicationinsights-react-js';
@@ -12,34 +11,33 @@ export function ProcessingPayrexxPaymentDialog() {
     const payment = useAppSelector(state => state.session.session.payment);
     const order = useGetOrderQuery(payment.orderId!, { pollingInterval: 3000, skip: !payment.orderId });
     const customer = useAppSelector(state => state.customer.customer);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [updateOrder] = useUpdateOrderMutation();
     const applicationInsights = useAppInsightsContext();
 
     useEffect(() => {
-        if (searchParams.get('payrexx') === 'failure') {
-            setSearchParams({});
-            
-            updateOrder({
-                id: payment.orderId!,
-                status: 'cancelled'
-            });
-            
-            dispatch(showFailure());
-            return;
-        }
-        if (order.isSuccess && order.data.orderStatus === 'completed') {
+        if (order.isSuccess) {
             dispatch(setTransactionId({ transactionId: order.data.transactionId }));
-            dispatch(showSuccess());
-            applicationInsights.getAppInsights().trackEvent({ name: 'success' }, {
+            let trackName = 'neither-success-nor-failure';
+            switch(order.data.orderStatus) {
+                case 'completed':
+                    dispatch(showSuccess());
+                    trackName = 'success';
+                    break;
+                case 'cancelled':
+                    dispatch(showFailure());
+                    trackName = 'failure';
+                    break;
+            }
+
+            applicationInsights.getAppInsights().trackEvent({ name: trackName }, {
                 customer: customer?.id,
                 orderId: order.data.orderId,
                 transactionId: order.data.transactionId,
                 paymentMethod: "payrexx",
             });
+
             return;
         }
-    }, [order, dispatch, searchParams]);
+    }, [order, dispatch]);
 
     return (
             <>
@@ -56,7 +54,6 @@ export function ProcessingPayrexxPaymentDialog() {
                             <span className="text-right">{formatPrice(payment.charges)} CHF</span>
                             <div>Transaktionsnummer:</div>
                             <span className="text-right"><Spinner className={'ml-2 h-4 w-4 inline-block'} /></span>
-
                         </div>
                     </div>
                     <div className={'p-4 flex justify-center items-center'}>
