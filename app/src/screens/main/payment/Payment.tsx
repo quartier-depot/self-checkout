@@ -66,6 +66,7 @@ export function Payment() {
             dispatch(setTransactionId({ transactionId: walletTransactionId }));
 
             await updateOrder({
+                customerId: customer!.id,
                 id: orderId,
                 payment_method: 'wallet',
                 payment_method_title: 'Virtuelles Konto',
