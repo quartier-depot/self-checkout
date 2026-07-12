@@ -27,12 +27,13 @@ export function Payment() {
     const [createOrder] = useCreateOrderMutation();
     const [showMemberDialog, setShowMemberDialog] = useState(false);
     const [showTopUpWalletDialog, setShowTopUpWalletDialog] = useState(false);
-    const { data: walletBalance, isSuccess: walletBalanceSuccess } = useGetWalletBalanceQuery(customer?.email || '', {
+    const { data: walletBalance, isFetching: walletBalanceFetching, isSuccess: walletBalanceSuccess } = useGetWalletBalanceQuery(customer?.email || '', {
         skip: !customer?.email
     });
     const loggedIn = Boolean(customer);
     const cartEmpty = cart.items.length == 0;
-    const sufficientBalance = walletBalanceSuccess && walletBalance?.balance >= cart.price;
+    const walletBalanceAvailable = loggedIn && walletBalanceSuccess && !walletBalanceFetching;
+    const sufficientBalance = walletBalanceAvailable && (walletBalance?.balance ?? 0) >= cart.price;
     const { data: payrexxAvailable, refetch: refetchPayrexx } = useCheckSignatureQuery();
     const [createGateway] = useCreateGatewayMutation();
     const [payWithWallet] = usePayWithWalletMutation();
@@ -181,7 +182,7 @@ export function Payment() {
                             </Button>
                     )}
 
-                    {loggedIn && !cartEmpty && walletBalanceSuccess && !sufficientBalance && (
+                    {!cartEmpty && walletBalanceAvailable && !sufficientBalance && (
                             <Button type={'secondary'} className={'h-20'} onClick={() => setShowTopUpWalletDialog(true)}>
                                 <div>{formatPrice(walletBalance.balance)} CHF</div>
                                 <div className={'font-bold'}>Guthaben</div>
@@ -189,7 +190,7 @@ export function Payment() {
                             </Button>
                     )}
 
-                    {loggedIn && !cartEmpty && walletBalanceSuccess && sufficientBalance && (
+                    {!cartEmpty && walletBalanceAvailable && sufficientBalance && (
                             <Button type={'primary'} className={'h-20'} onClick={handlePayWithWallet}>
                                 <div className={'lowercase'}>bezahlen mit</div>
                                 <div className={'font-bold'}>Guthaben</div>
