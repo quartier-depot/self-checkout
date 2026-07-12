@@ -16,6 +16,7 @@ export type OrderStatus =
   | 'trash';
 
 export interface OrderUpdate {
+  customerId: number;
   id: string;
   payment_method?: string;
   payment_method_title?: string,
@@ -60,7 +61,6 @@ export interface WalletBalance {
 }
 
 
-
 export const woocommerceApi = createApi({
   reducerPath: 'woocommerceApi',
   baseQuery: fetchBaseQuery({
@@ -75,7 +75,7 @@ export const woocommerceApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Products', 'Customers', 'Wallet', 'Orders', 'PickUp'],
+  tagTypes: ['Products', 'Customers', 'Wallet', 'Order', 'Orders', 'PickUp'],
   endpoints: (builder) => ({
     // Products
     getProducts: builder.query<Product[], void>({
@@ -228,7 +228,7 @@ export const woocommerceApi = createApi({
         url: 'wallet/balance',
         params: { email: customerEmail },
       }),
-      providesTags: ['Wallet'],
+      providesTags: (_result, _error, email) => [{ type: 'Wallet', id: email }],
     }),
 
     payWithWallet: builder.mutation<PayWithWalletResponse, { customer: Customer; amount: number; note: string }>({
@@ -244,7 +244,7 @@ export const woocommerceApi = createApi({
           transactionId: response.id,
         };
       },
-      invalidatesTags: ['Wallet'],
+      invalidatesTags: (_result, _error, { customer }) => [{ type: 'Wallet', id: customer.email }],
     }),
 
     // Orders
@@ -272,6 +272,7 @@ export const woocommerceApi = createApi({
           orderStatus: response.status,
         };
       },
+      invalidatesTags: (_result, _error, { customer }) => [{ type: 'Orders', id: customer?.id }],
     }),
 
     updateOrder: builder.mutation<OrderUpdateResponse, OrderUpdate>({
@@ -280,7 +281,7 @@ export const woocommerceApi = createApi({
         method: 'PUT',
         body: update,
       }),
-      invalidatesTags: ['Orders'],
+      invalidatesTags: (_result, _error, update) => [{ type: 'Orders', id: update.customerId }],
       transformResponse: (response: any): OrderUpdateResponse => {
         return {
           orderId: response.id,
@@ -302,6 +303,7 @@ export const woocommerceApi = createApi({
           transactionId: response.transaction_id,
         };
       },
+      providesTags: (_result, _error, orderId) => [{ type: 'Order', id: orderId }],
     }),
 
     getCustomerOrders: builder.query<Order[], number>({
@@ -316,7 +318,7 @@ export const woocommerceApi = createApi({
       transformResponse: (response: unknown): Order[] => {
         return response as Order[];
       },
-      providesTags: ['Orders'],
+      providesTags: (_result, _error, customerId) => [{ type: 'Orders', id: customerId }],
     }),
 
     getPickUp: builder.query<PickUp, void>({
@@ -324,7 +326,7 @@ export const woocommerceApi = createApi({
         const result = await fetchWithBaseQuery('ondemand/pick-up');
 
         if (result.error && result.error.status === 500 && (result.error.data as any).message === 'Keine Bestellungen gefunden.') {
-          return { data: { lists: []} };
+          return { data: { lists: [] } };
         }
 
         if (result.error) {
@@ -348,5 +350,5 @@ export const {
   useUpdateOrderMutation,
   useGetOrderQuery,
   useGetCustomerOrdersQuery,
-  useGetPickUpQuery
+  useGetPickUpQuery,
 } = woocommerceApi;
