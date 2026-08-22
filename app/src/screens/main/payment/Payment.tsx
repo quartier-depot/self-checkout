@@ -31,7 +31,7 @@ export function Payment() {
         skip: !customer?.email
     });
     const loggedIn = Boolean(customer);
-    const cartEmpty = cart.items.length == 0;
+    const pricePositive = cart.price > 0;
     const walletBalanceAvailable = loggedIn && walletBalanceSuccess && !walletBalanceFetching;
     const sufficientBalance = walletBalanceAvailable && (walletBalance?.balance ?? 0) >= cart.price;
     const { data: payrexxAvailable, refetch: refetchPayrexx } = useCheckSignatureQuery();
@@ -155,7 +155,7 @@ export function Payment() {
                             </Button>
                     )}
 
-                    {loggedIn && cartEmpty && (
+                    {loggedIn && !pricePositive && (
                             <>
                                 <Button type={'primary'} className={'h-20'} onClick={noop} disabled={true}
                                         withDisabledLock={true}>
@@ -168,21 +168,21 @@ export function Payment() {
                             </>
                     )}
 
-                    {loggedIn && !cartEmpty && payrexxAvailable && (
+                    {loggedIn && pricePositive && payrexxAvailable && (
                             <Button type={'primary'} className={'h-20'} onClick={handlePayWithPayrexx}>
                                 <div className={'lowercase'}>bezahlen mit</div>
                                 <div className={'mb-6 font-bold'}>Twint</div>
                             </Button>
                     )}
 
-                    {loggedIn && !cartEmpty && !payrexxAvailable && (
+                    {loggedIn && pricePositive && !payrexxAvailable && (
                             <Button type={'primary'} className={'h-20'} onClick={refetchPayrexx} disabled={true}
                                     withDisabledLock={true}>
                                 Twint
                             </Button>
                     )}
 
-                    {!cartEmpty && walletBalanceAvailable && !sufficientBalance && (
+                    {pricePositive && walletBalanceAvailable && !sufficientBalance && (
                             <Button type={'secondary'} className={'h-20'} onClick={() => setShowTopUpWalletDialog(true)}>
                                 <div>{formatPrice(walletBalance.balance)} CHF</div>
                                 <div className={'font-bold'}>Guthaben</div>
@@ -190,7 +190,7 @@ export function Payment() {
                             </Button>
                     )}
 
-                    {!cartEmpty && walletBalanceAvailable && sufficientBalance && (
+                    {pricePositive && walletBalanceAvailable && sufficientBalance && (
                             <Button type={'primary'} className={'h-20'} onClick={handlePayWithWallet}>
                                 <div className={'lowercase'}>bezahlen mit</div>
                                 <div className={'font-bold'}>Guthaben</div>
