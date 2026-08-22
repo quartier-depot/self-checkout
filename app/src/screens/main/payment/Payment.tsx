@@ -178,7 +178,8 @@ export function Payment() {
                     {loggedIn && pricePositive && !payrexxAvailable && (
                             <Button type={'primary'} className={'h-20'} onClick={refetchPayrexx} disabled={true}
                                     withDisabledLock={true}>
-                                Twint
+                                <div className={'lowercase'}>bezahlen mit</div>
+                                <div className={'mb-6 font-bold'}>Twint</div>
                             </Button>
                     )}
 
